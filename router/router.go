@@ -12,6 +12,8 @@ func Initialize(r *gin.Engine) {
 	api := r.Group("")
 	{
 
+		api.POST("/upload", controllers.UploadApplication)
+
 		api.GET("/accounts", controllers.GetAccounts)
 		api.GET("/accounts/:id", controllers.GetAccount)
 		api.POST("/accounts", controllers.CreateAccount)

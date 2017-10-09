@@ -22,6 +22,8 @@ var (
 	apikey    = setapikey.Arg("key", "Key.").Required().String()
 )
 
+var DEFAULT_HOST = "https://platform.loomx.io"
+
 func main() {
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 	case upload.FullCommand():
@@ -34,7 +36,11 @@ func main() {
 			fmt.Println("Missing api key or api key is invalid. Please set it with the setapikey command.")
 			return
 		}
-		client.UploadApp(c.Apikey, *zipfile, *slug)
+		hostName := c.HostName
+		if hostName == "" {
+			hostName = DEFAULT_HOST
+		}
+		client.UploadApp(hostName, c.Apikey, *zipfile, *slug)
 	case setapikey.FullCommand():
 		if *apikey == "" || len(*apikey) < 3 {
 			fmt.Println("Missing api key or api key is invalid")

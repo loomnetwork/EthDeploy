@@ -11,15 +11,9 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var data = `
-a: Easy!
-b:
-  c: 2
-  d: [3, 4]
-`
-
 type Config struct {
-	Apikey string `yaml:"c"`
+	Apikey   string `yaml:"apikey"`
+	HostName string `yaml:"hostname"`
 }
 
 func findOrCreateConfigFile() string {

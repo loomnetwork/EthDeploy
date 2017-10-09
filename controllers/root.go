@@ -24,6 +24,7 @@ func APIEndpoints(c *gin.Context) {
 		"appkey_url":       baseURL + "/appkeys/{id}",
 		"applications_url": baseURL + "/applications",
 		"application_url":  baseURL + "/applications/{id}",
+		"upload_url":       baseURL + "/upload",
 	}
 
 	c.IndentedJSON(http.StatusOK, resources)

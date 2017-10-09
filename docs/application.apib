@@ -1,0 +1,94 @@
+# Group Applications
+Welcome to the applications API. This API provides access to the applications service.
+
+## applications [/applications]
+
+### Create application [POST]
+
+Create a new application
+
++ Request application (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+    + Attributes
+
+        + name: NAME (string)
+        + slug: SLUG (string)
+        + status: STATUS (string)
+        + account form: (account)
+
++ Response 201 (application/json; charset=utf-8)
+    + Attributes (application, fixed)
+
+### Get applications [GET]
+
+Returns an application list.
+
++ Request (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (array, fixed)
+        + (application)
+
+## application details [/applications/{id}]
+
++ Parameters
+    + id: `1` (enum[string]) - The ID of the desired application.
+        + Members
+            + `1`
+            + `2`
+            + `3`
+
+### Get application [GET]
+
+Returns an application.
+
++ Request (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (application, fixed)
+
+### Update application [PUT]
+
+Update an application.
+
++ Request application (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+    + Attributes
+
+        + name: NAME (string)
+        + slug: SLUG (string)
+        + status: STATUS (string)
+        + account form: (account)
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (application, fixed)
+
+### Delete application [DELETE]
+
+Delete an application.
+
++ Request (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+
++ Response 204
+
+# Data Structures
+## application (object)
+
++ id: *1* (number)
++ name: *NAME* (string)
++ slug: *SLUG* (string)
++ status: *STATUS* (string)
++ account form: (account)

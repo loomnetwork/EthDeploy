@@ -1,0 +1,90 @@
+# Group Accounts
+Welcome to the accounts API. This API provides access to the accounts service.
+
+## accounts [/accounts]
+
+### Create account [POST]
+
+Create a new account
+
++ Request account (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+    + Attributes
+
+        + name: NAME (string)
+        + emails: EMAILS (string)
+
++ Response 201 (application/json; charset=utf-8)
+    + Attributes (account, fixed)
+
+### Get accounts [GET]
+
+Returns an account list.
+
++ Request (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (array, fixed)
+        + (account)
+
+## account details [/accounts/{id}]
+
++ Parameters
+    + id: `1` (enum[string]) - The ID of the desired account.
+        + Members
+            + `1`
+            + `2`
+            + `3`
+
+### Get account [GET]
+
+Returns an account.
+
++ Request (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (account, fixed)
+
+### Update account [PUT]
+
+Update an account.
+
++ Request account (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+    + Attributes
+
+        + name: NAME (string)
+        + emails: EMAILS (string)
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (account, fixed)
+
+### Delete account [DELETE]
+
+Delete an account.
+
++ Request (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+
++ Response 204
+
+# Data Structures
+## account (object)
+
++ id: *1* (number)
++ name: *NAME* (string)
++ emails: *EMAILS* (string)
++ created_at: `*2000-01-01 00:00:00*` (string)
++ updated_at: `*2000-01-01 00:00:00*` (string)

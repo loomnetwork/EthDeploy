@@ -1,0 +1,88 @@
+# Group Appkeys
+Welcome to the appkeys API. This API provides access to the appkeys service.
+
+## appkeys [/appkeys]
+
+### Create appkey [POST]
+
+Create a new appkey
+
++ Request appkey (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+    + Attributes
+
+        + key: KEY (string)
+        + account form: (account)
+
++ Response 201 (application/json; charset=utf-8)
+    + Attributes (appkey, fixed)
+
+### Get appkeys [GET]
+
+Returns an appkey list.
+
++ Request (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (array, fixed)
+        + (appkey)
+
+## appkey details [/appkeys/{id}]
+
++ Parameters
+    + id: `1` (enum[string]) - The ID of the desired appkey.
+        + Members
+            + `1`
+            + `2`
+            + `3`
+
+### Get appkey [GET]
+
+Returns an appkey.
+
++ Request (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (appkey, fixed)
+
+### Update appkey [PUT]
+
+Update an appkey.
+
++ Request appkey (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+    + Attributes
+
+        + key: KEY (string)
+        + account form: (account)
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (appkey, fixed)
+
+### Delete appkey [DELETE]
+
+Delete an appkey.
+
++ Request (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.mattkanwisher+json
+
++ Response 204
+
+# Data Structures
+## appkey (object)
+
++ id: *1* (number)
++ key: *KEY* (string)
++ account form: (account)

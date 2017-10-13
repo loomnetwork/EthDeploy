@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	dbpkg "github.com/mattkanwisher/loom/db"
-	"github.com/mattkanwisher/loom/helper"
-	"github.com/mattkanwisher/loom/models"
-	"github.com/mattkanwisher/loom/version"
+	dbpkg "github.com/loomnetwork/dashboard/db"
+	"github.com/loomnetwork/dashboard/helper"
+	"github.com/loomnetwork/dashboard/models"
+	"github.com/loomnetwork/dashboard/version"
 
 	"github.com/gin-gonic/gin"
 )

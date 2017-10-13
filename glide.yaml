@@ -1,4 +1,4 @@
-package: github.com/mattkanwisher/loom
+package: github.com/loomnetwork/dashboard
 import:
 - package: github.com/gin-gonic/gin
   version: v1.2

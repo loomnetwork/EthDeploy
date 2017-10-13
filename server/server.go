@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/mattkanwisher/loom/middleware"
-	"github.com/mattkanwisher/loom/router"
+	"github.com/loomnetwork/dashboard/middleware"
+	"github.com/loomnetwork/dashboard/router"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"

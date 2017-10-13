@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/mattkanwisher/loom/controllers"
+	"github.com/loomnetwork/dashboard/controllers"
 
 	"github.com/gin-gonic/gin"
 )

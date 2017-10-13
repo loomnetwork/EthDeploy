@@ -4,8 +4,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/mattkanwisher/loom/db"
-	"github.com/mattkanwisher/loom/server"
+	"github.com/loomnetwork/dashboard/db"
+	"github.com/loomnetwork/dashboard/server"
 )
 
 // main ...

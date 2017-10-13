@@ -3,20 +3,18 @@ package db
 import (
 	"log"
 	"os"
-	"path/filepath"
 	"strings"
 
-	"github.com/mattkanwisher/loom/models"
+	"github.com/loomnetwork/dashboard/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/serenize/snaker"
 )
 
 func Connect() *gorm.DB {
-	dir := filepath.Dir("db/database.db")
-	db, err := gorm.Open("sqlite3", dir+"/database.db")
+	db, err := gorm.Open("mysql", "root:@tcp(127.0.0.1:3306)/loom?charset=utf8")
 	if err != nil {
 		log.Fatalf("Got error when connect database, the error is '%v'", err)
 	}

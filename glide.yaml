@@ -1,0 +1,11 @@
+package: github.com/mattkanwisher/loom
+import:
+- package: github.com/gin-gonic/gin
+  version: v1.2
+- package: github.com/jinzhu/gorm
+  version: v1.0
+  subpackages:
+  - dialects/sqlite
+- package: github.com/serenize/snaker
+- package: rsc.io/letsencrypt
+  version: v0.0.1

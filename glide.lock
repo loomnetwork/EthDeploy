@@ -1,0 +1,67 @@
+hash: 2f3f32fa01693d70d4e259a7c1acf6c3f74a9135fbeab066cdace61f3e65c361
+updated: 2017-10-13T12:46:00.555514471+07:00
+imports:
+- name: github.com/gin-contrib/sse
+  version: 22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae
+- name: github.com/gin-gonic/gin
+  version: d459835d2b077e44f7c9b453505ee29881d5d12d
+  subpackages:
+  - binding
+  - render
+- name: github.com/golang/protobuf
+  version: 130e6b02ab059e7b717a096f397c5b60111cae74
+  subpackages:
+  - proto
+- name: github.com/jinzhu/gorm
+  version: 5174cc5c242a728b435ea2be8a2f7f998e15429b
+  subpackages:
+  - dialects/sqlite
+- name: github.com/jinzhu/inflection
+  version: 1c35d901db3da928c72a72d8458480cc9ade058f
+- name: github.com/mattn/go-isatty
+  version: 30a891c33c7cde7b02a981314b4228ec99380cca
+- name: github.com/mattn/go-sqlite3
+  version: 5160b48509cf5c877bc22c11c373f8c7738cdb38
+- name: github.com/miekg/dns
+  version: 946bd9fbed05568b0f3cd188353d8aa28f38b688
+  subpackages:
+  - internal/socket
+- name: github.com/serenize/snaker
+  version: c7a77c38c398a5468cac9579c3b2b1de22fb4da6
+- name: github.com/ugorji/go
+  version: f76f59a92f8224c695c0e2c401b9ad17e820a8f5
+  subpackages:
+  - codec
+- name: github.com/xenolf/lego
+  version: 5a2fd5039fbba3c06b640be91a2c436bc23f74e8
+  subpackages:
+  - acme
+- name: golang.org/x/crypto
+  version: bed12803fa9663d7aa2c2346b0c634ad2dcd43b7
+  subpackages:
+  - ocsp
+- name: golang.org/x/net
+  version: 41bba8d80bbfab43231ffdf4c210037baae5f6a3
+  subpackages:
+  - context
+  - publicsuffix
+- name: golang.org/x/sys
+  version: 7a6e5648d140666db5d920909e082ca00a87ba2c
+  subpackages:
+  - unix
+- name: golang.org/x/time
+  version: 6dc17368e09b0e8634d71cac8168d853e869a0c7
+  subpackages:
+  - rate
+- name: gopkg.in/go-playground/validator.v8
+  version: 5f1438d3fca68893a817e4a66806cea46a9e4ebf
+- name: gopkg.in/square/go-jose.v1
+  version: aa2e30fdd1fe9dd3394119af66451ae790d50e0d
+  subpackages:
+  - cipher
+  - json
+- name: gopkg.in/yaml.v2
+  version: 4c78c975fe7c825c6d1466c42be594d1d6f3aba6
+- name: rsc.io/letsencrypt
+  version: 33926faef6d434b854ea994228f11d0185faa0c1
+testImports: []

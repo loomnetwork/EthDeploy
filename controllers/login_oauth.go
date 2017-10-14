@@ -14,7 +14,7 @@ func Login(c *gin.Context) {
 
 func RedirectOauth(c *gin.Context) {
 	//TODO validate oauth token
-	c.HTML(http.StatusOK, "dashboard/index.tmpl", gin.H{
+	c.HTML(http.StatusOK, "dashboard.tmpl", gin.H{
 		"title": "Dashboard",
 	})
 }

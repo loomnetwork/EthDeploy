@@ -17,7 +17,7 @@ func Initialize(r *gin.Engine) {
 
 		api.POST("/upload", controllers.UploadApplication)
 		api.POST("/login_oauth", controllers.LoginOauth)
-		api.POST("/oauth/callback", controllers.RedirectOauth)
+		api.GET("/oauth/callback", controllers.RedirectOauth)
 
 		api.GET("/accounts", controllers.GetAccounts)
 		api.GET("/accounts/:id", controllers.GetAccount)

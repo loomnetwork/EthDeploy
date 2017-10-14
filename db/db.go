@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -14,7 +15,13 @@ import (
 )
 
 func Connect() *gorm.DB {
-	db, err := gorm.Open("mysql", "root:@tcp(127.0.0.1:3306)/loom?charset=utf8")
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		dbPass := os.Getenv("DATABASE_PASS")
+		dbURL = fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/loom?charset=utf8", dbPass)
+	}
+
+	db, err := gorm.Open("mysql", dbURL)
 	if err != nil {
 		log.Fatalf("Got error when connect database, the error is '%v'", err)
 	}

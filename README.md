@@ -35,3 +35,12 @@ DELETE /applications/:id
 ```
 
 server runs at http://localhost:8080
+
+
+
+### Setup
+glide install
+mysql -u root -p -e "create database loom"
+
+### Run
+AUTOMIGRATE=1 go run main.go

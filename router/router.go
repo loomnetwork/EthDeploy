@@ -7,13 +7,17 @@ import (
 )
 
 func Initialize(r *gin.Engine) {
-	r.GET("/", controllers.APIEndpoints)
+	r.LoadHTMLGlob("templates/**/*")
+
+	r.GET("/", controllers.Login)
+	r.GET("/apis.json", controllers.APIEndpoints)
 
 	api := r.Group("")
 	{
 
 		api.POST("/upload", controllers.UploadApplication)
 		api.POST("/login_oauth", controllers.LoginOauth)
+		api.POST("/oauth/callback", controllers.RedirectOauth)
 
 		api.GET("/accounts", controllers.GetAccounts)
 		api.GET("/accounts/:id", controllers.GetAccount)

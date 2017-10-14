@@ -9,3 +9,6 @@ import:
 - package: github.com/serenize/snaker
 - package: rsc.io/letsencrypt
   version: v0.0.1
+- package: golang.org/x/net
+  subpackages:
+  - context

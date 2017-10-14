@@ -1,5 +1,5 @@
-hash: 23fca1642f9a38dbf92bd285f8762562fe8ecf09cd87304486e87ed31ba94cb6
-updated: 2017-10-14T01:41:34.658096898+07:00
+hash: e58278e5e32a8a235a15be956551caee3d1ce4473b730fc702fe0b4e2538f44e
+updated: 2017-10-14T22:17:46.694856235+07:00
 imports:
 - name: github.com/gin-contrib/sse
   version: 22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae
@@ -45,7 +45,12 @@ imports:
   version: 41bba8d80bbfab43231ffdf4c210037baae5f6a3
   subpackages:
   - context
+  - context/ctxhttp
   - publicsuffix
+- name: golang.org/x/oauth2
+  version: bb50c06baba3d0c76f9d125c0719093e315b5b44
+  subpackages:
+  - internal
 - name: golang.org/x/sys
   version: 7a6e5648d140666db5d920909e082ca00a87ba2c
   subpackages:
@@ -54,6 +59,16 @@ imports:
   version: 6dc17368e09b0e8634d71cac8168d853e869a0c7
   subpackages:
   - rate
+- name: google.golang.org/appengine
+  version: a2e0dc829727a4f957a7428b1f322805cfc1f362
+  subpackages:
+  - internal
+  - internal/base
+  - internal/datastore
+  - internal/log
+  - internal/remote_api
+  - internal/urlfetch
+  - urlfetch
 - name: gopkg.in/go-playground/validator.v8
   version: 5f1438d3fca68893a817e4a66806cea46a9e4ebf
 - name: gopkg.in/square/go-jose.v1

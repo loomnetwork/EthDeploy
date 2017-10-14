@@ -10,11 +10,13 @@ Create a new account
 + Request account (application/json; charset=utf-8)
     + Headers
 
-            Accept: application/vnd.mattkanwisher+json
+            Accept: application/vnd.loomnetwork+json
     + Attributes
 
         + name: NAME (string)
-        + emails: EMAILS (string)
+        + email: EMAIL (string)
+        + provider: PROVIDER (string)
+        + auth_token: AUTHTOKEN (string)
 
 + Response 201 (application/json; charset=utf-8)
     + Attributes (account, fixed)
@@ -26,7 +28,7 @@ Returns an account list.
 + Request (application/json; charset=utf-8)
     + Headers
 
-            Accept: application/vnd.mattkanwisher+json
+            Accept: application/vnd.loomnetwork+json
 
 + Response 200 (application/json; charset=utf-8)
     + Attributes (array, fixed)
@@ -48,7 +50,7 @@ Returns an account.
 + Request (application/json; charset=utf-8)
     + Headers
 
-            Accept: application/vnd.mattkanwisher+json
+            Accept: application/vnd.loomnetwork+json
 
 + Response 200 (application/json; charset=utf-8)
     + Attributes (account, fixed)
@@ -60,11 +62,13 @@ Update an account.
 + Request account (application/json; charset=utf-8)
     + Headers
 
-            Accept: application/vnd.mattkanwisher+json
+            Accept: application/vnd.loomnetwork+json
     + Attributes
 
         + name: NAME (string)
-        + emails: EMAILS (string)
+        + email: EMAIL (string)
+        + provider: PROVIDER (string)
+        + auth_token: AUTHTOKEN (string)
 
 + Response 200 (application/json; charset=utf-8)
     + Attributes (account, fixed)
@@ -76,7 +80,7 @@ Delete an account.
 + Request (application/json; charset=utf-8)
     + Headers
 
-            Accept: application/vnd.mattkanwisher+json
+            Accept: application/vnd.loomnetwork+json
 
 + Response 204
 
@@ -85,6 +89,8 @@ Delete an account.
 
 + id: *1* (number)
 + name: *NAME* (string)
-+ emails: *EMAILS* (string)
++ email: *EMAIL* (string)
++ provider: *PROVIDER* (string)
++ auth_token: *AUTHTOKEN* (string)
 + created_at: `*2000-01-01 00:00:00*` (string)
 + updated_at: `*2000-01-01 00:00:00*` (string)

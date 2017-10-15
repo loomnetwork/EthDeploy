@@ -2,3 +2,4 @@
 upload_tmp
 vendor/
 letsencrypt.cache
+tmp/

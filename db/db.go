@@ -18,7 +18,12 @@ func Connect() *gorm.DB {
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
 		dbPass := os.Getenv("DATABASE_PASS")
-		dbURL = fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/loom?charset=utf8", dbPass)
+		dbHost := os.Getenv("DATABASE_HOST")
+		if len(dbHost) == 0 {
+			dbHost = "127.0.0.1"
+		}
+
+		dbURL = fmt.Sprintf("root:%s@tcp(%s:3306)/loom?charset=utf8", dbPass)
 	}
 
 	db, err := gorm.Open("mysql", dbURL)

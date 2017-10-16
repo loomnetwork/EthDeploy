@@ -1,4 +1,4 @@
-FROM golang:latest 
+FROM scratch
 RUN mkdir /app 
 ADD . /app/ 
 WORKDIR /app 

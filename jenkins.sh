@@ -4,7 +4,7 @@ export PATH=$PATH:~/gopath/bin
 
 
 glide install
-go build -o dashboard main.go
+CGO_ENABLED=0 GOOS=linux go build --prefix loomnetwork/dashboard -o dashboard main.go
 
 REV=`git rev-parse --short HEAD`
 DOC_IMAGE=loomnetwork/dashboard:$REV

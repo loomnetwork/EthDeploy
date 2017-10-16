@@ -2,6 +2,9 @@
 export GOPATH=~/gopath
 export PATH=$PATH:~/gopath/bin
 
+mkdir -p ~/gopath/src/github.com/loomnetwork
+ln -sfn `pwd` ~/gopath/src/github.com/loomnetwork/dashboard
+cd  ~/gopath/src/github.com/loomnetwork/dashboard
 
 glide install
 CGO_ENABLED=0 GOOS=linux go build --prefix loomnetwork/dashboard -o dashboard main.go

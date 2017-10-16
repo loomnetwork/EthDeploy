@@ -4,10 +4,17 @@ import (
 	"github.com/loomnetwork/dashboard/controllers"
 
 	"github.com/gin-gonic/gin"
+  "github.com/gin-contrib/static"
+
 )
 
 func Initialize(r *gin.Engine) {
 	r.LoadHTMLGlob("templates/**/*")
+
+
+  s  := static.Serve("/static", static.LocalFile("/static", true))
+
+	r.Use(s)
 
 	r.GET("/", controllers.Login)
 	r.GET("/apis.json", controllers.APIEndpoints)

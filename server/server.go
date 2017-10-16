@@ -5,6 +5,7 @@ import (
 	"github.com/loomnetwork/dashboard/router"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/jinzhu/gorm"
 )
 

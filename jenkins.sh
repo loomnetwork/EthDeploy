@@ -1,4 +1,10 @@
 #!/bin/bash
+export GOPATH=~/gopath
+export PATH=$PATH:~/gopath/bin
+
+
+glide install
+go build -o dashboard main.go
 
 REV=`git rev-parse --short HEAD`
 DOC_IMAGE=loomnetwork/dashboard:$REV

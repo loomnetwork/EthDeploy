@@ -7,7 +7,7 @@ ln -sfn `pwd` ~/gopath/src/github.com/loomnetwork/dashboard
 cd  ~/gopath/src/github.com/loomnetwork/dashboard
 
 glide install
-CGO_ENABLED=0 GOOS=linux go build --prefix loomnetwork/dashboard -o dashboard main.go
+CGO_ENABLED=0 GOOS=linux go build -o dashboard main.go
 
 npm install
 ./node_modules/.bin/gulp

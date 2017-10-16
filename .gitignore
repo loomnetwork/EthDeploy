@@ -3,3 +3,4 @@ upload_tmp
 vendor/
 letsencrypt.cache
 tmp/
+node_modules

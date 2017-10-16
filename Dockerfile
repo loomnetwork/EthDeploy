@@ -1,9 +1,6 @@
 FROM scratch
-RUN mkdir /app 
-ADD . /app/ 
-WORKDIR /app 
 
-ADD dashboard /app/dashboard
-ADD static /app/static
+ADD dashboard /dashboard
+ADD static /static
 
-CMD ["/app/dashboard"]
+CMD ["/dashboard"]

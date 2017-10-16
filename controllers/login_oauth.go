@@ -81,9 +81,14 @@ func RedirectOauth(c *gin.Context) {
 
 //Api calls
 func LoginOauth(c *gin.Context) {
-	//	r := c.Request
-	//	w := c.Writer
+	la := &LoginAuth{ApiKey: ""}
 
+	//			c.JSON(400, gin.H{"error": err.Error()})
+	if _, ok := c.GetQuery("pretty"); ok {
+		c.IndentedJSON(200, la)
+	} else {
+		c.JSON(200, la)
+	}
 }
 
 /*
@@ -91,6 +96,10 @@ func LoginOauth(c *gin.Context) {
 */
 type LinkedinEmail struct {
 	Email string `json:"emailAddress,omitempty" form:"id"`
+}
+type LoginAuth struct {
+	Email  string `json:"email,omitempty" form:"id"`
+	ApiKey string `json:"apikey,omitempty" form:"id"`
 }
 
 func extractLinkedInEmail(c *http.Client) string {

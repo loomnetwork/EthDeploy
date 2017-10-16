@@ -3,7 +3,7 @@ RUN mkdir /app
 ADD . /app/ 
 WORKDIR /app 
 
-ADD dashboard /
-CMD ["/app/dashboard"]
+ADD dashboard /app/dashboard
+ADD static /app/static
 
-#todo add static
+CMD ["/app/dashboard"]

@@ -42,6 +42,7 @@ server runs at http://localhost:8080
 ```bash
 glide install
 mysql -u root -p -e "create database loom"
+go get github.com/pilu/fresh
 ```
 
 __For Local Development__

@@ -4,4 +4,3 @@ vendor/
 letsencrypt.cache
 tmp/
 node_modules
-dashboard

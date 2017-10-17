@@ -18,7 +18,7 @@ import (
 )
 
 func Login(c *gin.Context) {
-	c.HTML(http.StatusOK, "dashboard.tmpl", gin.H{
+	c.HTML(http.StatusOK, "application.tmpl", gin.H{
 		"title": "Loom Network Login",
 	})
 }

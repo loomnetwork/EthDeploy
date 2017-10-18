@@ -23,7 +23,7 @@ func Connect() *gorm.DB {
 			dbHost = "127.0.0.1"
 		}
 
-		dbURL = fmt.Sprintf("root:%s@tcp(%s:3306)/loom?charset=utf8", dbPass, dbHost)
+		dbURL = fmt.Sprintf("root:%s@tcp(%s:3306)/loom?charset=utf8&parseTime=true", dbPass, dbHost)
 	}
 
 	db, err := gorm.Open("mysql", dbURL)

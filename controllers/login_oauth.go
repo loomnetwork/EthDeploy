@@ -87,7 +87,7 @@ func LoginOauth(c *gin.Context) {
 
 	la.Email = email
 	if len(email) > 0 {
-		getOrCreateApiKey(c, email)
+		la.ApiKey = getOrCreateApiKey(c, email)
 	}
 
 	//			c.JSON(400, gin.H{"error": err.Error()})
@@ -112,15 +112,13 @@ func getOrCreateApiKey(c *gin.Context, email string) string {
 			log.WithField("error", err).Warn("Failed creating account")
 			return ""
 		}
-
-		return ""
 	}
-	var apikey models.Apikey
+	fmt.Printf("almost\n")
+	apikey := &models.Apikey{}
 	// Ok we have an account, see if they have an api key first
 	if err := db.First(&apikey, "account_id = ?", account.ID).Error; err != nil {
 		log.WithField("error", err).Info("Failed retrieving apikey, will try and create")
 
-		apikey := &models.Apikey{}
 		apikey.AccountID = apikey.ID
 		apikey.Key = uuid.NewV4().String()
 
@@ -129,6 +127,7 @@ func getOrCreateApiKey(c *gin.Context, email string) string {
 			return ""
 		}
 	}
+	fmt.Printf("wtf -- %s\n", apikey.Key)
 	return apikey.Key
 }
 

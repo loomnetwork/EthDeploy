@@ -1,8 +1,11 @@
 package router
 
 import (
+	"os"
+
 	"github.com/loomnetwork/dashboard/controllers"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +15,12 @@ func Initialize(r *gin.Engine) {
 
 	s := static.Serve("/static", static.LocalFile("static", true))
 	r.Use(s)
+	secret := os.Getenv("COOKIE_SECRET")
+	if secret == "" {
+		secret = "123213312fdsjdsflkjdsfajkafsd"
+	}
+	store := sessions.NewCookieStore([]byte(secret))
+	r.Use(sessions.Sessions("mysession", store))
 
 	r.GET("/", controllers.Login)
 	r.GET("/apis.json", controllers.APIEndpoints)

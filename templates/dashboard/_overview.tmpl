@@ -1,0 +1,166 @@
+{{ define "_overview.tmpl"}}
+
+<div role="tabpanel" class="tab-pane active" id="dashboard">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 overview-sidebar">
+        <ul class="list-group">
+          <li class="list-group-header">
+            <img src="/assets/images/rocket.png" height="20" class="pr-2">
+            Loom Core Services</li>
+          <li class="list-group-item">DApp x 1</li>
+          <li class="list-group-item">5GB Storage</li>
+          <li class="list-group-item">500tx/sec</li>
+          <li class="list-group-item price bg-success">$15/month <span class="upgrade-button btn btn-outline-primary p-1">Upgrade Now..</span></li>
+        </ul>
+        <ul class="list-group mt-5">
+          <li class="list-group-header">
+            <img src="/assets/images/weave@2x.png" height="20" class="pr-2">Weaves (Add Ons)</li>
+          <li class="list-group-item">Push Notification <span class="badge badge-info text-white">Trial</span></li>
+          <li class="list-group-item">Webhooks <span class="badge badge-info text-white">Trial</span></li>
+          <li class="list-group-item">Scheduler <span class="badge badge-info text-white">Trial</span></li>
+          <li class="list-group-item">Mailer <span class="badge badge-info text-white">Trial</span></li>
+          <li class="list-group-item price bg-success">$0/month <span class="upgrade-button btn btn-outline-primary p-1">Upgrade Now..</span></li>
+        </ul>
+      </div>
+      <div class="col-md-6 content">
+        <div class="hr-divider mt-0 mb-3">
+          <h3 class="hr-divider-content hr-divider-heading">Quick stats</h3>
+        </div>
+
+        <div class="row statcards">
+          <div class="col-md-6 col-xl-3 mb-3 mb-md-4 mb-xl-0">
+            <div class="statcard statcard-success">
+              <div class="p-3">
+                <span class="statcard-desc">Read Txs</span>
+                <h2 class="statcard-number">35,001<small class="delta-indicator delta-positive">5%</small></h2>
+                <hr class="statcard-hr mb-0">
+              </div>
+              <canvas id="sparkline1" width="378" height="94" class="sparkline" data-chart="spark-line" data-dataset="[[28,68,41,43,96,45,100]]" data-labels="['a','b','c','d','e','f','g']" style="width: 189px; height: 47px;"></canvas>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-3 mb-3 mb-md-4 mb-xl-0">
+            <div class="statcard statcard-danger">
+              <div class="p-3">
+                <span class="statcard-desc">Write Txs</span>
+                <h2 class="statcard-number">1921<small class="delta-indicator delta-negative">1.3%</small></h2>
+                <hr class="statcard-hr mb-0">
+              </div>
+              <canvas id="sparkline1" width="378" height="94" class="sparkline" data-chart="spark-line" data-dataset="[[4,34,64,27,96,50,80]]" data-labels="['a','b','c','d','e','f','g']" style="width: 189px; height: 47px;"></canvas>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-3 mb-3 mb-md-4 mb-xl-0">
+            <div class="statcard statcard-info">
+              <div class="p-3">
+                <span class="statcard-desc">Oracle Use</span>
+                <h2 class="statcard-number">2931<small class="delta-indicator delta-positive">6.75%</small></h2>
+                <hr class="statcard-hr mb-0">
+              </div>
+              <canvas id="sparkline1" width="378" height="94" class="sparkline" data-chart="spark-line" data-dataset="[[12,38,32,60,36,54,68]]" data-labels="['a','b','c','d','e','f','g']" style="width: 189px; height: 47px;"></canvas>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-3 mb-3 mb-md-4 mb-xl-0">
+            <div class="statcard statcard-warning">
+              <div class="p-3">
+                <span class="statcard-desc">Savings</span>
+                <h2 class="statcard-number">$15,230<small class="delta-indicator">@$293/ETH</small></h2>
+                <hr class="statcard-hr mb-0">
+              </div>
+              <canvas id="sparkline1" width="378" height="94" class="sparkline" data-chart="spark-line" data-dataset="[[43,48,52,58,50,95,100]]" data-labels="['a','b','c','d','e','f','g']" style="width: 189px; height: 47px;"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <hr class="mt-5">
+
+        <div class="row">
+          <div class="col-md-6 mb-5">
+            <div class="list-group mb-3">
+              <h6 class="list-group-header">Top ABI Calls</h6>
+
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span class="list-group-progress" style="width: 62.4%;"></span>
+                <span>listKeyPairs</span>
+                <span class="text-muted">62.4%</span>
+              </a>
+
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span class="list-group-progress" style="width: 15.0%;"></span>
+                <span>isKeyAccessible</span>
+                <span class="text-muted">15.0%</span>
+              </a>
+
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span class="list-group-progress" style="width: 5.0%;"></span>
+                <span>SignInWith</span>
+                <span class="text-muted">5.0%</span>
+              </a>
+
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span class="list-group-progress" style="width: 5.0%;"></span>
+                <span>AddKeyPair</span>
+                <span class="text-muted">5.0%</span>
+              </a>
+
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span class="list-group-progress" style="width: 4.5%;"></span>
+                <span>RemoveKeyPair</span>
+                <span class="text-muted">4.5%</span>
+              </a>
+
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span class="list-group-progress" style="width: 2.3%;"></span>
+                <span>LastLoggedInForKey</span>
+                <span class="text-muted">2.3%</span>
+              </a>
+
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span class="list-group-progress" style="width: 1.7%;"></span>
+                <span>DeleteUser</span>
+                <span class="text-muted">1.7%</span>
+              </a>
+
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span class="list-group-progress" style="width: 1.5%;"></span>
+                <span>Stats</span>
+                <span class="text-muted">1.5%</span>
+              </a>
+            </div>
+            <a href="#" class="btn btn-outline-primary px-3">View Metrics</a>
+          </div>
+          <div class="col-md-6 mb-5">
+            <div class="list-group mb-3">
+              <h6 class="list-group-header">Deploy History</h6>
+
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span>v104</span>
+                <span class="text-muted">10.18.13:45 UTC</span>
+              </a>
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span>v103</span>
+                <span class="text-muted">10.17.21:41 UTC</span>
+              </a>
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span>v102</span>
+                <span class="text-muted">10.17.21:31 UTC</span>
+              </a>
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span>v101</span>
+                <span class="text-muted">10.17.21:10 UTC</span>
+              </a>
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span>v100</span>
+                <span class="text-muted">10.17.20:45 UTC</span>
+              </a>
+              <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+                <span>v99</span>
+                <span class="text-muted">10.17.18:25 UTC</span>
+              </a>
+
+            </div>
+            <a href="#" class="btn btn-outline-primary px-3">View Deploy Log</a>
+          </div>
+        </div>
+</div>
+
+{{end}}

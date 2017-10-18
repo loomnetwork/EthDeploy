@@ -1,0 +1,43 @@
+{{ define "_header.tmpl" }}
+
+<nav class="navbar navbar-expand-sm fixed-top app-navbar">
+
+    <a class="navbar-brand" href="/">
+      <img src="/assets/images/rgb-text-transparent-bg-trimmed.svg">
+    </a>
+
+    <button
+      class="navbar-toggler navbar-toggler-right d-md-none"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarResponsive"
+      aria-controls="navbarResponsive"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="nav navbar-nav mr-auto nav-pills">
+        <li class="nav-item">
+          <a class="nav-link" href="../order-history-light/index.html">All DApps</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="../fluid-light/index.html">Account</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="../icon-nav-light/index.html">Documentation</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link support" href="../docs/index.html">Support</a>
+        </li>
+      </ul>
+
+      <form class="form-inline d-none d-md-flex ml-auto">
+        <input class="form-control" type="text" data-action="grow" placeholder="Search">
+      </form>
+    </div>
+  </nav>
+
+{{ end }}

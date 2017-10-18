@@ -13,7 +13,7 @@ import (
 func Initialize(r *gin.Engine) {
 	r.LoadHTMLGlob("templates/**/*")
 
-	s := static.Serve("/static", static.LocalFile("static", true))
+	s := static.Serve("/assets", static.LocalFile("static", true))
 	r.Use(s)
 	secret := os.Getenv("COOKIE_SECRET")
 	if secret == "" {

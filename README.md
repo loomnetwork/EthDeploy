@@ -63,3 +63,9 @@ With hot reloading
 ```bash
 fresh
 ```
+
+asset pipeline
+```
+gulp #to compile it once
+gulp watch #to do autoreload
+```

@@ -8,7 +8,7 @@ $gray-subtle:            #eee;
 
 // Brand Scale
 $theme-colors: (
-  primary: #1997c6,
+  primary: #004b67,
   success: #1BC98E,
   info: #9F86FF,
   warning: #E4D836,
@@ -29,9 +29,9 @@ $nav-tabs-active-link-hover-bg: $body-bg !default;
 // Custom and override variables for this toolkit.
 
 // icons
-$icon-font-path: "../fonts/";
+$icon-font-path: "/assets/fonts/";
 $icon-font-name: "toolkit-entypo";
-
+$breadcrumb-divider-color: #1BC98E;
 
 // States
 //
@@ -58,12 +58,12 @@ $grid-gutter-width: $spacer;
 // Overrides Bootstrap defaults.
 
 // Fonts
-$font-family-sans-serif:  "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-sans-serif:  "Arimo", "Helvetica Neue", Helvetica, Arial, sans-serif;
 $font-family-base:        $font-family-sans-serif;
 
 // Body
-$font-size-base:          0.9rem;
-$font-weight-base:        300;
+$font-size-base:          1rem;
+$font-weight-base:        400;
 $letter-spacing-base:     0;
 $line-height-base:        1.5;
 $text-color:              $gray-700;
@@ -76,7 +76,7 @@ $lead-line-height:    1.4;
 $lead-letter-spacing: 0;
 
 // Headings
-$headings-font-weight:    300;
+$headings-font-weight:    400;
 $headings-color:          inherit;
 
 $text-muted:              #999;
@@ -241,6 +241,6 @@ $navbar-nav-active-font-weight: 500;
 $container-max-widths: (
   md: 880px,
   lg: 950px,
-  xl: 1100px
+  xl: 1300px
 );
 @include _assert-ascending($container-max-widths, "$container-max-widths");

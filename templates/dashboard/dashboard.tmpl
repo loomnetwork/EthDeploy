@@ -1,12 +1,10 @@
-{{ define "index.tmpl" }}
-<html><h1>
-	{{ .title }}
-</h1>
-<p>Using dashboard/index.tmpl</p>
+{{ define "dashboard.tmpl" }}
 
+	{{template "_dashboard-status.tmpl"}}
+	{{template "_dashboard-nav.tmpl"}}
 
-TODO js app here
+	<div class="tab-content">
+		{{template "_overview.tmpl"}}
+	</div>
 
-
-</html>
 {{ end }}

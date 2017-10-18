@@ -14,6 +14,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/linkedin"
 )
 
 func Login(c *gin.Context) {
@@ -26,18 +27,14 @@ func RedirectOauth(c *gin.Context) {
 	clientID := "86zs2w1g2j8hfu"
 	clientSecret := "mBd0gDHQdEwSRgt8"
 
-	authURL := "https://www.linkedin.com/uas/oauth2/authorization"
-	tokenURL := "https://www.linkedin.com/uas/oauth2/accessToken"
+	//linkedin reqs
 	scopes := []string{"r_emailaddress", "r_basicprofile"} // []string{"account"},
 
 	conf := &oauth2.Config{
 		ClientID:     clientID,     // also known as slient key sometimes
 		ClientSecret: clientSecret, // also known as secret key
 		Scopes:       scopes,
-		Endpoint: oauth2.Endpoint{
-			AuthURL:  authURL,
-			TokenURL: tokenURL,
-		},
+		Endpoint:     linkedin.Endpoint,
 	}
 
 	// Redirect user to consent page to ask for permission
@@ -63,7 +60,7 @@ func RedirectOauth(c *gin.Context) {
 		fmt.Printf("got client %v", client)
 
 		//TODO figure out which provider it is?
-		email := extractLinkedInEmail(client)
+		email := extractLinkedInEmail(client, "")
 		fmt.Printf("got email %s", email)
 	}
 
@@ -83,7 +80,7 @@ func LoginOauth(c *gin.Context) {
 
 	auth := c.GetHeader("Authorization")
 
-	email := extractLinkedInEmailAuthString(auth)
+	email := extractLinkedInEmail(&http.Client{}, auth)
 
 	la.Email = email
 	if len(email) > 0 {
@@ -142,39 +139,13 @@ type LoginAuth struct {
 	ApiKey string `json:"apikey,omitempty" form:"id"`
 }
 
-func extractLinkedInEmail(c *http.Client) string {
-	peopleURL := "https://api.linkedin.com/v1/people/~:(email-address)?format=json"
-	resp, err := c.Get(peopleURL)
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 { // OK
-		fmt.Printf("bad response code %d\n", resp.StatusCode)
-	}
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	bodyString := string(bodyBytes)
-	fmt.Printf(bodyString)
-
-	var email LinkedinEmail
-	err = json.Unmarshal(bodyBytes, &email)
-	if err != nil {
-		fmt.Println("error:", err)
-		return ""
-	}
-
-	return email.Email
-}
-
-func extractLinkedInEmailAuthString(auth string) string {
+func extractLinkedInEmail(c *http.Client, auth string) string {
 	peopleURL := "https://api.linkedin.com/v1/people/~:(email-address)?format=json"
 
 	req, err := http.NewRequest("GET", peopleURL, nil)
-	req.Header.Add("Authorization", auth)
-
-	c := &http.Client{}
+	if auth != "" {
+		req.Header.Add("Authorization", auth)
+	}
 	resp, err := c.Do(req)
 
 	defer resp.Body.Close()

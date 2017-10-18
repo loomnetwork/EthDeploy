@@ -1,8 +1,10 @@
-// models/appkey.go
+// models/apikey.go
 package models
 
+import "github.com/jinzhu/gorm"
+
 type Application struct {
-	ID      uint     `gorm:"primary_key;AUTO_INCREMENT" json:"id" form:"id"`
+	gorm.Model
 	Name    string   `json:"name" form:"name"`
 	Slug    string   `json:"slug" form:"slug"`
 	Status  string   `json:"status" form:"status"`

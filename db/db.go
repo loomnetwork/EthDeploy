@@ -40,7 +40,7 @@ func Connect() *gorm.DB {
 	if os.Getenv("AUTOMIGRATE") == "1" {
 		db.AutoMigrate(
 			&models.Account{},
-			&models.Appkey{},
+			&models.Apikey{},
 			&models.Application{},
 		)
 	}

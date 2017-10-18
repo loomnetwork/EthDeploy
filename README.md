@@ -14,14 +14,14 @@ PUT    /accounts/:id
 DELETE /accounts/:id
 ```
 
-### Appkeys Resource
+### Apikeys Resource
 
 ```
-GET    /appkeys
-GET    /appkeys/:id
-POST   /appkeys
-PUT    /appkeys/:id
-DELETE /appkeys/:id
+GET    /apikeys
+GET    /apikeys/:id
+POST   /apikeys
+PUT    /apikeys/:id
+DELETE /apikeys/:id
 ```
 
 ### Applications Resource

@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetAppkeys(c *gin.Context) {
+func GetApikeys(c *gin.Context) {
 	ver, err := version.New(c)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -20,7 +20,7 @@ func GetAppkeys(c *gin.Context) {
 	}
 
 	db := dbpkg.DBInstance(c)
-	parameter, err := dbpkg.NewParameter(c, models.Appkey{})
+	parameter, err := dbpkg.NewParameter(c, models.Apikey{})
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -35,19 +35,19 @@ func GetAppkeys(c *gin.Context) {
 	db = parameter.SetPreloads(db)
 	db = parameter.SortRecords(db)
 	db = parameter.FilterFields(db)
-	appkeys := []models.Appkey{}
+	apikeys := []models.Apikey{}
 	fields := helper.ParseFields(c.DefaultQuery("fields", "*"))
-	queryFields := helper.QueryFields(models.Appkey{}, fields)
+	queryFields := helper.QueryFields(models.Apikey{}, fields)
 
-	if err := db.Select(queryFields).Find(&appkeys).Error; err != nil {
+	if err := db.Select(queryFields).Find(&apikeys).Error; err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
 	index := 0
 
-	if len(appkeys) > 0 {
-		index = int(appkeys[len(appkeys)-1].ID)
+	if len(apikeys) > 0 {
+		index = int(apikeys[len(apikeys)-1].ID)
 	}
 
 	if err := parameter.SetHeaderLink(c, index); err != nil {
@@ -64,8 +64,8 @@ func GetAppkeys(c *gin.Context) {
 		enc := json.NewEncoder(c.Writer)
 		c.Status(200)
 
-		for _, appkey := range appkeys {
-			fieldMap, err := helper.FieldToMap(appkey, fields)
+		for _, apikey := range apikeys {
+			fieldMap, err := helper.FieldToMap(apikey, fields)
 			if err != nil {
 				c.JSON(400, gin.H{"error": err.Error()})
 				return
@@ -79,8 +79,8 @@ func GetAppkeys(c *gin.Context) {
 	} else {
 		fieldMaps := []map[string]interface{}{}
 
-		for _, appkey := range appkeys {
-			fieldMap, err := helper.FieldToMap(appkey, fields)
+		for _, apikey := range apikeys {
+			fieldMap, err := helper.FieldToMap(apikey, fields)
 			if err != nil {
 				c.JSON(400, gin.H{"error": err.Error()})
 				return
@@ -97,7 +97,7 @@ func GetAppkeys(c *gin.Context) {
 	}
 }
 
-func GetAppkey(c *gin.Context) {
+func GetApikey(c *gin.Context) {
 	ver, err := version.New(c)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -105,25 +105,25 @@ func GetAppkey(c *gin.Context) {
 	}
 
 	db := dbpkg.DBInstance(c)
-	parameter, err := dbpkg.NewParameter(c, models.Appkey{})
+	parameter, err := dbpkg.NewParameter(c, models.Apikey{})
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
 	db = parameter.SetPreloads(db)
-	appkey := models.Appkey{}
+	apikey := models.Apikey{}
 	id := c.Params.ByName("id")
 	fields := helper.ParseFields(c.DefaultQuery("fields", "*"))
-	queryFields := helper.QueryFields(models.Appkey{}, fields)
+	queryFields := helper.QueryFields(models.Apikey{}, fields)
 
-	if err := db.Select(queryFields).First(&appkey, id).Error; err != nil {
-		content := gin.H{"error": "appkey with id#" + id + " not found"}
+	if err := db.Select(queryFields).First(&apikey, id).Error; err != nil {
+		content := gin.H{"error": "apikey with id#" + id + " not found"}
 		c.JSON(404, content)
 		return
 	}
 
-	fieldMap, err := helper.FieldToMap(appkey, fields)
+	fieldMap, err := helper.FieldToMap(apikey, fields)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -141,7 +141,7 @@ func GetAppkey(c *gin.Context) {
 	}
 }
 
-func CreateAppkey(c *gin.Context) {
+func CreateApikey(c *gin.Context) {
 	ver, err := version.New(c)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -149,14 +149,14 @@ func CreateAppkey(c *gin.Context) {
 	}
 
 	db := dbpkg.DBInstance(c)
-	appkey := models.Appkey{}
+	apikey := models.Apikey{}
 
-	if err := c.Bind(&appkey); err != nil {
+	if err := c.Bind(&apikey); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := db.Create(&appkey).Error; err != nil {
+	if err := db.Create(&apikey).Error; err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
@@ -166,10 +166,10 @@ func CreateAppkey(c *gin.Context) {
 		// 1.0.0 <= this version < 2.0.0 !!
 	}
 
-	c.JSON(201, appkey)
+	c.JSON(201, apikey)
 }
 
-func UpdateAppkey(c *gin.Context) {
+func UpdateApikey(c *gin.Context) {
 	ver, err := version.New(c)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -178,20 +178,20 @@ func UpdateAppkey(c *gin.Context) {
 
 	db := dbpkg.DBInstance(c)
 	id := c.Params.ByName("id")
-	appkey := models.Appkey{}
+	apikey := models.Apikey{}
 
-	if db.First(&appkey, id).Error != nil {
-		content := gin.H{"error": "appkey with id#" + id + " not found"}
+	if db.First(&apikey, id).Error != nil {
+		content := gin.H{"error": "apikey with id#" + id + " not found"}
 		c.JSON(404, content)
 		return
 	}
 
-	if err := c.Bind(&appkey); err != nil {
+	if err := c.Bind(&apikey); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := db.Save(&appkey).Error; err != nil {
+	if err := db.Save(&apikey).Error; err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
@@ -201,10 +201,10 @@ func UpdateAppkey(c *gin.Context) {
 		// 1.0.0 <= this version < 2.0.0 !!
 	}
 
-	c.JSON(200, appkey)
+	c.JSON(200, apikey)
 }
 
-func DeleteAppkey(c *gin.Context) {
+func DeleteApikey(c *gin.Context) {
 	ver, err := version.New(c)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -213,15 +213,15 @@ func DeleteAppkey(c *gin.Context) {
 
 	db := dbpkg.DBInstance(c)
 	id := c.Params.ByName("id")
-	appkey := models.Appkey{}
+	apikey := models.Apikey{}
 
-	if db.First(&appkey, id).Error != nil {
-		content := gin.H{"error": "appkey with id#" + id + " not found"}
+	if db.First(&apikey, id).Error != nil {
+		content := gin.H{"error": "apikey with id#" + id + " not found"}
 		c.JSON(404, content)
 		return
 	}
 
-	if err := db.Delete(&appkey).Error; err != nil {
+	if err := db.Delete(&apikey).Error; err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}

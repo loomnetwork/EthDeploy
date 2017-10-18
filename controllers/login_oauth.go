@@ -2,16 +2,18 @@ package controllers
 
 import (
 	"context"
-	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 
-	"golang.org/x/oauth2"
+	dbpkg "github.com/loomnetwork/dashboard/db"
 
 	"github.com/gin-gonic/gin"
+	"github.com/loomnetwork/dashboard/models"
+	uuid "github.com/satori/go.uuid"
+	log "github.com/sirupsen/logrus"
+	"golang.org/x/oauth2"
 )
 
 func Login(c *gin.Context) {
@@ -43,11 +45,7 @@ func RedirectOauth(c *gin.Context) {
 	conf.RedirectURL = fmt.Sprintf("http://127.0.0.1:8080/oauth/callback")
 	conf.AuthCodeURL("state", oauth2.AccessTypeOffline)
 
-	// add transport for self-signed certificate to context
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
-	}
-	sslcli := &http.Client{Transport: tr}
+	sslcli := &http.Client{}
 	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, sslcli)
 
 	code := c.Query("code")
@@ -83,12 +81,55 @@ func RedirectOauth(c *gin.Context) {
 func LoginOauth(c *gin.Context) {
 	la := &LoginAuth{ApiKey: ""}
 
+	auth := c.GetHeader("Authorization")
+
+	email := extractLinkedInEmailAuthString(auth)
+
+	la.Email = email
+	if len(email) > 0 {
+		getOrCreateApiKey(c, email)
+	}
+
 	//			c.JSON(400, gin.H{"error": err.Error()})
 	if _, ok := c.GetQuery("pretty"); ok {
 		c.IndentedJSON(200, la)
 	} else {
 		c.JSON(200, la)
 	}
+}
+
+func getOrCreateApiKey(c *gin.Context, email string) string {
+	var account models.Account
+	db := dbpkg.DBInstance(c)
+
+	if err := db.First(&account, "email = ?", email).Error; err != nil {
+		log.WithField("error", err).Warn("Failed retrieving user, will try and create")
+
+		account := models.Account{}
+		account.Email = email
+
+		if err := db.Create(&account).Error; err != nil {
+			log.WithField("error", err).Warn("Failed creating account")
+			return ""
+		}
+
+		return ""
+	}
+	var apikey models.Apikey
+	// Ok we have an account, see if they have an api key first
+	if err := db.First(&apikey, "account_id = ?", account.ID).Error; err != nil {
+		log.WithField("error", err).Info("Failed retrieving apikey, will try and create")
+
+		apikey := &models.Apikey{}
+		apikey.AccountID = apikey.ID
+		apikey.Key = uuid.NewV4().String()
+
+		if err := db.Create(&apikey).Error; err != nil {
+			log.WithField("error", err).Info("Failed creating apikey")
+			return ""
+		}
+	}
+	return apikey.Key
 }
 
 /*
@@ -105,6 +146,37 @@ type LoginAuth struct {
 func extractLinkedInEmail(c *http.Client) string {
 	peopleURL := "https://api.linkedin.com/v1/people/~:(email-address)?format=json"
 	resp, err := c.Get(peopleURL)
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 { // OK
+		fmt.Printf("bad response code %d\n", resp.StatusCode)
+	}
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	bodyString := string(bodyBytes)
+	fmt.Printf(bodyString)
+
+	var email LinkedinEmail
+	err = json.Unmarshal(bodyBytes, &email)
+	if err != nil {
+		fmt.Println("error:", err)
+		return ""
+	}
+
+	return email.Email
+}
+
+func extractLinkedInEmailAuthString(auth string) string {
+	peopleURL := "https://api.linkedin.com/v1/people/~:(email-address)?format=json"
+
+	req, err := http.NewRequest("GET", peopleURL, nil)
+	req.Header.Add("Authorization", auth)
+
+	c := &http.Client{}
+	resp, err := c.Do(req)
 
 	defer resp.Body.Close()
 

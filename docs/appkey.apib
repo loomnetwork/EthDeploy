@@ -1,13 +1,13 @@
-# Group Appkeys
-Welcome to the appkeys API. This API provides access to the appkeys service.
+# Group Apikeys
+Welcome to the apikeys API. This API provides access to the apikeys service.
 
-## appkeys [/appkeys]
+## apikeys [/apikeys]
 
-### Create appkey [POST]
+### Create apikey [POST]
 
-Create a new appkey
+Create a new apikey
 
-+ Request appkey (application/json; charset=utf-8)
++ Request apikey (application/json; charset=utf-8)
     + Headers
 
             Accept: application/vnd.loomnetwork+json
@@ -17,11 +17,11 @@ Create a new appkey
         + account form: (account)
 
 + Response 201 (application/json; charset=utf-8)
-    + Attributes (appkey, fixed)
+    + Attributes (apikey, fixed)
 
-### Get appkeys [GET]
+### Get apikeys [GET]
 
-Returns an appkey list.
+Returns an apikey list.
 
 + Request (application/json; charset=utf-8)
     + Headers
@@ -30,20 +30,20 @@ Returns an appkey list.
 
 + Response 200 (application/json; charset=utf-8)
     + Attributes (array, fixed)
-        + (appkey)
+        + (apikey)
 
-## appkey details [/appkeys/{id}]
+## apikey details [/apikeys/{id}]
 
 + Parameters
-    + id: `1` (enum[string]) - The ID of the desired appkey.
+    + id: `1` (enum[string]) - The ID of the desired apikey.
         + Members
             + `1`
             + `2`
             + `3`
 
-### Get appkey [GET]
+### Get apikey [GET]
 
-Returns an appkey.
+Returns an apikey.
 
 + Request (application/json; charset=utf-8)
     + Headers
@@ -51,13 +51,13 @@ Returns an appkey.
             Accept: application/vnd.loomnetwork+json
 
 + Response 200 (application/json; charset=utf-8)
-    + Attributes (appkey, fixed)
+    + Attributes (apikey, fixed)
 
-### Update appkey [PUT]
+### Update apikey [PUT]
 
-Update an appkey.
+Update an apikey.
 
-+ Request appkey (application/json; charset=utf-8)
++ Request apikey (application/json; charset=utf-8)
     + Headers
 
             Accept: application/vnd.loomnetwork+json
@@ -67,11 +67,11 @@ Update an appkey.
         + account form: (account)
 
 + Response 200 (application/json; charset=utf-8)
-    + Attributes (appkey, fixed)
+    + Attributes (apikey, fixed)
 
-### Delete appkey [DELETE]
+### Delete apikey [DELETE]
 
-Delete an appkey.
+Delete an apikey.
 
 + Request (application/json; charset=utf-8)
     + Headers
@@ -81,7 +81,7 @@ Delete an appkey.
 + Response 204
 
 # Data Structures
-## appkey (object)
+## apikey (object)
 
 + id: *1* (number)
 + key: *KEY* (string)

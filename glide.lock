@@ -1,5 +1,5 @@
-hash: bf2e00d1217c064018ea7e9b0ac08b0e6132bece442ffecd75ee967ac71956fe
-updated: 2017-10-16T14:40:52.538458527+07:00
+hash: 945f5a24bf22c7ae56c22107bde2dee26a6c04849afa980254923591af8a6718
+updated: 2017-10-18T21:27:47.531523856+07:00
 imports:
 - name: github.com/gin-contrib/sse
   version: 22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae
@@ -11,7 +11,7 @@ imports:
   - binding
   - render
 - name: github.com/go-sql-driver/mysql
-  version: eb92a8dc628ca52501ddae1ed90eca7514f215bf
+  version: a0583e0143b1624142adab07e0e97fe106d99561
 - name: github.com/golang/protobuf
   version: 130e6b02ab059e7b717a096f397c5b60111cae74
   subpackages:
@@ -29,10 +29,12 @@ imports:
   version: 946bd9fbed05568b0f3cd188353d8aa28f38b688
   subpackages:
   - internal/socket
+- name: github.com/satori/go.uuid
+  version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/serenize/snaker
   version: c7a77c38c398a5468cac9579c3b2b1de22fb4da6
 - name: github.com/ugorji/go
-  version: f76f59a92f8224c695c0e2c401b9ad17e820a8f5
+  version: f26fc641ec9d52a2161443cf9bb9fd53b9062a22
   subpackages:
   - codec
 - name: github.com/xenolf/lego
@@ -62,7 +64,7 @@ imports:
   subpackages:
   - rate
 - name: google.golang.org/appengine
-  version: a2e0dc829727a4f957a7428b1f322805cfc1f362
+  version: 24e4144ec923c2374f6b06610c0df16a9222c3d9
   subpackages:
   - internal
   - internal/base
@@ -79,7 +81,7 @@ imports:
   - cipher
   - json
 - name: gopkg.in/yaml.v2
-  version: 4c78c975fe7c825c6d1466c42be594d1d6f3aba6
+  version: eb3733d160e74a9c7e442f435eb3bea458e1d19f
 - name: rsc.io/letsencrypt
   version: 33926faef6d434b854ea994228f11d0185faa0c1
 testImports: []

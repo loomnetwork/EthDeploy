@@ -20,8 +20,8 @@ func APIEndpoints(c *gin.Context) {
 	resources := map[string]string{
 		"accounts_url":     baseURL + "/accounts",
 		"account_url":      baseURL + "/accounts/{id}",
-		"appkeys_url":      baseURL + "/appkeys",
-		"appkey_url":       baseURL + "/appkeys/{id}",
+		"apikeys_url":      baseURL + "/apikeys",
+		"apikey_url":       baseURL + "/apikeys/{id}",
 		"applications_url": baseURL + "/applications",
 		"application_url":  baseURL + "/applications/{id}",
 		"upload_url":       baseURL + "/upload",

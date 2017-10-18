@@ -29,11 +29,11 @@ func Initialize(r *gin.Engine) {
 		api.PUT("/accounts/:id", controllers.UpdateAccount)
 		api.DELETE("/accounts/:id", controllers.DeleteAccount)
 
-		api.GET("/appkeys", controllers.GetAppkeys)
-		api.GET("/appkeys/:id", controllers.GetAppkey)
-		api.POST("/appkeys", controllers.CreateAppkey)
-		api.PUT("/appkeys/:id", controllers.UpdateAppkey)
-		api.DELETE("/appkeys/:id", controllers.DeleteAppkey)
+		api.GET("/apikeys", controllers.GetApikeys)
+		api.GET("/apikeys/:id", controllers.GetApikey)
+		api.POST("/apikeys", controllers.CreateApikey)
+		api.PUT("/apikeys/:id", controllers.UpdateApikey)
+		api.DELETE("/apikeys/:id", controllers.DeleteApikey)
 
 		api.GET("/applications", controllers.GetApplications)
 		api.GET("/applications/:id", controllers.GetApplication)

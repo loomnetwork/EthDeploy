@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/loomnetwork/dashboard/config"
 	"github.com/loomnetwork/dashboard/middleware"
 	"github.com/loomnetwork/dashboard/router"
 
@@ -9,9 +10,10 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func Setup(db *gorm.DB) *gin.Engine {
+func Setup(db *gorm.DB, c *config.Config) *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.SetDBtoContext(db))
-	router.Initialize(r)
+	r.Use(middleware.SetConfigtoContext(c))
+	router.Initialize(r, c)
 	return r
 }

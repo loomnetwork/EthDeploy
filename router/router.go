@@ -3,6 +3,7 @@ package router
 import (
 	"os"
 
+	"github.com/loomnetwork/dashboard/config"
 	"github.com/loomnetwork/dashboard/controllers"
 
 	"github.com/gin-contrib/sessions"
@@ -10,7 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Initialize(r *gin.Engine) {
+func Initialize(r *gin.Engine, c *config.Config) {
+	//TODO potentially just put the config into the gin context
+
 	r.LoadHTMLGlob("templates/**/*")
 
 	s := static.Serve("/assets", static.LocalFile("static", true))

@@ -1,5 +1,5 @@
-hash: f8f134fd7b341a3dab88361ac71a8e3de662c59ebf9e8843280e2bdc055a460e
-updated: 2017-10-18T23:15:57.747838206+07:00
+hash: 4ea24e13ff556558abf51a39479e593fe328f80d23dadd74cb4f948eb688e0ff
+updated: 2017-10-19T16:20:06.297263437+07:00
 imports:
 - name: github.com/boj/redistore
   version: 4562487a4bee9a7c272b72bfaeda4917d0a47ab9
@@ -37,6 +37,8 @@ imports:
   version: e59506cc896acb7f7bf732d4fdf5e25f7ccd8983
 - name: github.com/gorilla/sessions
   version: a3acf13e802c358d65f249324d14ed24aac11370
+- name: github.com/ianschenck/envflag
+  version: 9111d830d133f952887a936367fb0211c3134f0d
 - name: github.com/jinzhu/gorm
   version: 5174cc5c242a728b435ea2be8a2f7f998e15429b
   subpackages:
@@ -46,6 +48,10 @@ imports:
   version: 1c35d901db3da928c72a72d8458480cc9ade058f
 - name: github.com/kidstuff/mongostore
   version: 256d65ac5b0e35e7c5ebb3f175c0bed1e5c2b253
+- name: github.com/loomnetwork/client
+  version: 5ff65ac776da28201ab02b993624d9b36af4727b
+  subpackages:
+  - config
 - name: github.com/mattn/go-isatty
   version: a5cdd64afdee435007ee3e9f6ed4684af949d568
 - name: github.com/miekg/dns

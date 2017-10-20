@@ -13,9 +13,9 @@ func SetDBtoContext(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func SetConfigtoContext(config *config.Config) gin.HandlerFunc {
+func SetConfigtoContext(conf *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Set("CONFIG", config)
+		c.Set(config.DefaultKey, conf)
 		c.Next()
 	}
 }

@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/loomnetwork/dashboard/config"
 	dbpkg "github.com/loomnetwork/dashboard/db"
 
 	"github.com/gin-contrib/sessions"
@@ -73,7 +74,8 @@ func RedirectOauthLinkedIn(c *gin.Context) {
 func redirectOauth(c *gin.Context, conf *oauth2.Config, provider string) {
 	// Redirect user to consent page to ask for permission
 	// for the scopes specified above.
-	conf.RedirectURL = fmt.Sprintf("http://127.0.0.1:8080/oauth/callback_%s", provider)
+	configuration := config.Default(c)
+	conf.RedirectURL = fmt.Sprintf("%s/oauth/callback_%s", configuration.ServerHost, provider)
 	conf.AuthCodeURL("state", oauth2.AccessTypeOffline)
 
 	sslcli := &http.Client{}

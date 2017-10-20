@@ -18,6 +18,7 @@ func main() {
 	bindAddr := envflag.String("BIND_ADDR", ":8080", "What address to bind the main webserver to")
 	betaMode := envflag.Bool("BETA_MODE", true, "Requires whitelisting to create an account")
 	level := envflag.String("LOG_LEVEL", "debug", "Log level minimum to output. Info/Debug/Warn")
+	serverHost := envflag.String("SERVER_HOST", "http://127.0.0.1:8080", "Hostname for server, useful for absolute redirects and oauth")
 
 	envflag.Parse()
 
@@ -39,8 +40,9 @@ func main() {
 	}
 
 	config := &config.Config{
-		DemoMode: *demo,
-		BetaMode: *betaMode,
+		DemoMode:   *demo,
+		BetaMode:   *betaMode,
+		ServerHost: *serverHost,
 	}
 
 	database := db.Connect()

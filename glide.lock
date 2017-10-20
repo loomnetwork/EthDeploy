@@ -1,5 +1,5 @@
 hash: 58239556fba22343e937ea8932db86f6d6854da7e77766b52f827db637e6f331
-updated: 2017-10-20T17:11:45.854930376+07:00
+updated: 2017-10-20T23:14:09.82813047+07:00
 imports:
 - name: github.com/boj/redistore
   version: 4562487a4bee9a7c272b72bfaeda4917d0a47ab9
@@ -84,6 +84,7 @@ imports:
 - name: golang.org/x/oauth2
   version: bb50c06baba3d0c76f9d125c0719093e315b5b44
   subpackages:
+  - github
   - internal
   - linkedin
 - name: golang.org/x/sys

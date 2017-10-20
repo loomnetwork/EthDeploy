@@ -27,7 +27,10 @@ func Dashboard(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	c.HTML(http.StatusOK, "login/login", gin.H{})
+	conf := config.Default(c)
+	c.HTML(http.StatusOK, "login/login", gin.H{
+		"serverbasepath": conf.ServerHost,
+	})
 }
 
 func Logout(c *gin.Context) {

@@ -27,7 +27,7 @@ func APIEndpoints(c *gin.Context) {
 		"upload_url":           baseURL + "/upload",
 		"login_oauth":          baseURL + "/login_oauth",
 		"beta_users_url":       baseURL + "/beta_users",
-		"beta_users_url":       baseURL + "/beta_users/{id}",
+		"beta_user_url":        baseURL + "/beta_users/{id}",
 		"deploy_histories_url": baseURL + "/deploy_histories",
 		"deploy_history_url":   baseURL + "/deploy_histories/{id}",
 	}

@@ -19,15 +19,20 @@ import (
 )
 
 func Dashboard(c *gin.Context) {
-	fmt.Printf("In dashboard\n")
 	c.HTML(http.StatusOK, "dashboard/dashboard", gin.H{
 		"loggedIn": true,
 	})
 }
 
 func Login(c *gin.Context) {
-	fmt.Printf("In Login\n")
 	c.HTML(http.StatusOK, "login/login", gin.H{})
+}
+
+func Logout(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Clear()
+	session.Save()
+	c.Redirect(302, "/")
 }
 
 func RedirectOauth(c *gin.Context) {
@@ -76,7 +81,9 @@ func RedirectOauth(c *gin.Context) {
 		_, accountID := getOrCreateApiKey(c, email)
 		//Set Cookie for api key
 		session := sessions.Default(c)
+		log.WithField("account_id", session.Get("account_id")).Info("previous user")
 
+		log.WithField("account_id", accountID).Info("logging user in")
 		session.Set("account_id", accountID)
 		session.Save()
 	}
@@ -97,6 +104,7 @@ func LoginOauth(c *gin.Context) {
 		la.ApiKey, _ = getOrCreateApiKey(c, email)
 	}
 
+	//right now errors give blank apikey, maybe we should return error instead
 	//			c.JSON(400, gin.H{"error": err.Error()})
 	if _, ok := c.GetQuery("pretty"); ok {
 		c.IndentedJSON(200, la)
@@ -126,15 +134,20 @@ func getOrCreateApiKey(c *gin.Context, email string) (string, string) {
 	if err := db.First(&apikey, "account_id = ?", account.ID).Error; err != nil {
 		log.WithField("error", err).Info("Failed retrieving apikey, will try and create")
 
-		apikey.AccountID = apikey.ID
+		apikey.AccountID = account.ID
 		apikey.Key = uuid.NewV4().String()
 
 		if err := db.Create(&apikey).Error; err != nil {
 			log.WithField("error", err).Info("Failed creating apikey")
 			return "", ""
 		}
+		//Ok lets get the new account ID
+		if err := db.First(&account, "email = ?", email).Error; err != nil {
+			log.WithField("error", err).Info("Failed reading accountID")
+			return "", ""
+		}
 	}
-	acid := fmt.Sprintf("%d", apikey.AccountID) //TODO switch to using a GUID for IDs
+	acid := fmt.Sprintf("%d", account.ID) //TODO switch to using a GUID for IDs
 	return apikey.Key, acid
 }
 

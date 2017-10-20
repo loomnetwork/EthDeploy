@@ -2,10 +2,10 @@ package router
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/loomnetwork/dashboard/config"
 	"github.com/loomnetwork/dashboard/controllers"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/static"
@@ -16,36 +16,30 @@ func LoggedInMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 		accountID := session.Get("account_id")
-		fmt.Printf("debug in logged in middleware --\n")
+		fmt.Printf("debug in logged in middleware --%v\n", accountID)
 
 		if accountID != nil && len(accountID.(string)) > 0 {
-			fmt.Printf("User logged in --%s\n", accountID)
+			log.WithField("account_id", accountID).Debug("[AuthFilter] User is logged in")
 
 			//do something here
 			c.Next()
 		} else {
-			fmt.Printf("No user is logged in, redirect to login")
+			log.Debug("[AuthFilter]No user is logged in, redirect to login")
 			c.Redirect(302, "/login")
 		}
 	}
 }
 
 func Initialize(r *gin.Engine, c *config.Config) {
-	secret := os.Getenv("COOKIE_SECRET")
-	if secret == "" {
-		secret = "123213312fdsjdsflkjdsfajkafsd"
-	}
-
-	//TODO: when do sessions get invalidated?
-	store := sessions.NewCookieStore([]byte(secret))
-	r.Use(sessions.Sessions("mysession", store))
 
 	s := static.Serve("/assets", static.LocalFile("static", true))
 	r.Use(s)
 
 	r.GET("/login", controllers.Login)
+	r.GET("/logout", controllers.Logout)
 
 	if c.DemoMode == false {
+		//TODO how can we group calls together?
 		r.Use(LoggedInMiddleWare())
 	}
 	r.GET("/", controllers.Dashboard)

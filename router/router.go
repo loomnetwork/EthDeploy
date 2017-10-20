@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/loomnetwork/dashboard/config"
@@ -11,10 +12,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Initialize(r *gin.Engine, c *config.Config) {
-	//TODO potentially just put the config into the gin context
+func LoggedInMiddleWare() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		fmt.Printf("debug in logged in middleware --")
+		//do something here
+		c.Next()
+	}
+}
 
-	r.LoadHTMLGlob("templates/**/*")
+func Initialize(r *gin.Engine, c *config.Config) {
+	//r.LoadHTMLGlob("templates/**/*")
+	if c.DemoMode == false {
+		r.Use(LoggedInMiddleWare())
+	}
 
 	s := static.Serve("/assets", static.LocalFile("static", true))
 	r.Use(s)
@@ -25,9 +35,13 @@ func Initialize(r *gin.Engine, c *config.Config) {
 	store := sessions.NewCookieStore([]byte(secret))
 	r.Use(sessions.Sessions("mysession", store))
 
-	r.GET("/", controllers.Login)
+	r.GET("/", controllers.Dashboard)
+	r.GET("/login", controllers.Login)
+
 	r.GET("/apis.json", controllers.APIEndpoints)
 
+	//Apis require api key or logged in session
+	//TODO have middleware set the logged account based on the api key or the session cookie
 	api := r.Group("")
 	{
 

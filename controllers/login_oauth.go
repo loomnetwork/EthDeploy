@@ -18,10 +18,16 @@ import (
 	"golang.org/x/oauth2/linkedin"
 )
 
-func Login(c *gin.Context) {
-	c.HTML(http.StatusOK, "application.tmpl", gin.H{
-		"title": "Loom Network Login",
+func Dashboard(c *gin.Context) {
+	fmt.Printf("In dashboard\n")
+	c.HTML(http.StatusOK, "dashboard/dashboard", gin.H{
+		"loggedIn": true,
 	})
+}
+
+func Login(c *gin.Context) {
+	fmt.Printf("In Login\n")
+	//c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
 
 func RedirectOauth(c *gin.Context) {
@@ -47,7 +53,6 @@ func RedirectOauth(c *gin.Context) {
 	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, sslcli)
 
 	code := c.Query("code")
-	apikey := ""
 	email := ""
 	if code != "" {
 		// Exchange will do the handshake to retrieve the initial access token.
@@ -76,10 +81,7 @@ func RedirectOauth(c *gin.Context) {
 		session.Save()
 	}
 
-	c.HTML(http.StatusOK, "dashboard.tmpl", gin.H{
-		"title":  "Dashboard",
-		"apikey": apikey,
-	})
+	c.Redirect(302, "/")
 }
 
 //Api calls

@@ -1,10 +1,11 @@
-{{ define "dashboard.tmpl" }}
+{{define "content"}}
 
 	{{template "_dashboard-status.tmpl"}}
 	{{template "_dashboard-nav.tmpl"}}
 
 	<div class="tab-content">
-		{{template "_overview.tmpl"}}
+		{{template "_overview.tmpl" .}}
 	</div>
 
 {{ end }}
+

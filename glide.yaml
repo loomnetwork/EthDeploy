@@ -17,3 +17,4 @@ import:
   version: ~1.1.0
 - package: github.com/gin-contrib/sessions
 - package: github.com/ianschenck/envflag
+- package: github.com/loomnetwork/ez-gin-template

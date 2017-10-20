@@ -1,5 +1,5 @@
-hash: 4ea24e13ff556558abf51a39479e593fe328f80d23dadd74cb4f948eb688e0ff
-updated: 2017-10-19T16:20:06.297263437+07:00
+hash: 58239556fba22343e937ea8932db86f6d6854da7e77766b52f827db637e6f331
+updated: 2017-10-20T16:33:42.179968325+07:00
 imports:
 - name: github.com/boj/redistore
   version: 4562487a4bee9a7c272b72bfaeda4917d0a47ab9
@@ -48,12 +48,12 @@ imports:
   version: 1c35d901db3da928c72a72d8458480cc9ade058f
 - name: github.com/kidstuff/mongostore
   version: 256d65ac5b0e35e7c5ebb3f175c0bed1e5c2b253
-- name: github.com/loomnetwork/client
-  version: 5ff65ac776da28201ab02b993624d9b36af4727b
-  subpackages:
-  - config
+- name: github.com/loomnetwork/ez-gin-template
+  version: 62d72f3de7af3aa8eededd45c3c5c2db26b89573
 - name: github.com/mattn/go-isatty
   version: a5cdd64afdee435007ee3e9f6ed4684af949d568
+- name: github.com/michelloworld/ez-gin-template
+  version: 16500de79a13b17b366f23fc44f0a5e75c8e8fa8
 - name: github.com/miekg/dns
   version: 946bd9fbed05568b0f3cd188353d8aa28f38b688
   subpackages:

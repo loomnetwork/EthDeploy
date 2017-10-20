@@ -14,6 +14,7 @@ func main() {
 
 	demo := envflag.Bool("DEMO_MODE", true, "Enable demo mode for investors")
 	bindAddr := envflag.String("BIND_ADDR", ":8080", "What address to bind the main webserver to")
+	betaMode := envflag.Bool("BETA_MODE", true, "Requires whitelisting to create an account")
 
 	envflag.Parse()
 
@@ -23,6 +24,7 @@ func main() {
 
 	config := &config.Config{
 		DemoMode: *demo,
+		BetaMode: *betaMode,
 	}
 
 	database := db.Connect()

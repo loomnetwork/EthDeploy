@@ -37,6 +37,8 @@ func Initialize(r *gin.Engine, c *config.Config) {
 
 	r.GET("/login", controllers.Login)
 	r.GET("/logout", controllers.Logout)
+	r.POST("/login_oauth", controllers.LoginOauth)
+	r.GET("/oauth/callback", controllers.RedirectOauth)
 
 	if c.DemoMode == false {
 		//TODO how can we group calls together?
@@ -50,10 +52,7 @@ func Initialize(r *gin.Engine, c *config.Config) {
 	//TODO have middleware set the logged account based on the api key or the session cookie
 	api := r.Group("")
 	{
-
 		api.POST("/upload", controllers.UploadApplication)
-		api.POST("/login_oauth", controllers.LoginOauth)
-		api.GET("/oauth/callback", controllers.RedirectOauth)
 
 		api.GET("/accounts", controllers.GetAccounts)
 		api.GET("/accounts/:id", controllers.GetAccount)

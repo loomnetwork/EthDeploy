@@ -27,7 +27,7 @@ func Dashboard(c *gin.Context) {
 
 func Login(c *gin.Context) {
 	fmt.Printf("In Login\n")
-	//c.HTML(http.StatusOK, "index.tmpl", gin.H{})
+	c.HTML(http.StatusOK, "login/login", gin.H{})
 }
 
 func RedirectOauth(c *gin.Context) {

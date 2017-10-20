@@ -14,29 +14,41 @@ import (
 
 func LoggedInMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		fmt.Printf("debug in logged in middleware --")
-		//do something here
-		c.Next()
+		session := sessions.Default(c)
+		accountID := session.Get("account_id")
+		fmt.Printf("debug in logged in middleware --\n")
+
+		if accountID != nil && len(accountID.(string)) > 0 {
+			fmt.Printf("User logged in --%s\n", accountID)
+
+			//do something here
+			c.Next()
+		} else {
+			fmt.Printf("No user is logged in, redirect to login")
+			c.Redirect(302, "/login")
+		}
 	}
 }
 
 func Initialize(r *gin.Engine, c *config.Config) {
-	//r.LoadHTMLGlob("templates/**/*")
-	if c.DemoMode == false {
-		r.Use(LoggedInMiddleWare())
-	}
-
-	s := static.Serve("/assets", static.LocalFile("static", true))
-	r.Use(s)
 	secret := os.Getenv("COOKIE_SECRET")
 	if secret == "" {
 		secret = "123213312fdsjdsflkjdsfajkafsd"
 	}
+
+	//TODO: when do sessions get invalidated?
 	store := sessions.NewCookieStore([]byte(secret))
 	r.Use(sessions.Sessions("mysession", store))
 
-	r.GET("/", controllers.Dashboard)
+	s := static.Serve("/assets", static.LocalFile("static", true))
+	r.Use(s)
+
 	r.GET("/login", controllers.Login)
+
+	if c.DemoMode == false {
+		r.Use(LoggedInMiddleWare())
+	}
+	r.GET("/", controllers.Dashboard)
 
 	r.GET("/apis.json", controllers.APIEndpoints)
 

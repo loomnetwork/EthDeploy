@@ -1,8 +1,6 @@
 package router
 
 import (
-	"fmt"
-
 	"github.com/loomnetwork/dashboard/config"
 	"github.com/loomnetwork/dashboard/controllers"
 	log "github.com/sirupsen/logrus"
@@ -16,7 +14,10 @@ func LoggedInMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 		accountID := session.Get("account_id")
-		fmt.Printf("debug in logged in middleware --%v\n", accountID)
+
+		//Check if there is an apikey header for commandline clients
+
+		//If we find one, look it up in the database and set it into the gin context
 
 		if accountID != nil && len(accountID.(string)) > 0 {
 			log.WithField("account_id", accountID).Debug("[AuthFilter] User is logged in")
@@ -38,7 +39,9 @@ func Initialize(r *gin.Engine, c *config.Config) {
 	r.GET("/login", controllers.Login)
 	r.GET("/logout", controllers.Logout)
 	r.POST("/login_oauth", controllers.LoginOauth)
-	r.GET("/oauth/callback", controllers.RedirectOauth)
+	//Is there a cleaner way then multiple urls?
+	r.GET("/oauth/callback_linkedin", controllers.RedirectOauthLinkedIn)
+	r.GET("/oauth/callback_github", controllers.RedirectOauthGithub)
 
 	if c.DemoMode == false {
 		//TODO how can we group calls together?

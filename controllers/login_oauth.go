@@ -15,6 +15,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/github"
 	"golang.org/x/oauth2/linkedin"
 )
 
@@ -35,7 +36,25 @@ func Logout(c *gin.Context) {
 	c.Redirect(302, "/")
 }
 
-func RedirectOauth(c *gin.Context) {
+func RedirectOauthGithub(c *gin.Context) {
+	provider := "github"
+	clientID := ""
+	clientSecret := ""
+
+	//TODO what does github need????
+	scopes := []string{"r_emailaddress", "r_basicprofile"} // []string{"account"},
+
+	conf := &oauth2.Config{
+		ClientID:     clientID,     // also known as slient key sometimes
+		ClientSecret: clientSecret, // also known as secret key
+		Scopes:       scopes,
+		Endpoint:     github.Endpoint,
+	}
+	redirectOauth(c, conf, provider)
+}
+
+func RedirectOauthLinkedIn(c *gin.Context) {
+	provider := "linkedin"
 	clientID := "86zs2w1g2j8hfu"
 	clientSecret := "mBd0gDHQdEwSRgt8"
 
@@ -48,10 +67,13 @@ func RedirectOauth(c *gin.Context) {
 		Scopes:       scopes,
 		Endpoint:     linkedin.Endpoint,
 	}
+	redirectOauth(c, conf, provider)
+}
 
+func redirectOauth(c *gin.Context, conf *oauth2.Config, provider string) {
 	// Redirect user to consent page to ask for permission
 	// for the scopes specified above.
-	conf.RedirectURL = fmt.Sprintf("http://127.0.0.1:8080/oauth/callback")
+	conf.RedirectURL = fmt.Sprintf("http://127.0.0.1:8080/oauth/callback_%s", provider)
 	conf.AuthCodeURL("state", oauth2.AccessTypeOffline)
 
 	sslcli := &http.Client{}
@@ -72,8 +94,15 @@ func RedirectOauth(c *gin.Context) {
 		fmt.Printf("got client %v", client)
 
 		//TODO figure out which provider it is?
-		email = extractLinkedInEmail(client, "")
-		fmt.Printf("got email %s", email)
+		if provider == "linkedin" {
+			email = extractLinkedInEmail(client, "")
+			fmt.Printf("got email %s", email)
+		} else if provider == "linkedin" {
+			email = extractGithubEmail(client, "")
+			fmt.Printf("got email %s", email)
+		} else {
+			log.WithField("provider", provider).Error("unknown provider")
+		}
 	}
 
 	//redirect to dashboard
@@ -207,9 +236,13 @@ type GithubEmail struct {
 	Verified uint   `json:"verified,omitempty" form:"id"`
 }
 
-func extractGithubEmail(c *http.Client) string {
+func extractGithubEmail(c *http.Client, auth string) string {
 	githubEmailURL := "https://api.github.com/user/emails"
-	resp, err := c.Get(githubEmailURL)
+	req, err := http.NewRequest("GET", githubEmailURL, nil)
+	if auth != "" {
+		req.Header.Add("Authorization", auth)
+	}
+	resp, err := c.Do(req)
 
 	defer resp.Body.Close()
 

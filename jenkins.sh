@@ -22,4 +22,4 @@ docker push $DOC_IMAGE
 export IMAGE=dashboard
 
 
-ssh root@128.199.83.146 "docker pull loomnetwork/${IMAGE}:$REV && docker stop ${IMAGE}; true && docker rm ${IMAGE}; true && docker run  --log-driver=syslog -d -v /dev/log:/dev/log -e AUTOMIGRATE=1 -e DATABASE_PASS=power2edit -e \"LETSENCRYPT_HOST=dashboard.loomx.io\" -e \"LETSENCRYPT_EMAIL=team@loomx.com\" -e \"VIRTUAL_HOST=dashboard.loomx.io\" -e DATABASE_HOST=172.17.0.1 -p 8081:8080 --name ${IMAGE} loomnetwork/${IMAGE}:$REV && docker update --restart=always ${IMAGE}"
+ssh root@128.199.83.146 "docker pull loomnetwork/${IMAGE}:$REV && docker stop ${IMAGE}; true && docker rm ${IMAGE}; true && docker run  --log-driver=syslog -d -v /dev/log:/dev/log -e SERVER_HOST=\"https://dashboard.loomx.io\" -e DEMO_MODE=false -e BETA_MODE=false  -e GIN_MODE=release -e LOG_LEVEL=debug  -e AUTOMIGRATE=1 -e DATABASE_PASS=power2edit -e \"LETSENCRYPT_HOST=dashboard.loomx.io\" -e \"LETSENCRYPT_EMAIL=team@loomx.com\" -e \"VIRTUAL_HOST=dashboard.loomx.io\" -e DATABASE_HOST=172.17.0.1 -p 8081:8080 --name ${IMAGE} loomnetwork/${IMAGE}:$REV && docker update --restart=always ${IMAGE}"

@@ -1,13 +1,11 @@
 package server
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"github.com/loomnetwork/dashboard/config"
 	"github.com/loomnetwork/dashboard/middleware"
 	"github.com/loomnetwork/dashboard/router"
-
-	"github.com/gin-gonic/gin"
-
-	"github.com/jinzhu/gorm"
 )
 
 func Setup(db *gorm.DB, c *config.Config) *gin.Engine {

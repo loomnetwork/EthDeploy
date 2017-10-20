@@ -9,6 +9,7 @@ import (
 
 	dbpkg "github.com/loomnetwork/dashboard/db"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/loomnetwork/dashboard/models"
 	uuid "github.com/satori/go.uuid"
@@ -47,6 +48,7 @@ func RedirectOauth(c *gin.Context) {
 
 	code := c.Query("code")
 	apikey := ""
+	email := ""
 	if code != "" {
 		// Exchange will do the handshake to retrieve the initial access token.
 		tok, err := conf.Exchange(ctx, code)
@@ -60,13 +62,19 @@ func RedirectOauth(c *gin.Context) {
 		fmt.Printf("got client %v", client)
 
 		//TODO figure out which provider it is?
-		email := extractLinkedInEmail(client, "")
+		email = extractLinkedInEmail(client, "")
 		fmt.Printf("got email %s", email)
 	}
 
-	//Set Cookie for api key
-
 	//redirect to dashboard
+	if len(email) > 0 {
+		_, accountID := getOrCreateApiKey(c, email)
+		//Set Cookie for api key
+		session := sessions.Default(c)
+
+		session.Set("account_id", accountID)
+		session.Save()
+	}
 
 	c.HTML(http.StatusOK, "dashboard.tmpl", gin.H{
 		"title":  "Dashboard",
@@ -84,7 +92,7 @@ func LoginOauth(c *gin.Context) {
 
 	la.Email = email
 	if len(email) > 0 {
-		la.ApiKey = getOrCreateApiKey(c, email)
+		la.ApiKey, _ = getOrCreateApiKey(c, email)
 	}
 
 	//			c.JSON(400, gin.H{"error": err.Error()})
@@ -95,7 +103,7 @@ func LoginOauth(c *gin.Context) {
 	}
 }
 
-func getOrCreateApiKey(c *gin.Context, email string) string {
+func getOrCreateApiKey(c *gin.Context, email string) (string, string) {
 	var account models.Account
 	db := dbpkg.DBInstance(c)
 
@@ -107,7 +115,7 @@ func getOrCreateApiKey(c *gin.Context, email string) string {
 
 		if err := db.Create(&account).Error; err != nil {
 			log.WithField("error", err).Warn("Failed creating account")
-			return ""
+			return "", ""
 		}
 	}
 	fmt.Printf("almost\n")
@@ -121,11 +129,11 @@ func getOrCreateApiKey(c *gin.Context, email string) string {
 
 		if err := db.Create(&apikey).Error; err != nil {
 			log.WithField("error", err).Info("Failed creating apikey")
-			return ""
+			return "", ""
 		}
 	}
-	fmt.Printf("wtf -- %s\n", apikey.Key)
-	return apikey.Key
+	acid := fmt.Sprintf("%d", apikey.AccountID) //TODO switch to using a GUID for IDs
+	return apikey.Key, acid
 }
 
 /*

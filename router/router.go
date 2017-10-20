@@ -75,5 +75,18 @@ func Initialize(r *gin.Engine, c *config.Config) {
 		api.PUT("/applications/:id", controllers.UpdateApplication)
 		api.DELETE("/applications/:id", controllers.DeleteApplication)
 
+		//Not sure we need to expose this, maybe just edit database
+		/*
+			api.GET("/beta_users", controllers.GetBetaUsers)
+			api.GET("/beta_users/:id", controllers.GetBetaUsers)
+			api.POST("/beta_users", controllers.CreateBetaUsers)
+			api.PUT("/beta_users/:id", controllers.UpdateBetaUsers)
+			api.DELETE("/beta_users/:id", controllers.DeleteBetaUsers)
+		*/
+		api.GET("/deploy_histories", controllers.GetDeployHistories)
+		api.GET("/deploy_histories/:id", controllers.GetDeployHistory)
+		api.POST("/deploy_histories", controllers.CreateDeployHistory)
+		api.PUT("/deploy_histories/:id", controllers.UpdateDeployHistory)
+		api.DELETE("/deploy_histories/:id", controllers.DeleteDeployHistory)
 	}
 }

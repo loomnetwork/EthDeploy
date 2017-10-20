@@ -1,0 +1,90 @@
+# Group DeployHistories
+Welcome to the deploy histories API. This API provides access to the deploy histories service.
+
+## deploy histories [/deploy_histories]
+
+### Create deploy history [POST]
+
+Create a new deploy history
+
++ Request deploy history (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.loomnetwork+json
+    + Attributes
+
+        + account_id: 1 (number)
+        + application_id: 1 (number)
+        + version: 1 (number)
+
++ Response 201 (application/json; charset=utf-8)
+    + Attributes (deploy_history, fixed)
+
+### Get deploy histories [GET]
+
+Returns a deploy history list.
+
++ Request (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.loomnetwork+json
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (array, fixed)
+        + (deploy_history)
+
+## deploy history details [/deploy_histories/{id}]
+
++ Parameters
+    + id: `1` (enum[string]) - The ID of the desired deploy history.
+        + Members
+            + `1`
+            + `2`
+            + `3`
+
+### Get deploy history [GET]
+
+Returns a deploy history.
+
++ Request (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.loomnetwork+json
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (deploy_history, fixed)
+
+### Update deploy history [PUT]
+
+Update a deploy history.
+
++ Request deploy_history (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.loomnetwork+json
+    + Attributes
+
+        + account_id: 1 (number)
+        + application_id: 1 (number)
+        + version: 1 (number)
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (deploy_history, fixed)
+
+### Delete deploy history [DELETE]
+
+Delete a deploy history.
+
++ Request (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.loomnetwork+json
+
++ Response 204
+
+# Data Structures
+## deploy_history (object)
+
++ account_id: *1* (number)
++ application_id: *1* (number)
++ version: *1* (number)

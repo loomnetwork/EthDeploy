@@ -7,11 +7,11 @@
         <ul class="list-group">
           <li class="list-group-header">
             <img src="/assets/images/rocket.png" height="20" class="pr-2">
-            Loom Core Services</li>
+            Loom Infinity Fabric</li>
           <li class="list-group-item">DApp x 1</li>
           <li class="list-group-item">5GB Storage</li>
           <li class="list-group-item">500tx/sec</li>
-          <li class="list-group-item price bg-success">$15/month <span class="upgrade-button btn btn-outline-primary p-1">Upgrade Now..</span></li>
+          <li class="list-group-item price bg-info">$15/month <a class="upgrade-button btn btn-outline-primary p-1" href="#upgrade-modal" data-toggle="modal">Upgrade Now..</a></li>
         </ul>
         <ul class="list-group mt-5">
           <li class="list-group-header">
@@ -20,7 +20,7 @@
           <li class="list-group-item">Webhooks <span class="badge badge-info text-white">Trial</span></li>
           <li class="list-group-item">Scheduler <span class="badge badge-info text-white">Trial</span></li>
           <li class="list-group-item">Mailer <span class="badge badge-info text-white">Trial</span></li>
-          <li class="list-group-item price bg-success">$0/month <span class="upgrade-button btn btn-outline-primary p-1">Upgrade Now..</span></li>
+          <li class="list-group-item price bg-info">$0/month <a class="upgrade-button btn btn-outline-primary p-1" href="#upgrade-modal" data-toggle="modal">Upgrade Now..</a></li>
         </ul>
       </div>
       <div class="col-md-6 content">
@@ -71,9 +71,7 @@
           </div>
         </div>
 
-        <hr class="mt-5">
-
-        <div class="row">
+        <div class="row mt-2">
           <div class="col-md-6 mb-5">
             <div class="list-group mb-3">
               <h6 class="list-group-header">Top ABI Calls</h6>
@@ -162,5 +160,7 @@
           </div>
         </div>
 </div>
+
+{{template "_upgrade-modal.tmpl"}}
 
 {{end}}

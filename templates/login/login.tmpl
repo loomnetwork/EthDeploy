@@ -1,13 +1,19 @@
 
 {{define "content"}}
 
+<div class="col-md-4 mx-auto mt-5">
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Login Failed.</strong> Please try again or try using another method.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 
-<div class="login-card mx-auto mt-5">
-    <div class="list-group mb-3">
-      <h6 class="list-group-header bg-primary text-white">
-        Login Required
-      </h6>
-
+  <div class="login-card mt-5">
+      <div class="list-group mb-3">
+        <h6 class="list-group-header bg-primary text-white">
+          Login Required
+        </h6>
         <a class="list-group-item list-group-item-action justify-content-between d-flex" href="https://github.com/login/oauth/authorize?scope=user:email&client_id=a6abecccefa53842aba4">
           <span class="icon icon-github"></span>
           <span>Login with Github</span>
@@ -17,8 +23,8 @@
           <span class="icon icon-linkedin"></span>
           <span>Login with LinkedIn</span>
         </a>
-
-    </div>
+      </div>
+  </div>
 </div>
 
 {{ end }}

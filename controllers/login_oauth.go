@@ -22,7 +22,7 @@ import (
 
 var (
 	PROD_GITHUB_WEB_KEY    = "a6abecccefa53842aba4"
-	PROD_GITHUB_WEB_SECRET = "836d8c9c4dc0c06bfcfdd9089fc59265fdc67a8a"
+	PROD_GITHUB_WEB_SECRET = "1ee2a16122358308c556a08fbb487a4d1b7b4473"
 	DEV_GITHUB_KEY         = "08b87d778bb6c806bbd7"
 	DEV_GITHUB_SECRET      = "004f53d434b710e82a046f324e0865d820a18640"
 )
@@ -64,7 +64,7 @@ func RedirectOauthGithub(c *gin.Context) {
 		clientSecret = PROD_GITHUB_WEB_SECRET
 	}
 
-	scopes := []string{"email"}
+	scopes := []string{"user:email"}
 
 	conf := &oauth2.Config{
 		ClientID:     clientID,     // also known as slient key sometimes
@@ -150,7 +150,14 @@ func LoginOauth(c *gin.Context) {
 
 	auth := c.GetHeader("Authorization")
 
-	email := extractLinkedInEmail(&http.Client{}, auth)
+	email := ""
+	provider := c.GetHeader("Loom-Oauth-Provider")
+
+	if provider == "linkedin" {
+		email = extractLinkedInEmail(&http.Client{}, auth)
+	} else if provider == "github" {
+		email = extractGithubEmail(&http.Client{}, auth)
+	}
 
 	la.Email = email
 	if len(email) > 0 {

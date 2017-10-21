@@ -20,6 +20,12 @@ import (
 	"golang.org/x/oauth2/linkedin"
 )
 
+var (
+	PROD_GITHUB_WEB_KEY = "a6abecccefa53842aba4"
+	DEV_GITHUB_KEY      = "08b87d778bb6c806bbd7"
+	DEV_GITHUB_SECRET   = "004f53d434b710e82a046f324e0865d820a18640"
+)
+
 func Dashboard(c *gin.Context) {
 	c.HTML(http.StatusOK, "dashboard/dashboard", gin.H{
 		"loggedIn": true,
@@ -28,8 +34,11 @@ func Dashboard(c *gin.Context) {
 
 func Login(c *gin.Context) {
 	conf := config.Default(c)
+	githubClientID := DEV_GITHUB_KEY
+
 	c.HTML(http.StatusOK, "login/login", gin.H{
 		"serverbasepath": conf.ServerHost,
+		"githubClientID": githubClientID,
 	})
 }
 
@@ -42,11 +51,10 @@ func Logout(c *gin.Context) {
 
 func RedirectOauthGithub(c *gin.Context) {
 	provider := "github"
-	clientID := ""
-	clientSecret := ""
+	clientID := DEV_GITHUB_KEY
+	clientSecret := DEV_GITHUB_SECRET
 
-	//TODO what does github need????
-	scopes := []string{"r_emailaddress", "r_basicprofile"} // []string{"account"},
+	scopes := []string{"email"}
 
 	conf := &oauth2.Config{
 		ClientID:     clientID,     // also known as slient key sometimes
@@ -78,7 +86,8 @@ func redirectOauth(c *gin.Context, conf *oauth2.Config, provider string) {
 	// Redirect user to consent page to ask for permission
 	// for the scopes specified above.
 	configuration := config.Default(c)
-	conf.RedirectURL = fmt.Sprintf("%s/oauth/callback_%s", configuration.ServerHost, provider)
+	redirectURL := fmt.Sprintf("%s/oauth/callback_%s", configuration.ServerHost, provider)
+	conf.RedirectURL = redirectURL
 	conf.AuthCodeURL("state", oauth2.AccessTypeOffline)
 
 	sslcli := &http.Client{}
@@ -102,7 +111,7 @@ func redirectOauth(c *gin.Context, conf *oauth2.Config, provider string) {
 		if provider == "linkedin" {
 			email = extractLinkedInEmail(client, "")
 			fmt.Printf("got email %s", email)
-		} else if provider == "linkedin" {
+		} else if provider == "github" {
 			email = extractGithubEmail(client, "")
 			fmt.Printf("got email %s", email)
 		} else {
@@ -148,13 +157,12 @@ func LoginOauth(c *gin.Context) {
 }
 
 func getOrCreateApiKey(c *gin.Context, email string) (string, string) {
-	var account models.Account
+	account := models.Account{}
 	db := dbpkg.DBInstance(c)
 
 	if err := db.First(&account, "email = ?", email).Error; err != nil {
 		log.WithField("error", err).Warn("Failed retrieving user, will try and create")
 
-		account := models.Account{}
 		account.Email = email
 
 		if err := db.Create(&account).Error; err != nil {
@@ -173,11 +181,6 @@ func getOrCreateApiKey(c *gin.Context, email string) (string, string) {
 
 		if err := db.Create(&apikey).Error; err != nil {
 			log.WithField("error", err).Info("Failed creating apikey")
-			return "", ""
-		}
-		//Ok lets get the new account ID
-		if err := db.First(&account, "email = ?", email).Error; err != nil {
-			log.WithField("error", err).Info("Failed reading accountID")
 			return "", ""
 		}
 	}
@@ -236,9 +239,11 @@ func extractLinkedInEmail(c *http.Client, auth string) string {
     "visibility": "public"
   }
 ]*/
+
 type GithubEmail struct {
-	Email    string `json:"email,omitempty" form:"id"`
-	Verified uint   `json:"verified,omitempty" form:"id"`
+	Email    string `json:"email,omitempty"`
+	Verified bool   `json:"verified,omitempty""`
+	Primary  bool   `json:"primary,omitempty""`
 }
 
 func extractGithubEmail(c *http.Client, auth string) string {
@@ -248,7 +253,10 @@ func extractGithubEmail(c *http.Client, auth string) string {
 		req.Header.Add("Authorization", auth)
 	}
 	resp, err := c.Do(req)
-
+	if err != nil {
+		fmt.Println("error:", err)
+		return ""
+	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 { // OK
@@ -267,7 +275,11 @@ func extractGithubEmail(c *http.Client, auth string) string {
 		fmt.Println("error:", err)
 	}
 	if len(gemails) > 0 {
-		return gemails[0].Email
+		for _, email := range gemails {
+			if email.Verified == true && email.Primary == true {
+				return email.Email
+			}
+		}
 	}
 
 	return ""

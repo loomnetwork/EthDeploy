@@ -18,6 +18,7 @@ func main() {
 	inviteMode := envflag.Bool("INVITE_MODE", true, "Requires whitelisting to create an account")
 	level := envflag.String("LOG_LEVEL", "debug", "Log level minimum to output. Info/Debug/Warn")
 	serverHost := envflag.String("SERVER_HOST", "http://127.0.0.1:8080", "Hostname for server, useful for absolute redirects and oauth")
+	loomEnv := envflag.String("LOOM_ENV", "devlopment", "devlopment/staging/production")
 
 	envflag.Parse()
 
@@ -42,6 +43,7 @@ func main() {
 		DemoMode:       *demo,
 		InviteOnlyMode: *inviteMode,
 		ServerHost:     *serverHost,
+		Env:            *loomEnv,
 	}
 
 	database := db.Connect()

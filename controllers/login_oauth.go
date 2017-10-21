@@ -21,9 +21,10 @@ import (
 )
 
 var (
-	PROD_GITHUB_WEB_KEY = "a6abecccefa53842aba4"
-	DEV_GITHUB_KEY      = "08b87d778bb6c806bbd7"
-	DEV_GITHUB_SECRET   = "004f53d434b710e82a046f324e0865d820a18640"
+	PROD_GITHUB_WEB_KEY    = "a6abecccefa53842aba4"
+	PROD_GITHUB_WEB_SECRET = "836d8c9c4dc0c06bfcfdd9089fc59265fdc67a8a"
+	DEV_GITHUB_KEY         = "08b87d778bb6c806bbd7"
+	DEV_GITHUB_SECRET      = "004f53d434b710e82a046f324e0865d820a18640"
 )
 
 func Dashboard(c *gin.Context) {
@@ -33,11 +34,14 @@ func Dashboard(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	conf := config.Default(c)
+	cfg := config.Default(c)
 	githubClientID := DEV_GITHUB_KEY
+	if cfg.Env == "production" {
+		githubClientID = PROD_GITHUB_WEB_KEY
+	}
 
 	c.HTML(http.StatusOK, "login/login", gin.H{
-		"serverbasepath": conf.ServerHost,
+		"serverbasepath": cfg.ServerHost,
 		"githubClientID": githubClientID,
 	})
 }
@@ -53,6 +57,12 @@ func RedirectOauthGithub(c *gin.Context) {
 	provider := "github"
 	clientID := DEV_GITHUB_KEY
 	clientSecret := DEV_GITHUB_SECRET
+
+	cfg := config.Default(c)
+	if cfg.Env == "production" {
+		clientID = PROD_GITHUB_WEB_KEY
+		clientSecret = PROD_GITHUB_WEB_SECRET
+	}
 
 	scopes := []string{"email"}
 

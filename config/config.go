@@ -10,6 +10,7 @@ type Config struct {
 	DemoMode       bool   //Disables Auth and enables all UI
 	InviteOnlyMode bool   //Requires users to be whitelisted before creating an account
 	ServerHost     string // base domain, useful for absolute redirects and oauth
+	Env            string //Environment we are in
 }
 
 //Finding the config on the gin context

@@ -22,7 +22,7 @@ go get fresh
 
 Without hot reloading
 ```bash
-AUTOMIGRATE=1 go run main.go
+LOG_LEVEL=debug BETA_MODE=true INVITE_MODE=false  go run main.go
 ```
 
 With hot reloading
@@ -34,4 +34,17 @@ asset pipeline
 ```
 gulp #to compile it once
 gulp watch #to do autoreload
+```
+
+
+## config options
+
+Beta mode disables security and opens all features even just uncompleted ones
+```
+BETA_MODE=true
+```
+
+Invite mode requires people to be whitelisted before they can login
+```
+INVITE_MODE=false
 ```

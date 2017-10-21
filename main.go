@@ -13,10 +13,9 @@ import (
 
 // main ...
 func main() {
-
 	demo := envflag.Bool("DEMO_MODE", true, "Enable demo mode for investors")
 	bindAddr := envflag.String("BIND_ADDR", ":8080", "What address to bind the main webserver to")
-	betaMode := envflag.Bool("BETA_MODE", true, "Requires whitelisting to create an account")
+	inviteMode := envflag.Bool("INVITE_MODE", true, "Requires whitelisting to create an account")
 	level := envflag.String("LOG_LEVEL", "debug", "Log level minimum to output. Info/Debug/Warn")
 	serverHost := envflag.String("SERVER_HOST", "http://127.0.0.1:8080", "Hostname for server, useful for absolute redirects and oauth")
 
@@ -40,9 +39,9 @@ func main() {
 	}
 
 	config := &config.Config{
-		DemoMode:   *demo,
-		BetaMode:   *betaMode,
-		ServerHost: *serverHost,
+		DemoMode:       *demo,
+		InviteOnlyMode: *inviteMode,
+		ServerHost:     *serverHost,
 	}
 
 	database := db.Connect()

@@ -1,14 +1,24 @@
 
 {{define "content"}}
-<br>
-<br>
-<br>
-<br>
-<br>
 
 
- <a href="https://github.com/login/oauth/authorize?scope=user:email&client_id=a6abecccefa53842aba4">Login with Github</a>
+<div class="login-card mx-auto mt-5">
+    <div class="list-group mb-3">
+      <h6 class="list-group-header bg-primary text-white">
+        Login Required
+      </h6>
 
-<a href="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=86zs2w1g2j8hfu&redirect_uri={{.serverbasepath}}%2Foauth%2Fcallback_linkedin&state=634243432&scope=r_emailaddress,r_basicprofile">Login with LinkedIn</a>
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="https://github.com/login/oauth/authorize?scope=user:email&client_id=a6abecccefa53842aba4">
+          <span class="icon icon-github"></span>
+          <span>Login with Github</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=86zs2w1g2j8hfu&redirect_uri={{.serverbasepath}}%2Foauth%2Fcallback_linkedin&state=634243432&scope=r_emailaddress,r_basicprofile">
+          <span class="icon icon-linkedin"></span>
+          <span>Login with LinkedIn</span>
+        </a>
+
+    </div>
+</div>
 
 {{ end }}

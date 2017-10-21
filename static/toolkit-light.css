@@ -8837,4 +8837,9 @@ canvas {
   float: right;
   font-size: 12px; }
 
+.login-card {
+  width: 500px;
+  -webkit-box-shadow: 0 -4px 6px 2px rgba(206, 206, 206, 0.29);
+          box-shadow: 0 -4px 6px 2px rgba(206, 206, 206, 0.29); }
+
 /*# sourceMappingURL=assets/toolkit-light.css.map */

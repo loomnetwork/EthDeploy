@@ -113,10 +113,11 @@
     }
   }
 
-  min-height: 150px;
-  border: 2px solid rgba(0, 0, 0, 0.3);
-  background: white;
+  min-height: 344px;
+  border: 1px solid #ccc;
+  background: rgba(88, 203, 214, 0.1);
   padding: 20px 20px;
+  border-radius: 3px;
 
   &.dz-started {
     .dz-message {
@@ -132,9 +133,8 @@
   }
   .dz-message {
     text-align: center;
-    margin: 2em 0;
-
-
+    margin: 8em 0;
+    color: #bbb;
   }
 
 
@@ -288,7 +288,7 @@
 
       $image-height: 54px;
       $image-width: 54px;
- 
+
       pointer-events: none;
 
       opacity: 0;

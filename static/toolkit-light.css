@@ -8875,10 +8875,11 @@ canvas {
           box-sizing: border-box; }
 
 .dropzone {
-  min-height: 150px;
-  border: 2px solid rgba(0, 0, 0, 0.3);
-  background: white;
-  padding: 20px 20px; }
+  min-height: 344px;
+  border: 1px solid #ccc;
+  background: rgba(88, 203, 214, 0.1);
+  padding: 20px 20px;
+  border-radius: 3px; }
   .dropzone.dz-clickable {
     cursor: pointer; }
     .dropzone.dz-clickable * {
@@ -8893,7 +8894,8 @@ canvas {
       opacity: 0.5; }
   .dropzone .dz-message {
     text-align: center;
-    margin: 2em 0; }
+    margin: 8em 0;
+    color: #bbb; }
   .dropzone .dz-preview {
     position: relative;
     display: inline-block;

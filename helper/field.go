@@ -247,5 +247,16 @@ func FieldToMap(model interface{}, fields map[string]interface{}) (map[string]in
 		}
 	}
 
+	//mild hack, merge anything in 'Model' which is a gorm model, into the root of the json
+	umodel, ok := u["Model"]
+	if ok {
+		ts, vs := reflect.TypeOf(umodel), reflect.ValueOf(umodel)
+
+		for i := 0; i < ts.NumField(); i++ {
+			f := ts.Field(i)
+			u[f.Name] = vs.Field(i).Interface()
+		}
+		delete(u, "Model")
+	}
 	return u, nil
 }

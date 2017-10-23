@@ -47,7 +47,10 @@ func Initialize(r *gin.Engine, c *config.Config) {
 		//TODO how can we group calls together?
 		r.Use(LoggedInMiddleWare())
 	}
+
+	// Pages
 	r.GET("/", controllers.Dashboard)
+	r.GET("/dashboard/index", controllers.ApplicationIndex)
 
 	r.GET("/apis.json", controllers.APIEndpoints)
 

@@ -1,0 +1,28 @@
+{{ define "_applications-list.tmpl"}}
+
+<div class="list-group mb-3">
+  <h6 class="p-3 mb-0 mt-3 bg-info">
+    <div class="mx-auto container">
+      <span>All DApps</span>
+    </div>
+  </h6>
+
+  {{ range .applications }}
+    <a class="list-group-item list-group-item-action justify-content-between d-flex" href="/dashboard/{{.Slug}}">
+      <div class="mx-auto container">
+        {{ if  eq .Status "Live" }}
+          <span class="btn btn-xs btn-pill btn-success p-1 mr-1"></span><small class="text-info">{{.Status}}</small>
+        {{ else }}
+          <span class="btn btn-xs btn-pill btn-danger p-1 mr-1"></span><small class="text-info">{{.Status}}</small>
+        {{ end }}
+
+
+        <span class="text-bold">{{.Name}}</span>
+        <span class="float-right text-info">{{.LastDeployed.Format "Jan 02, 2006 15:04:05 UTC"}}</span>
+
+      </div>
+    </a>
+  {{ end }}
+</div>
+
+{{end}}

@@ -27,12 +27,6 @@ var (
 	DEV_GITHUB_SECRET      = "004f53d434b710e82a046f324e0865d820a18640"
 )
 
-func Dashboard(c *gin.Context) {
-	c.HTML(http.StatusOK, "dashboard/dashboard", gin.H{
-		"loggedIn": true,
-	})
-}
-
 func Login(c *gin.Context) {
 	cfg := config.Default(c)
 	githubClientID := DEV_GITHUB_KEY

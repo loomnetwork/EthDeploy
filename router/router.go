@@ -49,8 +49,8 @@ func Initialize(r *gin.Engine, c *config.Config) {
 	}
 
 	// Pages
-	r.GET("/", controllers.Dashboard)
-	r.GET("/dashboard/index", controllers.ApplicationIndex)
+	r.GET("/", controllers.ApplicationIndex)
+	r.GET("/dashboard/:id", controllers.Dashboard)
 
 	r.GET("/apis.json", controllers.APIEndpoints)
 

@@ -30,3 +30,9 @@ func ApplicationIndex(c *gin.Context) {
 		"applications": apps,
 	})
 }
+
+func Dashboard(c *gin.Context) {
+	c.HTML(http.StatusOK, "dashboard/dashboard", gin.H{
+		"loggedIn": true,
+	})
+}

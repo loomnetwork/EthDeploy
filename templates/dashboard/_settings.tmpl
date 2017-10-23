@@ -1,0 +1,78 @@
+{{ define "_settings.tmpl"}}
+
+<div role="tabpanel" class="tab-pane" id="settings">
+  <div class="container">
+    <div class="row pt-2 pb-5">
+      <div class="col-md-4 label-col">
+        <h5>Name</h5>
+      </div>
+      <div class="col-md-8 content-col">
+        <code>BlockSSH</code>
+      </div>
+    </div>
+    <div class="row pt-5 pb-3">
+      <div class="col-md-4 label-col">
+        <h5>Info</h5>
+        <p>The DApp's current enviroment</p>
+      </div>
+      <div class="col-md-8 content-col">
+        <ul class="col mb-0">
+          <li class="row mb-2">
+            <small class="col-sm-5 text-muted">Loom Infinity Fabric</small>
+            <span class="col-sm-7">v0.0.2</span>
+          </li>
+          <li class="row mb-2">
+            <small class="col-sm-5 text-muted">TestRPC</small>
+            <span class="col-sm-7">v4.1.1 Chocolate Chips</span>
+          </li>
+          <li class="row mb-2">
+            <small class="col-sm-5 text-muted">Go-Ethereum</small>
+            <span class="col-sm-7">v1.7.2</span>
+          </li>
+          <li class="row mb-2">
+            <small class="col-sm-5 text-muted">Static Content Url</small>
+            <span class="col-sm-7"><code>{{.name}}.loomapps.com</code></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row pt-5 pb-3">
+      <div class="col-md-4 label-col">
+        <h5>Test Faucet</h5>
+        <p>Insta-mine 1000 ETH and send it to an wallet address of your choice relative to your DApp</p>
+      </div>
+      <div class="col-md-8 content-col">
+        <form class="form-inline mt-2">
+          <div class="form-group col-9">
+            <label for="inputPassword2" class="sr-only">Password</label>
+            <input type="text" class="form-control w-100" id="faucet-address" placeholder="0x0000000000000000000000000000">
+          </div>
+          <button type="submit" class="btn btn-outline-success col-3">Send 1000 ETH</button>
+        </form>
+      </div>
+    </div>
+    <div class="row pt-5 pb-3">
+      <div class="col-md-4 label-col">
+        <h5>Transfer Ownership</h5>
+        <p>Transfers the ownership of this DApp to another account on Loom</p>
+      </div>
+      <div class="col-md-8 content-col mb-4">
+        <div class="card border-warning p-5 text-muted">
+          Transfer of ownership not available during Private Beta
+        </div>
+      </div>
+    </div>
+    <div class="row pt-5 pb-3">
+      <div class="col-md-4 label-col text-danger">
+        <h5>Delete DApp</h5>
+        <p>Delete the DApp permenantly</p>
+      </div>
+      <div class="col-md-8 content-col mb-4">
+        <div class="card border-danger p-5 text-muted">
+          DApp deletion is not enabled during this phase of testing, all DApps will be deleted before moving into the next phase.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}

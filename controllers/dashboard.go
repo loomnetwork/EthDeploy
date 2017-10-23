@@ -40,3 +40,11 @@ func Dashboard(c *gin.Context) {
 		"name":     c.Param("id"),
 	})
 }
+
+func NewDApp(c *gin.Context) {
+	fmt.Printf("got params %s", c.Params)
+
+	c.HTML(http.StatusOK, "dashboard/new", gin.H{
+		"loggedIn": true,
+	})
+}

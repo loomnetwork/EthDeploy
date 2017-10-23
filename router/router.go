@@ -25,6 +25,7 @@ func LoggedInMiddleWare() gin.HandlerFunc {
 			//do something here
 			c.Next()
 		} else {
+			c.Abort()
 			log.Debug("[AuthFilter]No user is logged in, redirect to login")
 			c.Redirect(302, "/login")
 		}

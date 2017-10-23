@@ -222,7 +222,7 @@ class Dropzone extends Emitter {
        * **NOTE**: If you have the option  `uploadMultiple` set to `true`, then
        * Dropzone will append `[]` to the name.
        */
-      paramName: "file",
+      paramName: "uploadfile",
 
       /**
        * Whether thumbnails for images should be generated

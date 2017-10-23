@@ -51,11 +51,11 @@ var jqueryVersionCheck = '+function ($) {\n' +
   '  }\n' +
   '}(jQuery);\n\n'
 
-gulp.task('default', ['scss-min', 'js'])
+gulp.task('default', ['scss-min', 'js-min'])
 
 gulp.task('watch', function () {
   gulp.watch(Paths.SCSS, ['scss-min']);
-  gulp.watch(Paths.JS,   ['js']);
+  gulp.watch(Paths.JS,   ['js-min']);
 })
 
 gulp.task('docs', ['server'], function () {
@@ -97,6 +97,22 @@ gulp.task('js', function () {
   return gulp.src(Paths.JS)
     .pipe(concat('toolkit.js'))
     .pipe(replace(/^(export|import).*/gm, ''))
+    .pipe(babel({
+        "compact" : false,
+        "presets": [
+          [
+            "es2015",
+            {
+              "modules": false,
+              "loose": true
+            }
+          ]
+        ],
+        "plugins": [
+          "transform-es2015-modules-strip"
+        ]
+      }
+    ))
     .pipe(wrapper({
        header: banner +
                "\n" +
@@ -109,11 +125,11 @@ gulp.task('js', function () {
     .pipe(gulp.dest(Paths.DIST))
 })
 
-// gulp.task('js-min', ['js'], function () {
-//   return gulp.src(Paths.DIST_TOOLKIT_JS)
-//     .pipe(uglify())
-//     .pipe(rename({
-//       suffix: '.min'
-//     }))
-//     .pipe(gulp.dest(Paths.DIST))
-// })
+gulp.task('js-min', ['js'], function () {
+  return gulp.src(Paths.DIST_TOOLKIT_JS)
+    .pipe(uglify())
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest(Paths.DIST))
+})

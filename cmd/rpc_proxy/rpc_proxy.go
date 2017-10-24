@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
+	"net/http/httputil"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -49,7 +49,12 @@ func commonHeaders(c *gin.Context) {
 }
 
 func Web3CatchAll(c *gin.Context) {
+	fmt.Printf("Web3CatchAll\n")
 	commonHeaders(c)
+	fmt.Printf("Web3CatchAll2\n")
+
+	proxy := c.MustGet("WEB3PROXY").(*httputil.ReverseProxy)
+	proxy.ServeHTTP(c.Writer, c.Request)
 }
 
 func OptionsCatchAll(c *gin.Context) {
@@ -62,28 +67,26 @@ type AccountJson struct {
 	AccountPrivateKeys map[string]string `json:"private_keys"`
 }
 
-func readJsonOutput() *AccountJson {
-	//TODO use a real file
-	filename := "misc/example_private_keys.json"
-
-	file, e := ioutil.ReadFile(filename)
-	if e != nil {
-		fmt.Printf("File error: %v\n", e)
-		os.Exit(1)
+func readJsonOutput(filename string) (*AccountJson, error) {
+	file, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
 	}
-	fmt.Printf("%s\n", string(file))
 
-	//m := new(Dispatch)
-	//var m interface{}
 	var data *AccountJson
 	json.Unmarshal(file, &data)
-	fmt.Printf("Results: %v\n", data)
-	return data
+	return data, nil
 }
 
 func LoomAccounts(c *gin.Context) {
 	commonHeaders(c)
-	accountJson := readJsonOutput() //TODO we should move this to a separate go routine that is spawning the other executable
+	config := config.Default(c)
+	fmt.Printf("serving file-%s\n", config.PrivateKeyJsonFile)
+	accountJson, err := readJsonOutput(config.PrivateKeyJsonFile) //TODO we should move this to a separate go routine that is spawning the other executable
+	if err != nil {
+		log.WithField("error", err).Error("Failed reading the json file")
+		c.JSON(400, gin.H{"error": "Invalid or missing API Key"})
+	}
 	c.JSON(200, accountJson)
 }
 
@@ -97,16 +100,14 @@ func routerInitialize(r *gin.Engine, c *config.Config) {
 	r.POST("/_loom/accounts", LoomAccounts) //Returns accounts and private keys for this test network
 
 	// Web3 RPCs
-	api := r.Group("")
-	{
-		api.PUT("/", Web3CatchAll)
-	}
+	r.NoRoute(Web3CatchAll)
 }
 
 func setup(db *gorm.DB, c *config.Config) *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.SetDBtoContext(db))
 	r.Use(middleware.SetConfigtoContext(c))
+	r.Use(middleware.SetProxyToContext(c))
 	routerInitialize(r, c)
 	return r
 }
@@ -117,6 +118,8 @@ func main() {
 	loomEnv := envflag.String("LOOM_ENV", "devlopment", "devlopment/staging/production")
 	bindAddr := envflag.String("BIND_ADDR", ":8081", "What address to bind the main webserver to")
 	skipLetsEncrypt := envflag.Bool("LETS_ENCRYPT_ENABLE", false, "enables or disables lets encrypt ssl")
+	proxyAddr := envflag.String("PROXY_ADDR", "http://localhost:8545", "Where the actual web3 rpc address exists")
+	privateKeyJsonFile := envflag.String("PRIVATE_KEY_JSON_PATH", "misc/example_private_keys.json", "TestRPC json output")
 
 	envflag.Parse()
 
@@ -138,8 +141,10 @@ func main() {
 	}
 
 	config := &config.Config{
-		DemoMode: *demo,
-		Env:      *loomEnv,
+		DemoMode:           *demo,
+		Env:                *loomEnv,
+		ProxyAddr:          *proxyAddr,
+		PrivateKeyJsonFile: *privateKeyJsonFile,
 	}
 
 	database := db.Connect()

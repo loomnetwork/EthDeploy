@@ -48,3 +48,16 @@ Invite mode requires people to be whitelisted before they can login
 ```
 INVITE_MODE=false
 ```
+
+
+## Web3 proxy info
+
+```
+git clone git@github.com:loomnetwork/testrpc.git
+git checkout save-keys
+node cli.js --acctKeys data.json --db testdata
+```
+
+```
+PRIVATE_KEY_JSON_PATH=<checkoutPath>testrpc/data.json  go run cmd/rpc_proxy/rpc_proxy.go
+```

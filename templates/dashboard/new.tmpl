@@ -1,0 +1,44 @@
+{{define "content"}}
+
+<div class="container">
+  <form class="mt-5">
+    <div class="col-md-6 card mx-auto p-5">
+      <div class="form-group ">
+        <label for="exampleFormControlInput1">DApp Name</label>
+        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlSelect1">Available TestRPC</label>
+        <select class="form-control" id="exampleFormControlSelect1">
+          <option>4.1.1</option>
+          <option>4.1.0</option>
+          <option>4.0.0</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlSelect2">Available GETH</label>
+        <select class="form-control" id="exampleFormControlSelect2">
+          <option>1.7.2</option>
+          <option>1.7.1</option>
+          <option>1.7.0</option>
+          <option>1.6.9</option>
+        </select>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <input class="form-check-input" type="checkbox" value="">
+          Simulate Slow Speeds (20 Tx/sec)
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <input class="form-check-input" type="checkbox" value="">
+          Pre-mine 5 Million ETH
+        </label>
+      </div>
+      <button class="btn btn-success mt-3" type="submit">Create Now</button>
+    </div>
+  </form>
+</div>
+
+{{ end }}

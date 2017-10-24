@@ -3,7 +3,6 @@ var App = {
   _isWithTooltips: false,
 
   init: function () {
-    App._tableSorters()
     App._tooltips()
     App._navDoc()
 
@@ -37,7 +36,7 @@ var App = {
         if ($window.width() > 768) {
           activateDocNavigation()
         } else {
-          deactivateDocNavigation()
+          deactivateDocNavigation() 
         }
       }
 
@@ -119,10 +118,6 @@ var App = {
     }
 
   },
-
-  _tableSorters: function () {
-    $('[data-sort="table"]').tablesorter( {sortList: [[1,0]]} )
-  }
 }
 
 App.init()

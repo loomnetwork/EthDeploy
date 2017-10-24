@@ -1,0 +1,300 @@
+{{ define "_metrics.tmpl"}}
+
+<div role="tabpanel" class="tab-pane" id="metrics">
+  <div class="container">
+    <div class="row statcards">
+      <div class="col-md-6 col-lg-3 mb-5 mb-md-3">
+        <div class="statcard">
+          <div class="p-a">
+            <span class="statcard-desc">Avg Transaction Time</span>
+            <h2 class="statcard-number">
+            5 ms
+          <small class="badge badge-success">5%</small>
+        </h2>
+          </div>
+          <canvas id="sparkline1" width="378" height="94" class="sparkline" data-chart="spark-line" data-dataset="[[28,68,41,43,96,45,100]]" data-dataset-options="[{borderColor: '#1ca8dd', backgroundColor:'rgba(104, 155, 196, 0.2)'}]" data-labels="['a','b','c','d','e','f','g']"
+          style="width: 189px; height: 47px;"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-5 mb-md-3">
+        <div class="statcard">
+          <div class="p-a">
+            <span class="statcard-desc">Max Server Load</span>
+            <h2 class="statcard-number">
+          91%
+          <small class="badge badge-danger">1.3%</small>
+        </h2>
+          </div>
+          <canvas id="sparkline1" width="378" height="94" class="sparkline" data-chart="spark-line" data-dataset="[[4,34,64,27,96,50,80]]" data-dataset-options="[{borderColor: '#1cdd97', backgroundColor:'rgba(66, 245, 116, 0.2)'}]" data-labels="['a','b','c','d','e','f','g']"
+          style="width: 189px; height: 47px;"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-5 mb-md-3">
+        <div class="statcard">
+          <div class="p-a">
+            <span class="statcard-desc"># of Concurrent Connections</span>
+            <h2 class="statcard-number">
+          16
+          <small class="badge badge-success">6.75%</small>
+        </h2>
+          </div>
+          <canvas id="sparkline1" width="378" height="94" class="sparkline" data-chart="spark-line" data-dataset="[[12,38,32,60,36,54,68]]" data-dataset-options="[{borderColor: '#a34bc2', backgroundColor:'rgba(220, 66, 245, 0.2)'}]" data-labels="['a','b','c','d','e','f','g']"
+          style="width: 189px; height: 47px;"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-5 mb-md-3">
+        <div class="statcard">
+          <div class="p-a">
+            <span class="statcard-desc">Avg Tx Size</span>
+            <h2 class="statcard-number">
+          1012 kb
+          <small class="badge badge-success">1.3%</small>
+        </h2>
+          </div>
+          <canvas id="sparkline1" width="378" height="94" class="sparkline" data-chart="spark-line" data-dataset="[[43,48,52,58,50,95,100]]" data-dataset-options="[{borderColor: '#7a2323', backgroundColor:'rgba(139, 67, 67, 0.2)'}]" data-labels="['a','b','c','d','e','f','g']"
+          style="width: 189px; height: 47px;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="hr-divider my-4">
+      <ul class="nav nav-pills hr-divider-content hr-divider-nav" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a href="#reads" class="nav-link active" role="tab" data-toggle="tab" aria-controls="reads">Reads</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a href="#writes" class="nav-link" role="tab" data-toggle="tab" aria-controls="writes">Writes</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a href="#errors" class="nav-link" role="tab" data-toggle="tab" aria-controls="errors">Errors</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="reads">
+        <div class="ex-line-graphs">
+          <canvas class="ex-line-graph" width="600" height="350" data-chart="line" data-dataset-options="[{borderColor: '#237a58', backgroundColor:'rgba(161, 212, 89, 0.2)'}]" data-dataset="[[2500, 3300, 2512, 2775, 2498, 3512, 2925, 4275, 3507, 3825, 3445, 3985]]" data-labels="['','Aug 29','','','Sept 5','','','Sept 12','','','Sept 19','']">
+          </canvas>
+        </div>
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="writes">
+        <div class="ex-line-graphs">
+          <canvas class="ex-line-graph" width="600" height="350" data-chart="line" data-dataset-options="[{borderColor: '#778de9', backgroundColor:'rgba(67, 87, 139, 0.2)'}]" data-dataset="[[2500, 3300, 2512, 2775, 2498, 3512, 2925, 4275, 3507, 3825, 3445, 3985]]" data-labels="['','Aug 29','','','Sept 5','','','Sept 12','','','Sept 19','']">
+          </canvas>
+        </div>
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="errors">
+        <div class="ex-line-graphs">
+          <canvas class="ex-line-graph" width="600" height="350" data-chart="line" data-dataset-options="[{borderColor: '#e97777', backgroundColor:'rgba(139, 67, 67, 0.2)'}]" data-dataset="[[2500, 3300, 2512, 2775, 2498, 3512, 2925, 4275, 3507, 3825, 3445, 3985]]" data-labels="['','Aug 29','','','Sept 5','','','Sept 12','','','Sept 19','']">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="hr-divider mt-5 mb-4">
+      <h3 class="hr-divider-content hr-divider-heading">RPC Gateway Analytics</h3>
+    </div>
+    <div class="row">
+  <div class="col-lg-4 mb-5">
+    <div class="list-group mb-3">
+      <h6 class="list-group-header">
+        DApp Users By Geography
+      </h6>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span class="list-group-progress" style="width: 62.4%;"></span>
+          <span>United States</span>
+          <span class="text-muted">62.4%</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span class="list-group-progress" style="width: 15.0%;"></span>
+          <span>India</span>
+          <span class="text-muted">15.0%</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span class="list-group-progress" style="width: 5.0%;"></span>
+          <span>United Kingdom</span>
+          <span class="text-muted">5.0%</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span class="list-group-progress" style="width: 5.0%;"></span>
+          <span>Canada</span>
+          <span class="text-muted">5.0%</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span class="list-group-progress" style="width: 4.5%;"></span>
+          <span>Russia</span>
+          <span class="text-muted">4.5%</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span class="list-group-progress" style="width: 2.3%;"></span>
+          <span>Mexico</span>
+          <span class="text-muted">2.3%</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span class="list-group-progress" style="width: 1.7%;"></span>
+          <span>Spain</span>
+          <span class="text-muted">1.7%</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span class="list-group-progress" style="width: 1.5%;"></span>
+          <span>France</span>
+          <span class="text-muted">1.5%</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span class="list-group-progress" style="width: 1.4%;"></span>
+          <span>South Africa</span>
+          <span class="text-muted">1.4%</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span class="list-group-progress" style="width: 1.2%;"></span>
+          <span>Japan</span>
+          <span class="text-muted">1.2%</span>
+        </a>
+
+    </div>
+    <a href="#" class="btn btn-outline-info px-3">Download .CSV</a>
+  </div>
+  <div class="col-lg-4 mb-5">
+    <div class="list-group mb-3">
+      <h6 class="list-group-header">
+        Top ABI Calls
+      </h6>
+
+      <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+        <span class="list-group-progress" style="width: 62.4%;"></span>
+        <span>listKeyPairs</span>
+        <span class="text-muted">62.4%</span>
+      </a>
+
+      <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+        <span class="list-group-progress" style="width: 15.0%;"></span>
+        <span>isKeyAccessible</span>
+        <span class="text-muted">15.0%</span>
+      </a>
+
+      <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+        <span class="list-group-progress" style="width: 5.0%;"></span>
+        <span>SignInWith</span>
+        <span class="text-muted">5.0%</span>
+      </a>
+
+      <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+        <span class="list-group-progress" style="width: 5.0%;"></span>
+        <span>AddKeyPair</span>
+        <span class="text-muted">5.0%</span>
+      </a>
+
+      <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+        <span class="list-group-progress" style="width: 4.5%;"></span>
+        <span>RemoveKeyPair</span>
+        <span class="text-muted">4.5%</span>
+      </a>
+
+      <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+        <span class="list-group-progress" style="width: 2.3%;"></span>
+        <span>LastLoggedInForKey</span>
+        <span class="text-muted">2.3%</span>
+      </a>
+
+      <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+        <span class="list-group-progress" style="width: 1.7%;"></span>
+        <span>DeleteUser</span>
+        <span class="text-muted">1.7%</span>
+      </a>
+
+      <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+        <span class="list-group-progress" style="width: 1.5%;"></span>
+        <span>Stats</span>
+        <span class="text-muted">1.5%</span>
+      </a>
+      <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+        <span class="list-group-progress" style="width: 1.5%;"></span>
+        <span>eqKey</span>
+        <span class="text-muted">1.1%</span>
+      </a>
+      <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+        <span class="list-group-progress" style="width: 1.5%;"></span>
+        <span>diffKey</span>
+        <span class="text-muted">1.1%</span>
+      </a>
+
+    </div>
+    <a href="#" class="btn btn-outline-info px-3">Download .CSV</a>
+  </div>
+  <div class="col-lg-4 mb-5">
+    <div class="list-group mb-3">
+      <h6 class="list-group-header">
+        DApp Users By Device
+      </h6>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span>Desktop (1920x1080)</span>
+          <span class="text-muted">3,929,481</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span>Desktop (1366x768)</span>
+          <span class="text-muted">1,143,393</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span>Desktop (1440x900)</span>
+          <span class="text-muted">938,287</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span>Desktop (1280x800)</span>
+          <span class="text-muted">749,393</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span>Tablet (1024x768)</span>
+          <span class="text-muted">695,912</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span>Tablet (768x1024)</span>
+          <span class="text-muted">501,938</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span>Phone (320x480)</span>
+          <span class="text-muted">392,842</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span>Phone (720x450)</span>
+          <span class="text-muted">298,183</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span>Desktop (2560x1080)</span>
+          <span class="text-muted">193,129</span>
+        </a>
+
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
+          <span>Desktop (2560x1600)</span>
+          <span class="text-muted">93,382</span>
+        </a>
+
+    </div>
+    <a href="#" class="btn btn-outline-info px-3">Download .CSV</a>
+  </div>
+</div>
+
+  </div>
+</div>
+{{end}}

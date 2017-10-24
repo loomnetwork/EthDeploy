@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -32,7 +33,18 @@ func ApplicationIndex(c *gin.Context) {
 }
 
 func Dashboard(c *gin.Context) {
+	fmt.Printf("got params %s", c.Params)
+
 	c.HTML(http.StatusOK, "dashboard/dashboard", gin.H{
+		"loggedIn": true,
+		"name":     c.Param("id"),
+	})
+}
+
+func NewDApp(c *gin.Context) {
+	fmt.Printf("got params %s", c.Params)
+
+	c.HTML(http.StatusOK, "dashboard/new", gin.H{
 		"loggedIn": true,
 	})
 }

@@ -10,6 +10,7 @@ var concat       = require('gulp-concat')
 var uglify       = require('gulp-uglify')
 var connect      = require('gulp-connect')
 var open         = require('gulp-open')
+var newer        = require('gulp-newer');
 var babel        = require('gulp-babel')
 var replace      = require('gulp-replace')
 var wrapper      = require('gulp-wrapper')
@@ -93,24 +94,18 @@ gulp.task('scss-min', ['scss'], function () {
     .pipe(gulp.dest(Paths.DIST))
 })
 
-gulp.task('js', function () {
+gulp.task('apply-prod-environment', function() {
+    process.env.NODE_ENV = 'development';
+});
+
+gulp.task('js', ['apply-prod-environment'],function () {
   return gulp.src(Paths.JS)
-    .pipe(concat('toolkit.js'))
+    .pipe(concat('toolkit.jsx'))
     .pipe(replace(/^(export|import).*/gm, ''))
     .pipe(babel({
         "compact" : false,
-        "presets": [
-          [
-            "es2015",
-            {
-              "modules": false,
-              "loose": true
-            }
-          ]
-        ],
-        "plugins": [
-          "transform-es2015-modules-strip"
-        ]
+        "presets": ['env'],
+        "plugins": ['transform-react-jsx']
       }
     ))
     .pipe(wrapper({

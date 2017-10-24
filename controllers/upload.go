@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,8 @@ func UploadApplication(c *gin.Context) {
 	file, handler, err := r.FormFile("uploadfile")
 	if err != nil {
 		fmt.Println(err)
+
+		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
 	defer file.Close()
@@ -27,5 +30,4 @@ func UploadApplication(c *gin.Context) {
 	}
 	defer f.Close()
 	io.Copy(f, file)
-
 }

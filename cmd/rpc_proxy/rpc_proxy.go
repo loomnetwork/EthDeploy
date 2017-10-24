@@ -49,9 +49,7 @@ func commonHeaders(c *gin.Context) {
 }
 
 func Web3CatchAll(c *gin.Context) {
-	fmt.Printf("Web3CatchAll\n")
 	commonHeaders(c)
-	fmt.Printf("Web3CatchAll2\n")
 
 	proxy := c.MustGet("WEB3PROXY").(*httputil.ReverseProxy)
 	proxy.ServeHTTP(c.Writer, c.Request)

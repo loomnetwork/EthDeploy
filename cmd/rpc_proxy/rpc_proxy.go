@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +11,7 @@ import (
 	"github.com/loomnetwork/dashboard/db"
 	"github.com/loomnetwork/dashboard/middleware"
 	log "github.com/sirupsen/logrus"
-	//	"rsc.io/letsencrypt"
+	"rsc.io/letsencrypt"
 )
 
 //Two headers
@@ -85,6 +86,7 @@ func main() {
 	level := envflag.String("LOG_LEVEL", "debug", "Log level minimum to output. Info/Debug/Warn")
 	loomEnv := envflag.String("LOOM_ENV", "devlopment", "devlopment/staging/production")
 	bindAddr := envflag.String("BIND_ADDR", ":8081", "What address to bind the main webserver to")
+	skipLetsEncrypt := envflag.Bool("LETS_ENCRYPT_ENABLE", false, "enables or disables lets encrypt ssl")
 
 	envflag.Parse()
 
@@ -113,70 +115,60 @@ func main() {
 	database := db.Connect()
 	s := setup(database, config)
 
-	s.Run(*bindAddr)
-	/*
+	//local dev we will ignore using letsencrypt
+	if *skipLetsEncrypt == false {
+		s.Run(*bindAddr)
+	} else {
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			fmt.Fprintf(w, "Hello, TLS!\n")
+			s.ServeHTTP(w, r)
 		})
 		var m letsencrypt.Manager
 		if err := m.CacheFile("letsencrypt.cache"); err != nil {
 			log.Fatal(err)
 		}
 		log.Fatal(m.Serve())
-	*/
+	}
 }
 
 /*
-   var headers = {
-     "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-     "Access-Control-Allow-Origin": "*",
-     "Access-Control-Allow-Methods": "*"
-   };
+   case "POST":
+     //console.log("Request coming in:", body);
 
-   switch (method) {
-     case "OPTIONS":
-       headers["Content-Type"] = "text/plain"
-       response.writeHead(200, headers);
-       response.end("");
-       break;
-     case "POST":
-       //console.log("Request coming in:", body);
-
-       var payload;
-       try {
-         payload = JSON.parse(body);
-       } catch(e) {
-         headers["Content-Type"] = "text/plain";
-         response.writeHead(400, headers);
-         response.end("400 Bad Request");
-         return;
-       }
-
-       // Log messages that come into the TestRPC via http
-       if (payload instanceof Array) {
-         // Batch request
-         for (var i = 0; i < payload.length; i++) {
-           var item = payload[i];
-           logger.log(item.method);
-         }
-       } else {
-         logger.log(payload.method);
-       }
-
-       provider.sendAsync(payload, function(err, result) {
-         headers["Content-Type"] = "application/json";
-         response.writeHead(200, headers);
-         response.end(JSON.stringify(result));
-       });
-
-       break;
-     default:
-       response.writeHead(400, {
-         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-         "Access-Control-Allow-Origin": "*",
-         "Access-Control-Allow-Methods": "*",
-         "Content-Type": "text/plain"
-       });
+     var payload;
+     try {
+       payload = JSON.parse(body);
+     } catch(e) {
+       headers["Content-Type"] = "text/plain";
+       response.writeHead(400, headers);
        response.end("400 Bad Request");
-       break;
+       return;
+     }
+
+     // Log messages that come into the TestRPC via http
+     if (payload instanceof Array) {
+       // Batch request
+       for (var i = 0; i < payload.length; i++) {
+         var item = payload[i];
+         logger.log(item.method);
+       }
+     } else {
+       logger.log(payload.method);
+     }
+
+     provider.sendAsync(payload, function(err, result) {
+       headers["Content-Type"] = "application/json";
+       response.writeHead(200, headers);
+       response.end(JSON.stringify(result));
+     });
+
+     break;
+   default:
+     response.writeHead(400, {
+       "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+       "Access-Control-Allow-Origin": "*",
+       "Access-Control-Allow-Methods": "*",
+       "Content-Type": "text/plain"
+     });
+     response.end("400 Bad Request");
+     break;
 */

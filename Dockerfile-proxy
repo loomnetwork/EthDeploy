@@ -1,0 +1,19 @@
+FROM mhart/alpine-node:6.9.2
+
+RUN apk add --no-cache make gcc g++ python git bash
+COPY package.json /src/package.json
+
+
+ADD misc/ca-certificates.crt /etc/ssl/certs/
+ADD rpc_proxy /rpc_proxy
+
+
+WORKDIR /src
+RUN npm install
+
+ADD tmp/testrpc .
+
+EXPOSE 8081
+
+CMD ["/rpc_proxy"]
+

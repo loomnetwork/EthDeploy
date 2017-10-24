@@ -155,7 +155,11 @@ func CreateApplication(c *gin.Context) {
 	if err := c.Bind(&application); err != nil {
 		switch c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON) {
 		case gin.MIMEHTML:
-			c.HTML(200, "TODO rebind the form with errors", nil)
+			c.HTML(http.StatusOK, "dashboard/new", gin.H{
+				"loggedIn":    true,
+				"errors":      err,
+				"application": application,
+			})
 		case gin.MIMEJSON:
 			c.JSON(400, gin.H{"error": err.Error()})
 		}
@@ -165,7 +169,11 @@ func CreateApplication(c *gin.Context) {
 	if err := db.Create(&application).Error; err != nil {
 		switch c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON) {
 		case gin.MIMEHTML:
-			c.HTML(200, "TODO rebind the form with errors", nil)
+			c.HTML(http.StatusOK, "dashboard/new", gin.H{
+				"loggedIn":    true,
+				"errors":      err,
+				"application": application,
+			})
 		case gin.MIMEJSON:
 			c.JSON(400, gin.H{"error": err.Error()})
 		}
@@ -178,6 +186,8 @@ func CreateApplication(c *gin.Context) {
 		// 1.0.0 <= this version < 2.0.0 !!
 	}
 
+	asdf := c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON)
+	fmt.Printf("NegotiateFormat-%s\n", asdf)
 	switch c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON) {
 	case gin.MIMEHTML:
 		c.Redirect(301, fmt.Sprintf("/dashboard/%d", application.ID))

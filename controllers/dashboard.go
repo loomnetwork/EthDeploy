@@ -43,8 +43,10 @@ func Dashboard(c *gin.Context) {
 
 func NewDApp(c *gin.Context) {
 	fmt.Printf("got params %s", c.Params)
+	application := models.Application{}
 
 	c.HTML(http.StatusOK, "dashboard/new", gin.H{
-		"loggedIn": true,
+		"loggedIn":    true,
+		"application": application,
 	})
 }

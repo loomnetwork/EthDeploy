@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	dbpkg "github.com/loomnetwork/dashboard/db"
@@ -152,12 +153,23 @@ func CreateApplication(c *gin.Context) {
 	application := models.Application{}
 
 	if err := c.Bind(&application); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		switch c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON) {
+		case gin.MIMEHTML:
+			c.HTML(200, "TODO rebind the form with errors", nil)
+		case gin.MIMEJSON:
+			c.JSON(400, gin.H{"error": err.Error()})
+		}
 		return
 	}
 
 	if err := db.Create(&application).Error; err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		switch c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON) {
+		case gin.MIMEHTML:
+			c.HTML(200, "TODO rebind the form with errors", nil)
+		case gin.MIMEJSON:
+			c.JSON(400, gin.H{"error": err.Error()})
+		}
+
 		return
 	}
 
@@ -166,7 +178,12 @@ func CreateApplication(c *gin.Context) {
 		// 1.0.0 <= this version < 2.0.0 !!
 	}
 
-	c.JSON(201, application)
+	switch c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON) {
+	case gin.MIMEHTML:
+		c.Redirect(301, fmt.Sprintf("/dashboard/%d", application.ID))
+	case gin.MIMEJSON:
+		c.JSON(201, application)
+	}
 }
 
 func UpdateApplication(c *gin.Context) {

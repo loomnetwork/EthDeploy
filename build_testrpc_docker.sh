@@ -3,7 +3,7 @@
 mkdir -p tmp
 rm -rf tmp/testrpc ; true
 cd tmp
-git clone git@github.com:loomnetwork/testrpc.git
+git clone https://github.com/loomnetwork/testrpc.git
 cd testrpc
 git checkout save-keys
 cd .. 

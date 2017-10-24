@@ -12,7 +12,6 @@ import (
 	"github.com/ianschenck/envflag"
 	"github.com/jinzhu/gorm"
 	"github.com/loomnetwork/dashboard/config"
-	"github.com/loomnetwork/dashboard/db"
 	"github.com/loomnetwork/dashboard/middleware"
 	log "github.com/sirupsen/logrus"
 	"rsc.io/letsencrypt"
@@ -103,7 +102,7 @@ func routerInitialize(r *gin.Engine, c *config.Config) {
 
 func setup(db *gorm.DB, c *config.Config) *gin.Engine {
 	r := gin.Default()
-	r.Use(middleware.SetDBtoContext(db))
+	//	r.Use(middleware.SetDBtoContext(db))
 	r.Use(middleware.SetConfigtoContext(c))
 	r.Use(middleware.SetProxyToContext(c))
 	routerInitialize(r, c)
@@ -145,8 +144,8 @@ func main() {
 		PrivateKeyJsonFile: *privateKeyJsonFile,
 	}
 
-	database := db.Connect()
-	s := setup(database, config)
+	//	database := db.Connect()
+	s := setup(nil, config) //database //TODO readd database
 
 	//local dev we will ignore using letsencrypt
 	if *skipLetsEncrypt == false {

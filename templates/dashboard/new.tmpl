@@ -4,20 +4,24 @@
   <form class="mt-5" method="POST" action="/applications">
     <div class="col-md-6 card mx-auto p-5">
       <div class="form-group ">
-        <label for="exampleFormControlInput1">DApp Name</label>
-        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+        <label for="dappNameInput">DApp Name</label>
+        <input type="text" class="form-control" id="dappNameInput" name="name" placeholder="bitcoin-2.0">
+      </div>
+      <div class="form-group ">
+        <label for="dappSlugInput">Slug</label>
+        <input type="text" class="form-control" id="dappSlugInput" name="slug" placeholder="bitcoin20">
       </div>
       <div class="form-group">
-        <label for="exampleFormControlSelect1">Available TestRPC</label>
-        <select class="form-control" id="exampleFormControlSelect1">
+        <label for="testRPCSelector">Available TestRPC</label>
+        <select class="form-control" id="testRPCSelector">
           <option>4.1.1</option>
           <option>4.1.0</option>
           <option>4.0.0</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="exampleFormControlSelect2">Available GETH</label>
-        <select class="form-control" id="exampleFormControlSelect2">
+        <label for="gethSelector">Available GETH</label>
+        <select class="form-control" id="gethSelector">
           <option>1.7.2</option>
           <option>1.7.1</option>
           <option>1.7.0</option>

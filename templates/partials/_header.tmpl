@@ -32,13 +32,25 @@
           <a class="nav-link" href="/">Documentation</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link support" href="mailto:support@loomx.io">Support</a>
         </li>
       </ul>
       {{ if  .loggedIn }}
       <form class="form-inline d-none d-md-flex ml-auto">
         <input class="form-control" type="text" data-action="grow" placeholder="Search">
       </form>
+      <div class="d-none d-md-flex dropdown">
+         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+           <img src="/assets/images/Satoshi-Nakamoto-AP.jpg" alt="" class="rounded-circle" height="30">
+         </a>
+         <div class="dropdown-menu account-dropdown">
+           <div class="dropdown-item">Satoshi@loomx.io</div>
+           <div class="dropdown-divider"></div>
+           <a class="dropdown-item" href="mailto:support@loomx.io">Get Support</a>
+           <div class="dropdown-divider"></div>
+           <a class="dropdown-item text-danger" href="/logout">Log Out</a>
+         </div>
+       </div>
+
       {{ end }}
       <!-- tood maybe a user icon with a drop down -->
     </div>

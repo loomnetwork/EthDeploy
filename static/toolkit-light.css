@@ -9085,11 +9085,8 @@ canvas {
   text-decoration: underline;
   font-weight: 700; }
 
-.nav-link.support {
-  color: #1ac746;
-  border: 2px solid #1ac746;
-  border-radius: 5px;
-  padding: 0.3rem; }
+.account-dropdown {
+  left: -9em; }
 
 .overview-sidebar .text-white {
   color: white; }

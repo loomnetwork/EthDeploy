@@ -117,6 +117,8 @@ func main() {
 	skipLetsEncrypt := envflag.Bool("LETS_ENCRYPT_ENABLE", false, "enables or disables lets encrypt ssl")
 	proxyAddr := envflag.String("PROXY_ADDR", "http://localhost:8545", "Where the actual web3 rpc address exists")
 	privateKeyJsonFile := envflag.String("PRIVATE_KEY_JSON_PATH", "misc/example_private_keys.json", "TestRPC json output")
+	spawnNetwork := envflag.String("SPAWN_NETWORK", "node tmp/testrpc/build/cli.node.js", "How does test rpc spawn the testrpc or ethereum network")
+	//Prod  node src/build/cli.node.js
 
 	envflag.Parse()
 
@@ -142,6 +144,7 @@ func main() {
 		Env:                *loomEnv,
 		ProxyAddr:          *proxyAddr,
 		PrivateKeyJsonFile: *privateKeyJsonFile,
+		SpawnNetwork:       *spawnNetwork,
 	}
 
 	//	database := db.Connect()

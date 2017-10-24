@@ -1,7 +1,11 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -38,23 +42,49 @@ func LoggedInMiddleWare() gin.HandlerFunc {
 	}
 }
 
+func commonHeaders(c *gin.Context) {
+	c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "*")
+}
+
 func Web3CatchAll(c *gin.Context) {
+	commonHeaders(c)
 }
 
 func OptionsCatchAll(c *gin.Context) {
-	/*
-			 "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-		     "Access-Control-Allow-Origin": "*",
-		     "Access-Control-Allow-Methods": "*"
-
-
-
-			 headers["Content-Type"] = "text/plain"
-	*/
+	commonHeaders(c)
+	c.Header("Content-Type", "text/plain")
 	c.HTML(200, "", nil)
 }
 
+type AccountJson struct {
+	AccountPrivateKeys map[string]string `json:"private_keys"`
+}
+
+func readJsonOutput() *AccountJson {
+	//TODO use a real file
+	filename := "misc/example_private_keys.json"
+
+	file, e := ioutil.ReadFile(filename)
+	if e != nil {
+		fmt.Printf("File error: %v\n", e)
+		os.Exit(1)
+	}
+	fmt.Printf("%s\n", string(file))
+
+	//m := new(Dispatch)
+	//var m interface{}
+	var data *AccountJson
+	json.Unmarshal(file, &data)
+	fmt.Printf("Results: %v\n", data)
+	return data
+}
+
 func LoomAccounts(c *gin.Context) {
+	commonHeaders(c)
+	accountJson := readJsonOutput() //TODO we should move this to a separate go routine that is spawning the other executable
+	c.JSON(200, accountJson)
 }
 
 func routerInitialize(r *gin.Engine, c *config.Config) {

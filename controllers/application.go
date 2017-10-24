@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	dbpkg "github.com/loomnetwork/dashboard/db"
 	"github.com/loomnetwork/dashboard/helper"
@@ -150,7 +151,7 @@ func CreateApplication(c *gin.Context) {
 	}
 
 	db := dbpkg.DBInstance(c)
-	application := models.Application{}
+	application := models.Application{LastDeployed: time.Now()}
 
 	if err := c.Bind(&application); err != nil {
 		switch c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON) {

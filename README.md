@@ -52,12 +52,24 @@ INVITE_MODE=false
 
 ## Web3 proxy info
 
+one window
 ```
 git clone git@github.com:loomnetwork/testrpc.git
 git checkout save-keys
 node cli.js --acctKeys data.json --db testdata
 ```
 
+another window
 ```
 PRIVATE_KEY_JSON_PATH=<checkoutPath>testrpc/data.json  go run cmd/rpc_proxy/rpc_proxy.go
+```
+
+to get public/private keys
+```
+curl -XPOST localhost:8081/_loom/accounts
+```
+
+to make web3 requests
+```
+curl -X POST --data '{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":67}' localhost:8081/
 ```

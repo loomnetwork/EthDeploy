@@ -27,6 +27,18 @@ func UploadApplication(c *gin.Context) {
 	}
 	defer file.Close()
 	fmt.Fprintf(w, "%v", handler.Header)
+
+	// create new version
+	db := dbpkg.DBInstance(c)
+	deployHistory := models.DeployHistory{
+		BundleName: handler.Filename,
+	}
+	if err := db.Create(&deployHistory).Error; err != nil {
+		log.WithField("error", err).Warn("Error when storing new version")
+	}
+
+	//TODO fix pathing on prod, we should mount a directory to the docker image
+	os.Mkdir("./upload_tmp/", 0666)
 	f, err := os.OpenFile("./upload_tmp/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		fmt.Println(err)
@@ -34,14 +46,4 @@ func UploadApplication(c *gin.Context) {
 	}
 	defer f.Close()
 	io.Copy(f, file)
-
-	// create new version
-	db := dbpkg.DBInstance(c)
-	deployHistory := models.DeployHistory{
-		BundleName: handler.Filename,
-	}
-
-	if err := db.Create(&deployHistory).Error; err != nil {
-		log.WithField("error", err).Warn("Error when storing new version")
-	}
 }

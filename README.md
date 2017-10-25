@@ -74,7 +74,27 @@ to make web3 requests
 curl -X POST --data '{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":67}' localhost:8081/
 ```
 
-to run in fresh
+###to run in fresh
+
+first time
+```
+mkdir -p tmp
+rm -rf tmp/testrpc ; true
+cd tmp
+git clone https://github.com/loomnetwork/testrpc.git
+cd testrpc
+git checkout save-keys
+cd .. 
+cd ..
+```
+
+after that
 ```
 fresh -c proxy_runner.conf
+```
+
+or
+
+```
+PRIVATE_KEY_JSON_PATH=tmp/testrpc/data.json SPAWN_NETWORK="/usr/local/bin/node tmp/testrpc/build/cli.node.js" PRE_KILL=true go run cmd/rpc_proxy/rpc_proxy.go
 ```

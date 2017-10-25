@@ -9,6 +9,7 @@ import (
 	"net/http/httputil"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/ianschenck/envflag"
@@ -92,7 +93,7 @@ func LoomAccounts(c *gin.Context) {
 func routerInitialize(r *gin.Engine, c *config.Config) {
 	if c.DemoMode == false {
 		//TODO how can we group calls together?
-		r.Use(LoggedInMiddleWare())
+		//r.Use(LoggedInMiddleWare())
 	}
 
 	//We prefix our apis with underscore so there is no conflict with the Web3 RPC APOs
@@ -111,34 +112,72 @@ func setup(db *gorm.DB, c *config.Config) *gin.Engine {
 	return r
 }
 
-func spawnChildNetwork() {
-	cmd := exec.Command(buildPath())
+type appLogWriter struct{ Pid int }
 
+func (a appLogWriter) Write(p []byte) (n int, err error) {
+	//Non structured logs from executable
+	fmt.Print(string(p))
+
+	//In prod use structured
+	//	log.WithField("PID", a.Pid).Info(string(p))
+
+	return len(p), nil
+}
+
+func spawnChildNetwork(cfg *config.Config) {
+	args := strings.Split(cfg.SpawnNetwork, " ")
+	fmt.Printf("launching -%s -(%d)-%v\n", args[0], len(args[1:]), args[1:])
+	cmd := exec.Command("node", "tmp/testrpc/build/cli.node.js") // (args[0], args[1:]...)
+	/*
+		path, err := os.Getwd()
+		if err != nil {
+			log.WithField("error", err).Error("failed getting path")
+		}
+		fmt.Printf("path-%s-\n", path)
+			cmd.Dir = path
+	*/
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
-		fatal(err)
+		log.WithField("error", err).Error("failed redirecting stderr")
 	}
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		fatal(err)
+		log.WithField("error", err).Error("failed redirecting stdout")
 	}
 
 	err = cmd.Start()
 	if err != nil {
-		fatal(err)
+		log.WithField("error", err).Error("failed starting child network")
 	}
 
-	go io.Copy(appLogWriter{}, stderr)
-	go io.Copy(appLogWriter{}, stdout)
+	go io.Copy(appLogWriter{cmd.Process.Pid}, stderr)
+	go io.Copy(appLogWriter{cmd.Process.Pid}, stdout)
 
+	log.WithField("pid", cmd.Process.Pid).Error("Launched!")
 	go func() {
 		<-stopChannel
 		pid := cmd.Process.Pid
-		runnerLog("Killing PID %d", pid)
+		log.WithField("pid", pid).Error("killing pid")
+
 		cmd.Process.Kill()
 	}()
+
+	cmd.Wait()
+	//TODO respawn???
 }
+
+func preKillNode() {
+	cmd := exec.Command("pkill", "node")
+	err := cmd.Start()
+	if err != nil {
+		log.WithField("error", err).Error("failed killing node")
+	}
+}
+
+var (
+	stopChannel chan bool
+)
 
 func main() {
 	demo := envflag.Bool("DEMO_MODE", true, "Enable demo mode for investors, or local development")
@@ -149,12 +188,19 @@ func main() {
 	proxyAddr := envflag.String("PROXY_ADDR", "http://localhost:8545", "Where the actual web3 rpc address exists")
 	privateKeyJsonFile := envflag.String("PRIVATE_KEY_JSON_PATH", "misc/example_private_keys.json", "TestRPC json output")
 	spawnNetwork := envflag.String("SPAWN_NETWORK", "node tmp/testrpc/build/cli.node.js", "How does test rpc spawn the testrpc or ethereum network")
+	preKill := envflag.Bool("PRE_KILL", false, "kills all node processes to cleanup first")
+
 	//Prod  node src/build/cli.node.js
+	stopChannel = make(chan bool)
 
 	envflag.Parse()
 
 	if *demo == true {
 		log.Info("You are running in demo mode, don't use this in production. As it skips authentication and other features")
+	}
+	if *preKill == true {
+		log.Info("killing all node instances")
+		//preKillNode()
 	}
 
 	// Check for log level specified by environment variable
@@ -178,10 +224,12 @@ func main() {
 		SpawnNetwork:       *spawnNetwork,
 	}
 
-	go spawnChildNetwork()
+	go spawnChildNetwork(config)
 
 	//	database := db.Connect()
 	s := setup(nil, config) //database //TODO readd database
+
+	//TODO move http to seperate thread, and main thread just checks for Ctrl-C
 
 	//local dev we will ignore using letsencrypt
 	if *skipLetsEncrypt == false {
@@ -196,4 +244,7 @@ func main() {
 		}
 		log.Fatal(m.Serve())
 	}
+	// Likely this would never happen, cause the http server would have to close
+	stopChannel <- true
+	time.Sleep(2 * time.Second) // Atleast try and give time to kill the subprogram
 }

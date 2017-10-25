@@ -73,3 +73,8 @@ to make web3 requests
 ```
 curl -X POST --data '{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":67}' localhost:8081/
 ```
+
+to run in fresh
+```
+fresh -c proxy_runner.conf
+```

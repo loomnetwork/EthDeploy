@@ -25,7 +25,7 @@ class DeploymentLog extends React.Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => this.tick(), 3000);
+    this.interval = setInterval(() => this.tick(), 5000);
   }
 
   componentWillUnmount() {

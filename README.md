@@ -56,6 +56,8 @@ one window
 ```
 git clone git@github.com:loomnetwork/testrpc.git
 git checkout save-keys
+npm install
+mkdir testdata
 node cli.js --acctKeys data.json --db testdata
 ```
 

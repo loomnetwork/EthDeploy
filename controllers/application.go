@@ -229,7 +229,14 @@ func UpdateApplication(c *gin.Context) {
 		// 1.0.0 <= this version < 2.0.0 !!
 	}
 
-	c.JSON(200, application)
+	asdf := c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON)
+	fmt.Printf("NegotiateFormat-%s\n", asdf)
+	switch c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON) {
+	case gin.MIMEHTML:
+		c.Redirect(301, fmt.Sprintf("/dashboard/%s#settings", application.Slug))
+	case gin.MIMEJSON:
+		c.JSON(201, application)
+	}
 }
 
 func DeleteApplication(c *gin.Context) {

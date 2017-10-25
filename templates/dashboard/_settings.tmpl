@@ -31,9 +31,40 @@
           </li>
           <li class="row mb-2">
             <small class="col-sm-5 text-muted">Static Content Url</small>
-            <span class="col-sm-7"><code>{{.name}}.loomapps.com</code></span>
+            <span class="col-sm-7"><code>{{.app.Slug}}.loomapps.com</code></span>
           </li>
         </ul>
+      </div>
+    </div>
+    <div class="row pt-5 pb-3">
+      <div class="col-md-4 label-col">
+        <h5>Default Chain</h5>
+        <p>Change which chain to direct users to by default</p>
+      </div>
+      <div class="col-md-8 content-col">
+        <form class="form-inline mt-2" action="/updated_default_chain/{{ .app.ID}}" method="POST">
+          <div class="form-group col-9">
+            <div class="form-check w-100 justify-content-start">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" name="default_chain" id="defaultchain1" value="loom" {{if eq .app.DefaultChain "loom"}} checked {{end}}>
+                Loom Network
+              </label>
+            </div>
+            <div class="form-check w-100 justify-content-start">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" name="default_chain" id="defaultchain2" value="mainnet" {{if eq .app.DefaultChain "mainnet"}} checked {{end}}>
+                Ethereum MainNet
+              </label>
+            </div>
+            <div class="form-check disabled w-100 justify-content-start">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" name="default_chain" id="defaultchain3" value="ropsten" disabled>
+                Ropsten TestNet
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-outline-danger col-3">Save Preferences</button>
+        </form>
       </div>
     </div>
     <div class="row pt-5 pb-3">

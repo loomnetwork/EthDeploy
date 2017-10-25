@@ -53,6 +53,7 @@ func Initialize(r *gin.Engine, c *config.Config) {
 	r.GET("/", controllers.ApplicationIndex)
 	r.GET("/dashboard/:id", controllers.Dashboard)
 	r.GET("/newdapp", controllers.NewDApp)
+	r.POST("/updated_default_chain/:id", controllers.UpdateApplication)
 
 	r.GET("/apis.json", controllers.APIEndpoints)
 

@@ -14,4 +14,5 @@ type Application struct {
 	Status       string    `json:"status" form:"status"`
 	Account      *Account  `json:"account form:"account`
 	LastDeployed time.Time `json:"lastdeployed" form:"lastdeployed"`
+	DefaultChain string    `json:"default_chain" form:"default_chain" gorm:"default:'loom'"`
 }

@@ -27,6 +27,10 @@
   left: -9em;
 }
 
+.muted-shadow {
+  box-shadow: 0 -4px 6px 2px rgba(206, 206, 206, 0.29);
+}
+
 .overview-sidebar {
   .text-white {
     color: white;
@@ -41,7 +45,6 @@
     padding: 0.3rem 1.25rem;
     // background: $gray-300;
     border: 0;
-    box-shadow: 0 -4px 6px 2px rgba(206, 206, 206, 0.29);
   }
 
   .upgrade-button {

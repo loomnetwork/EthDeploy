@@ -6,7 +6,11 @@ import (
 	"net/http"
 	"os"
 
+	dbpkg "github.com/loomnetwork/dashboard/db"
+	log "github.com/sirupsen/logrus"
+
 	"github.com/gin-gonic/gin"
+	"github.com/loomnetwork/dashboard/models"
 )
 
 func UploadApplication(c *gin.Context) {
@@ -30,4 +34,14 @@ func UploadApplication(c *gin.Context) {
 	}
 	defer f.Close()
 	io.Copy(f, file)
+
+	// create new version
+	db := dbpkg.DBInstance(c)
+	deployHistory := models.DeployHistory{
+		BundleName: handler.Filename,
+	}
+
+	if err := db.Create(&deployHistory).Error; err != nil {
+		log.WithField("error", err).Warn("Error when storing new version")
+	}
 }

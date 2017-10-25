@@ -1,14 +1,27 @@
 class DeploymentLog extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { items: [{version: '0.00', timestamp: '~'}], nonce: 0};
+    this.state = { items: [], nonce: 0};
   }
 
   tick() {
-    this.setState(prevState => ({
-      nonce: prevState.nonce + 1,
-      items: prevState.items.concat([{version: 'v0.0' + prevState.nonce, timestamp: '2017-10-22'}]),
-    }));
+    var items = [];
+    var component = this;
+
+    axios.get("/deploy_histories")
+      .then(function (histories) {
+        items = histories.data.map(function(item) {
+          return {version: item.bundle_name, timestamp: new Date(item.CreatedAt)}
+        })
+
+        component.setState(prevState => ({
+          nonce: prevState.nonce + 1,
+          items: items}),
+        );
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   componentDidMount() {
@@ -37,7 +50,7 @@ class LogItem extends React.Component {
       {this.props.items.map(item => (
         <a key={item.version} className="list-group-item list-group-item-action justify-content-between d-flex" href="#">
           <span>{item.version}</span>
-          <span className="text-muted">{item.timestamp}</span>
+          <span className="text-muted">{item.timestamp.toGMTString()}</span>
         </a>
       ))}
       </div>

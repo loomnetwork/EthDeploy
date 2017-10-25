@@ -33,7 +33,8 @@ var Paths = {
       "./assets/js/bootstrap/popover.js",
       "./assets/js/bootstrap/scrollspy.js",
       "./assets/js/bootstrap/tab.js",
-      './assets/js/custom/*'
+      './assets/js/custom/*',
+      './assets/js/components/*',
     ]
 }
 

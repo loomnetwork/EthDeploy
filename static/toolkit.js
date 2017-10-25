@@ -17510,101 +17510,6 @@ $(function () {
 	});
 })(window.jQuery);
 
-var DeploymentLog = function (_React$Component) {
-	_inherits(DeploymentLog, _React$Component);
-
-	function DeploymentLog(props) {
-		_classCallCheck(this, DeploymentLog);
-
-		var _this28 = _possibleConstructorReturn(this, (DeploymentLog.__proto__ || Object.getPrototypeOf(DeploymentLog)).call(this, props));
-
-		_this28.state = { items: [{ version: '0.00', timestamp: '~' }], nonce: 0 };
-		return _this28;
-	}
-
-	_createClass(DeploymentLog, [{
-		key: 'tick',
-		value: function tick() {
-			this.setState(function (prevState) {
-				return {
-					nonce: prevState.nonce + 1,
-					items: prevState.items.concat([{ version: 'v0.0' + prevState.nonce, timestamp: '2017-10-22' }])
-				};
-			});
-		}
-	}, {
-		key: 'componentDidMount',
-		value: function componentDidMount() {
-			var _this29 = this;
-
-			this.interval = setInterval(function () {
-				return _this29.tick();
-			}, 3000);
-		}
-	}, {
-		key: 'componentWillUnmount',
-		value: function componentWillUnmount() {
-			clearInterval(this.interval);
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			return React.createElement(
-				'div',
-				{ className: 'list-group mb-3', id: 'deploymentlog' },
-				React.createElement(
-					'h6',
-					{ className: 'list-group-header' },
-					'Deployment Log'
-				),
-				React.createElement(LogItem, { items: this.state.items })
-			);
-		}
-	}]);
-
-	return DeploymentLog;
-}(React.Component);
-
-var LogItem = function (_React$Component2) {
-	_inherits(LogItem, _React$Component2);
-
-	function LogItem() {
-		_classCallCheck(this, LogItem);
-
-		return _possibleConstructorReturn(this, (LogItem.__proto__ || Object.getPrototypeOf(LogItem)).apply(this, arguments));
-	}
-
-	_createClass(LogItem, [{
-		key: 'render',
-		value: function render() {
-			return React.createElement(
-				'div',
-				null,
-				this.props.items.map(function (item) {
-					return React.createElement(
-						'a',
-						{ key: item.version, className: 'list-group-item list-group-item-action justify-content-between d-flex', href: '#' },
-						React.createElement(
-							'span',
-							null,
-							item.version
-						),
-						React.createElement(
-							'span',
-							{ className: 'text-muted' },
-							item.timestamp
-						)
-					);
-				})
-			);
-		}
-	}]);
-
-	return LogItem;
-}(React.Component);
-
-ReactDOM.render(React.createElement(DeploymentLog, null), document.getElementById('deploymentlog'));
-
 /*
  *
  * More info at [www.dropzonejs.com](http://www.dropzonejs.com)
@@ -18347,7 +18252,7 @@ var Dropzone = function (_Emitter) {
 				// Called when a file is added to the queue
 				// Receives `file`
 				addedfile: function addedfile(file) {
-					var _this32 = this;
+					var _this29 = this;
 
 					if (this.element === this.previewsContainer) {
 						this.element.classList.add("dz-started");
@@ -18417,16 +18322,16 @@ var Dropzone = function (_Emitter) {
 							e.preventDefault();
 							e.stopPropagation();
 							if (file.status === Dropzone.UPLOADING) {
-								return Dropzone.confirm(_this32.options.dictCancelUploadConfirmation, function () {
-									return _this32.removeFile(file);
+								return Dropzone.confirm(_this29.options.dictCancelUploadConfirmation, function () {
+									return _this29.removeFile(file);
 								});
 							} else {
-								if (_this32.options.dictRemoveFileConfirmation) {
-									return Dropzone.confirm(_this32.options.dictRemoveFileConfirmation, function () {
-										return _this32.removeFile(file);
+								if (_this29.options.dictRemoveFileConfirmation) {
+									return Dropzone.confirm(_this29.options.dictRemoveFileConfirmation, function () {
+										return _this29.removeFile(file);
 									});
 								} else {
-									return _this32.removeFile(file);
+									return _this29.removeFile(file);
 								}
 							}
 						};
@@ -18684,106 +18589,106 @@ var Dropzone = function (_Emitter) {
 	function Dropzone(el, options) {
 		_classCallCheck(this, Dropzone);
 
-		var _this31 = _possibleConstructorReturn(this, (Dropzone.__proto__ || Object.getPrototypeOf(Dropzone)).call(this));
+		var _this28 = _possibleConstructorReturn(this, (Dropzone.__proto__ || Object.getPrototypeOf(Dropzone)).call(this));
 
 		var fallback = void 0,
 		    left = void 0;
-		_this31.element = el;
+		_this28.element = el;
 		// For backwards compatibility since the version was in the prototype previously
-		_this31.version = Dropzone.version;
+		_this28.version = Dropzone.version;
 
-		_this31.defaultOptions.previewTemplate = _this31.defaultOptions.previewTemplate.replace(/\n*/g, "");
+		_this28.defaultOptions.previewTemplate = _this28.defaultOptions.previewTemplate.replace(/\n*/g, "");
 
-		_this31.clickableElements = [];
-		_this31.listeners = [];
-		_this31.files = []; // All files
+		_this28.clickableElements = [];
+		_this28.listeners = [];
+		_this28.files = []; // All files
 
-		if (typeof _this31.element === "string") {
-			_this31.element = document.querySelector(_this31.element);
+		if (typeof _this28.element === "string") {
+			_this28.element = document.querySelector(_this28.element);
 		}
 
 		// Not checking if instance of HTMLElement or Element since IE9 is extremely weird.
-		if (!_this31.element || _this31.element.nodeType == null) {
+		if (!_this28.element || _this28.element.nodeType == null) {
 			throw new Error("Invalid dropzone element.");
 		}
 
-		if (_this31.element.dropzone) {
+		if (_this28.element.dropzone) {
 			throw new Error("Dropzone already attached.");
 		}
 
 		// Now add this dropzone to the instances.
-		Dropzone.instances.push(_this31);
+		Dropzone.instances.push(_this28);
 
 		// Put the dropzone inside the element itself.
-		_this31.element.dropzone = _this31;
+		_this28.element.dropzone = _this28;
 
-		var elementOptions = (left = Dropzone.optionsForElement(_this31.element)) != null ? left : {};
+		var elementOptions = (left = Dropzone.optionsForElement(_this28.element)) != null ? left : {};
 
-		_this31.options = Dropzone.extend({}, _this31.defaultOptions, elementOptions, options != null ? options : {});
+		_this28.options = Dropzone.extend({}, _this28.defaultOptions, elementOptions, options != null ? options : {});
 
 		// If the browser failed, just call the fallback and leave
-		if (_this31.options.forceFallback || !Dropzone.isBrowserSupported()) {
+		if (_this28.options.forceFallback || !Dropzone.isBrowserSupported()) {
 			var _ret;
 
-			return _ret = _this31.options.fallback.call(_this31), _possibleConstructorReturn(_this31, _ret);
+			return _ret = _this28.options.fallback.call(_this28), _possibleConstructorReturn(_this28, _ret);
 		}
 
 		// @options.url = @element.getAttribute "action" unless @options.url?
-		if (_this31.options.url == null) {
-			_this31.options.url = _this31.element.getAttribute("action");
+		if (_this28.options.url == null) {
+			_this28.options.url = _this28.element.getAttribute("action");
 		}
 
-		if (!_this31.options.url) {
+		if (!_this28.options.url) {
 			throw new Error("No URL provided.");
 		}
 
-		if (_this31.options.acceptedFiles && _this31.options.acceptedMimeTypes) {
+		if (_this28.options.acceptedFiles && _this28.options.acceptedMimeTypes) {
 			throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
 		}
 
-		if (_this31.options.uploadMultiple && _this31.options.chunking) {
+		if (_this28.options.uploadMultiple && _this28.options.chunking) {
 			throw new Error('You cannot set both: uploadMultiple and chunking.');
 		}
 
 		// Backwards compatibility
-		if (_this31.options.acceptedMimeTypes) {
-			_this31.options.acceptedFiles = _this31.options.acceptedMimeTypes;
-			delete _this31.options.acceptedMimeTypes;
+		if (_this28.options.acceptedMimeTypes) {
+			_this28.options.acceptedFiles = _this28.options.acceptedMimeTypes;
+			delete _this28.options.acceptedMimeTypes;
 		}
 
 		// Backwards compatibility
-		if (_this31.options.renameFilename != null) {
-			_this31.options.renameFile = function (file) {
-				return _this31.options.renameFilename.call(_this31, file.name, file);
+		if (_this28.options.renameFilename != null) {
+			_this28.options.renameFile = function (file) {
+				return _this28.options.renameFilename.call(_this28, file.name, file);
 			};
 		}
 
-		_this31.options.method = _this31.options.method.toUpperCase();
+		_this28.options.method = _this28.options.method.toUpperCase();
 
-		if ((fallback = _this31.getExistingFallback()) && fallback.parentNode) {
+		if ((fallback = _this28.getExistingFallback()) && fallback.parentNode) {
 			// Remove the fallback
 			fallback.parentNode.removeChild(fallback);
 		}
 
 		// Display previews in the previewsContainer element or the Dropzone element unless explicitly set to false
-		if (_this31.options.previewsContainer !== false) {
-			if (_this31.options.previewsContainer) {
-				_this31.previewsContainer = Dropzone.getElement(_this31.options.previewsContainer, "previewsContainer");
+		if (_this28.options.previewsContainer !== false) {
+			if (_this28.options.previewsContainer) {
+				_this28.previewsContainer = Dropzone.getElement(_this28.options.previewsContainer, "previewsContainer");
 			} else {
-				_this31.previewsContainer = _this31.element;
+				_this28.previewsContainer = _this28.element;
 			}
 		}
 
-		if (_this31.options.clickable) {
-			if (_this31.options.clickable === true) {
-				_this31.clickableElements = [_this31.element];
+		if (_this28.options.clickable) {
+			if (_this28.options.clickable === true) {
+				_this28.clickableElements = [_this28.element];
 			} else {
-				_this31.clickableElements = Dropzone.getElements(_this31.options.clickable, "clickable");
+				_this28.clickableElements = Dropzone.getElements(_this28.options.clickable, "clickable");
 			}
 		}
 
-		_this31.init();
-		return _this31;
+		_this28.init();
+		return _this28;
 	}
 
 	// Returns all files that have been accepted
@@ -18857,7 +18762,7 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: 'init',
 		value: function init() {
-			var _this33 = this;
+			var _this30 = this;
 
 			// In case it isn't set already
 			if (this.element.tagName === "form") {
@@ -18870,34 +18775,34 @@ var Dropzone = function (_Emitter) {
 
 			if (this.clickableElements.length) {
 				var setupHiddenFileInput = function setupHiddenFileInput() {
-					if (_this33.hiddenFileInput) {
-						_this33.hiddenFileInput.parentNode.removeChild(_this33.hiddenFileInput);
+					if (_this30.hiddenFileInput) {
+						_this30.hiddenFileInput.parentNode.removeChild(_this30.hiddenFileInput);
 					}
-					_this33.hiddenFileInput = document.createElement("input");
-					_this33.hiddenFileInput.setAttribute("type", "file");
-					if (_this33.options.maxFiles === null || _this33.options.maxFiles > 1) {
-						_this33.hiddenFileInput.setAttribute("multiple", "multiple");
+					_this30.hiddenFileInput = document.createElement("input");
+					_this30.hiddenFileInput.setAttribute("type", "file");
+					if (_this30.options.maxFiles === null || _this30.options.maxFiles > 1) {
+						_this30.hiddenFileInput.setAttribute("multiple", "multiple");
 					}
-					_this33.hiddenFileInput.className = "dz-hidden-input";
+					_this30.hiddenFileInput.className = "dz-hidden-input";
 
-					if (_this33.options.acceptedFiles !== null) {
-						_this33.hiddenFileInput.setAttribute("accept", _this33.options.acceptedFiles);
+					if (_this30.options.acceptedFiles !== null) {
+						_this30.hiddenFileInput.setAttribute("accept", _this30.options.acceptedFiles);
 					}
-					if (_this33.options.capture !== null) {
-						_this33.hiddenFileInput.setAttribute("capture", _this33.options.capture);
+					if (_this30.options.capture !== null) {
+						_this30.hiddenFileInput.setAttribute("capture", _this30.options.capture);
 					}
 
 					// Not setting `display="none"` because some browsers don't accept clicks
 					// on elements that aren't displayed.
-					_this33.hiddenFileInput.style.visibility = "hidden";
-					_this33.hiddenFileInput.style.position = "absolute";
-					_this33.hiddenFileInput.style.top = "0";
-					_this33.hiddenFileInput.style.left = "0";
-					_this33.hiddenFileInput.style.height = "0";
-					_this33.hiddenFileInput.style.width = "0";
-					document.querySelector(_this33.options.hiddenInputContainer).appendChild(_this33.hiddenFileInput);
-					return _this33.hiddenFileInput.addEventListener("change", function () {
-						var files = _this33.hiddenFileInput.files;
+					_this30.hiddenFileInput.style.visibility = "hidden";
+					_this30.hiddenFileInput.style.position = "absolute";
+					_this30.hiddenFileInput.style.top = "0";
+					_this30.hiddenFileInput.style.left = "0";
+					_this30.hiddenFileInput.style.height = "0";
+					_this30.hiddenFileInput.style.width = "0";
+					document.querySelector(_this30.options.hiddenInputContainer).appendChild(_this30.hiddenFileInput);
+					return _this30.hiddenFileInput.addEventListener("change", function () {
+						var files = _this30.hiddenFileInput.files;
 
 						if (files.length) {
 							var _iteratorNormalCompletion10 = true;
@@ -18908,7 +18813,7 @@ var Dropzone = function (_Emitter) {
 								for (var _iterator10 = files[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
 									var file = _step10.value;
 
-									_this33.addFile(file);
+									_this30.addFile(file);
 								}
 							} catch (err) {
 								_didIteratorError10 = true;
@@ -18925,7 +18830,7 @@ var Dropzone = function (_Emitter) {
 								}
 							}
 						}
-						_this33.emit("addedfiles", files);
+						_this30.emit("addedfiles", files);
 						return setupHiddenFileInput();
 					});
 				};
@@ -18963,23 +18868,23 @@ var Dropzone = function (_Emitter) {
 			}
 
 			this.on("uploadprogress", function () {
-				return _this33.updateTotalUploadProgress();
+				return _this30.updateTotalUploadProgress();
 			});
 
 			this.on("removedfile", function () {
-				return _this33.updateTotalUploadProgress();
+				return _this30.updateTotalUploadProgress();
 			});
 
 			this.on("canceled", function (file) {
-				return _this33.emit("complete", file);
+				return _this30.emit("complete", file);
 			});
 
 			// Emit a `queuecomplete` event if all files finished uploading.
 			this.on("complete", function (file) {
-				if (_this33.getAddedFiles().length === 0 && _this33.getUploadingFiles().length === 0 && _this33.getQueuedFiles().length === 0) {
+				if (_this30.getAddedFiles().length === 0 && _this30.getUploadingFiles().length === 0 && _this30.getQueuedFiles().length === 0) {
 					// This needs to be deferred so that `queuecomplete` really triggers after `complete`
 					return setTimeout(function () {
-						return _this33.emit("queuecomplete");
+						return _this30.emit("queuecomplete");
 					}, 0);
 				}
 			});
@@ -18998,11 +18903,11 @@ var Dropzone = function (_Emitter) {
 				element: this.element,
 				events: {
 					"dragstart": function dragstart(e) {
-						return _this33.emit("dragstart", e);
+						return _this30.emit("dragstart", e);
 					},
 					"dragenter": function dragenter(e) {
 						noPropagation(e);
-						return _this33.emit("dragenter", e);
+						return _this30.emit("dragenter", e);
 					},
 					"dragover": function dragover(e) {
 						// Makes it possible to drag files from chrome's download bar
@@ -19015,17 +18920,17 @@ var Dropzone = function (_Emitter) {
 						e.dataTransfer.dropEffect = 'move' === efct || 'linkMove' === efct ? 'move' : 'copy';
 
 						noPropagation(e);
-						return _this33.emit("dragover", e);
+						return _this30.emit("dragover", e);
 					},
 					"dragleave": function dragleave(e) {
-						return _this33.emit("dragleave", e);
+						return _this30.emit("dragleave", e);
 					},
 					"drop": function drop(e) {
 						noPropagation(e);
-						return _this33.drop(e);
+						return _this30.drop(e);
 					},
 					"dragend": function dragend(e) {
-						return _this33.emit("dragend", e);
+						return _this30.emit("dragend", e);
 					}
 
 					// This is disabled right now, because the browsers don't implement it properly.
@@ -19035,13 +18940,13 @@ var Dropzone = function (_Emitter) {
 				} }];
 
 			this.clickableElements.forEach(function (clickableElement) {
-				return _this33.listeners.push({
+				return _this30.listeners.push({
 					element: clickableElement,
 					events: {
 						"click": function click(evt) {
 							// Only the actual dropzone or the message element should trigger file selection
-							if (clickableElement !== _this33.element || evt.target === _this33.element || Dropzone.elementInside(evt.target, _this33.element.querySelector(".dz-message"))) {
-								_this33.hiddenFileInput.click(); // Forward the click
+							if (clickableElement !== _this30.element || evt.target === _this30.element || Dropzone.elementInside(evt.target, _this30.element.querySelector(".dz-message"))) {
+								_this30.hiddenFileInput.click(); // Forward the click
 							}
 							return true;
 						}
@@ -19254,7 +19159,7 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: 'disable',
 		value: function disable() {
-			var _this34 = this;
+			var _this31 = this;
 
 			this.clickableElements.forEach(function (element) {
 				return element.classList.remove("dz-clickable");
@@ -19262,7 +19167,7 @@ var Dropzone = function (_Emitter) {
 			this.removeEventListeners();
 
 			return this.files.map(function (file) {
-				return _this34.cancelUpload(file);
+				return _this31.cancelUpload(file);
 			});
 		}
 	}, {
@@ -19360,10 +19265,10 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: 'handleFiles',
 		value: function handleFiles(files) {
-			var _this35 = this;
+			var _this32 = this;
 
 			return files.map(function (file) {
-				return _this35.addFile(file);
+				return _this32.addFile(file);
 			});
 		}
 
@@ -19373,7 +19278,7 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: '_addFilesFromItems',
 		value: function _addFilesFromItems(items) {
-			var _this36 = this;
+			var _this33 = this;
 
 			return function () {
 				var result = [];
@@ -19388,16 +19293,16 @@ var Dropzone = function (_Emitter) {
 						var entry;
 						if (item.webkitGetAsEntry != null && (entry = item.webkitGetAsEntry())) {
 							if (entry.isFile) {
-								result.push(_this36.addFile(item.getAsFile()));
+								result.push(_this33.addFile(item.getAsFile()));
 							} else if (entry.isDirectory) {
 								// Append all files from that directory to files
-								result.push(_this36._addFilesFromDirectory(entry, entry.name));
+								result.push(_this33._addFilesFromDirectory(entry, entry.name));
 							} else {
 								result.push(undefined);
 							}
 						} else if (item.getAsFile != null) {
 							if (item.kind == null || item.kind === "file") {
-								result.push(_this36.addFile(item.getAsFile()));
+								result.push(_this33.addFile(item.getAsFile()));
 							} else {
 								result.push(undefined);
 							}
@@ -19429,7 +19334,7 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: '_addFilesFromDirectory',
 		value: function _addFilesFromDirectory(directory, path) {
-			var _this37 = this;
+			var _this34 = this;
 
 			var dirReader = directory.createReader();
 
@@ -19452,14 +19357,14 @@ var Dropzone = function (_Emitter) {
 
 								if (entry.isFile) {
 									entry.file(function (file) {
-										if (_this37.options.ignoreHiddenFiles && file.name.substring(0, 1) === '.') {
+										if (_this34.options.ignoreHiddenFiles && file.name.substring(0, 1) === '.') {
 											return;
 										}
 										file.fullPath = path + '/' + file.name;
-										return _this37.addFile(file);
+										return _this34.addFile(file);
 									});
 								} else if (entry.isDirectory) {
-									_this37._addFilesFromDirectory(entry, path + '/' + entry.name);
+									_this34._addFilesFromDirectory(entry, path + '/' + entry.name);
 								}
 							}
 
@@ -19514,7 +19419,7 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: 'addFile',
 		value: function addFile(file) {
-			var _this38 = this;
+			var _this35 = this;
 
 			file.upload = {
 				uuid: Dropzone.uuidv4(),
@@ -19538,14 +19443,14 @@ var Dropzone = function (_Emitter) {
 			return this.accept(file, function (error) {
 				if (error) {
 					file.accepted = false;
-					_this38._errorProcessing([file], error); // Will set the file.status
+					_this35._errorProcessing([file], error); // Will set the file.status
 				} else {
 					file.accepted = true;
-					if (_this38.options.autoQueue) {
-						_this38.enqueueFile(file);
+					if (_this35.options.autoQueue) {
+						_this35.enqueueFile(file);
 					} // Will set .accepted = true
 				}
-				return _this38._updateMaxFilesReachedClass();
+				return _this35._updateMaxFilesReachedClass();
 			});
 		}
 
@@ -19584,13 +19489,13 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: 'enqueueFile',
 		value: function enqueueFile(file) {
-			var _this39 = this;
+			var _this36 = this;
 
 			if (file.status === Dropzone.ADDED && file.accepted === true) {
 				file.status = Dropzone.QUEUED;
 				if (this.options.autoProcessQueue) {
 					return setTimeout(function () {
-						return _this39.processQueue();
+						return _this36.processQueue();
 					}, 0); // Deferring the call
 				}
 			} else {
@@ -19600,19 +19505,19 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: '_enqueueThumbnail',
 		value: function _enqueueThumbnail(file) {
-			var _this40 = this;
+			var _this37 = this;
 
 			if (this.options.createImageThumbnails && file.type.match(/image.*/) && file.size <= this.options.maxThumbnailFilesize * 1024 * 1024) {
 				this._thumbnailQueue.push(file);
 				return setTimeout(function () {
-					return _this40._processThumbnailQueue();
+					return _this37._processThumbnailQueue();
 				}, 0); // Deferring the call
 			}
 		}
 	}, {
 		key: '_processThumbnailQueue',
 		value: function _processThumbnailQueue() {
-			var _this41 = this;
+			var _this38 = this;
 
 			if (this._processingThumbnail || this._thumbnailQueue.length === 0) {
 				return;
@@ -19621,9 +19526,9 @@ var Dropzone = function (_Emitter) {
 			this._processingThumbnail = true;
 			var file = this._thumbnailQueue.shift();
 			return this.createThumbnail(file, this.options.thumbnailWidth, this.options.thumbnailHeight, this.options.thumbnailMethod, true, function (dataUrl) {
-				_this41.emit("thumbnail", file, dataUrl);
-				_this41._processingThumbnail = false;
-				return _this41._processThumbnailQueue();
+				_this38.emit("thumbnail", file, dataUrl);
+				_this38._processingThumbnail = false;
+				return _this38._processThumbnailQueue();
 			});
 		}
 
@@ -19689,19 +19594,19 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: 'resizeImage',
 		value: function resizeImage(file, width, height, resizeMethod, callback) {
-			var _this42 = this;
+			var _this39 = this;
 
 			return this.createThumbnail(file, width, height, resizeMethod, false, function (dataUrl, canvas) {
 				if (canvas === null) {
 					// The image has not been resized
 					return callback(file);
 				} else {
-					var resizeMimeType = _this42.options.resizeMimeType;
+					var resizeMimeType = _this39.options.resizeMimeType;
 
 					if (resizeMimeType == null) {
 						resizeMimeType = file.type;
 					}
-					var resizedDataURL = canvas.toDataURL(resizeMimeType, _this42.options.resizeQuality);
+					var resizedDataURL = canvas.toDataURL(resizeMimeType, _this39.options.resizeQuality);
 					if (resizeMimeType === 'image/jpeg' || resizeMimeType === 'image/jpg') {
 						// Now add the original EXIF information
 						resizedDataURL = ExifRestore.restore(file.dataURL, resizedDataURL);
@@ -19713,7 +19618,7 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: 'createThumbnail',
 		value: function createThumbnail(file, width, height, resizeMethod, fixOrientation, callback) {
-			var _this43 = this;
+			var _this40 = this;
 
 			var fileReader = new FileReader();
 
@@ -19729,7 +19634,7 @@ var Dropzone = function (_Emitter) {
 					return;
 				}
 
-				return _this43.createThumbnailFromUrl(file, width, height, resizeMethod, fixOrientation, callback);
+				return _this40.createThumbnailFromUrl(file, width, height, resizeMethod, fixOrientation, callback);
 			};
 
 			return fileReader.readAsDataURL(file);
@@ -19737,7 +19642,7 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: 'createThumbnailFromUrl',
 		value: function createThumbnailFromUrl(file, width, height, resizeMethod, fixOrientation, callback, crossOrigin) {
-			var _this44 = this;
+			var _this41 = this;
 
 			// Not using `new Image` here because of a bug in latest Chrome versions.
 			// See https://github.com/enyo/dropzone/pull/226
@@ -19763,7 +19668,7 @@ var Dropzone = function (_Emitter) {
 					file.width = img.width;
 					file.height = img.height;
 
-					var resizeInfo = _this44.options.resize.call(_this44, file, width, height, resizeMethod);
+					var resizeInfo = _this41.options.resize.call(_this41, file, width, height, resizeMethod);
 
 					var canvas = document.createElement("canvas");
 					var ctx = canvas.getContext("2d");
@@ -20024,7 +19929,7 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: 'uploadFiles',
 		value: function uploadFiles(files) {
-			var _this45 = this;
+			var _this42 = this;
 
 			this._transformFiles(files, function (transformedFiles) {
 				if (files[0].upload.chunked) {
@@ -20051,11 +19956,11 @@ var Dropzone = function (_Emitter) {
 
 						startedChunkCount++;
 
-						var start = chunkIndex * _this45.options.chunkSize;
-						var end = Math.min(start + _this45.options.chunkSize, file.size);
+						var start = chunkIndex * _this42.options.chunkSize;
+						var end = Math.min(start + _this42.options.chunkSize, file.size);
 
 						var dataBlock = {
-							name: _this45._getParamName(0),
+							name: _this42._getParamName(0),
 							data: transformedFile.webkitSlice ? transformedFile.webkitSlice(start, end) : transformedFile.slice(start, end),
 							filename: file.upload.filename,
 							chunkIndex: chunkIndex
@@ -20070,7 +19975,7 @@ var Dropzone = function (_Emitter) {
 							retries: 0 // The number of times this block has been retried.
 						};
 
-						_this45._uploadData(files, [dataBlock]);
+						_this42._uploadData(files, [dataBlock]);
 					};
 
 					file.upload.finishedChunkUpload = function (chunk) {
@@ -20090,13 +19995,13 @@ var Dropzone = function (_Emitter) {
 						}
 
 						if (allFinished) {
-							_this45.options.chunksUploaded(file, function () {
-								_this45._finished(files, '', null);
+							_this42.options.chunksUploaded(file, function () {
+								_this42._finished(files, '', null);
 							});
 						}
 					};
 
-					if (_this45.options.parallelChunkUploads) {
+					if (_this42.options.parallelChunkUploads) {
 						for (var i = 0; i < file.upload.totalChunkCount; i++) {
 							handleNextChunk();
 						}
@@ -20107,12 +20012,12 @@ var Dropzone = function (_Emitter) {
 					var dataBlocks = [];
 					for (var _i2 = 0; _i2 < files.length; _i2++) {
 						dataBlocks[_i2] = {
-							name: _this45._getParamName(_i2),
+							name: _this42._getParamName(_i2),
 							data: transformedFiles[_i2],
 							filename: files[_i2].upload.filename
 						};
 					}
-					_this45._uploadData(files, dataBlocks);
+					_this42._uploadData(files, dataBlocks);
 				}
 			});
 		}
@@ -20136,7 +20041,7 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: '_uploadData',
 		value: function _uploadData(files, dataBlocks) {
-			var _this46 = this;
+			var _this43 = this;
 
 			var xhr = new XMLHttpRequest();
 
@@ -20182,17 +20087,17 @@ var Dropzone = function (_Emitter) {
 			xhr.withCredentials = !!this.options.withCredentials;
 
 			xhr.onload = function (e) {
-				_this46._finishedUploading(files, xhr, e);
+				_this43._finishedUploading(files, xhr, e);
 			};
 
 			xhr.onerror = function () {
-				_this46._handleUploadError(files, xhr);
+				_this43._handleUploadError(files, xhr);
 			};
 
 			// Some browsers do not have the .upload property
 			var progressObj = xhr.upload != null ? xhr.upload : xhr;
 			progressObj.onprogress = function (e) {
-				return _this46._updateFilesUploadProgress(files, xhr, e);
+				return _this43._updateFilesUploadProgress(files, xhr, e);
 			};
 
 			var headers = {
@@ -20274,14 +20179,14 @@ var Dropzone = function (_Emitter) {
 	}, {
 		key: '_transformFiles',
 		value: function _transformFiles(files, done) {
-			var _this47 = this;
+			var _this44 = this;
 
 			var transformedFiles = [];
 			// Clumsy way of handling asynchronous calls, until I get to add a proper Future library.
 			var doneCounter = 0;
 
 			var _loop = function _loop(i) {
-				_this47.options.transformFile.call(_this47, files[i], function (transformedFile) {
+				_this44.options.transformFile.call(_this44, files[i], function (transformedFile) {
 					transformedFiles[i] = transformedFile;
 					if (++doneCounter === files.length) {
 						done(transformedFiles);
@@ -21425,4 +21330,109 @@ function __guardMethod__(obj, methodName, transform) {
 		return undefined;
 	}
 }
+
+var DeploymentLog = function (_React$Component) {
+	_inherits(DeploymentLog, _React$Component);
+
+	function DeploymentLog(props) {
+		_classCallCheck(this, DeploymentLog);
+
+		var _this45 = _possibleConstructorReturn(this, (DeploymentLog.__proto__ || Object.getPrototypeOf(DeploymentLog)).call(this, props));
+
+		_this45.state = { items: [], nonce: 0 };
+		return _this45;
+	}
+
+	_createClass(DeploymentLog, [{
+		key: 'tick',
+		value: function tick() {
+			var items = [];
+			var component = this;
+
+			axios.get("/deploy_histories").then(function (histories) {
+				items = histories.data.map(function (item) {
+					return { version: item.bundle_name, timestamp: new Date(item.CreatedAt) };
+				});
+
+				component.setState(function (prevState) {
+					return {
+						nonce: prevState.nonce + 1,
+						items: items };
+				});
+			}).catch(function (error) {
+				console.log(error);
+			});
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var _this46 = this;
+
+			this.interval = setInterval(function () {
+				return _this46.tick();
+			}, 3000);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			clearInterval(this.interval);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return React.createElement(
+				'div',
+				{ className: 'list-group mb-3', id: 'deploymentlog' },
+				React.createElement(
+					'h6',
+					{ className: 'list-group-header' },
+					'Deployment Log'
+				),
+				React.createElement(LogItem, { items: this.state.items })
+			);
+		}
+	}]);
+
+	return DeploymentLog;
+}(React.Component);
+
+var LogItem = function (_React$Component2) {
+	_inherits(LogItem, _React$Component2);
+
+	function LogItem() {
+		_classCallCheck(this, LogItem);
+
+		return _possibleConstructorReturn(this, (LogItem.__proto__ || Object.getPrototypeOf(LogItem)).apply(this, arguments));
+	}
+
+	_createClass(LogItem, [{
+		key: 'render',
+		value: function render() {
+			return React.createElement(
+				'div',
+				null,
+				this.props.items.map(function (item) {
+					return React.createElement(
+						'a',
+						{ key: item.version, className: 'list-group-item list-group-item-action justify-content-between d-flex', href: '#' },
+						React.createElement(
+							'span',
+							null,
+							item.version
+						),
+						React.createElement(
+							'span',
+							{ className: 'text-muted' },
+							item.timestamp.toGMTString()
+						)
+					);
+				})
+			);
+		}
+	}]);
+
+	return LogItem;
+}(React.Component);
+
+ReactDOM.render(React.createElement(DeploymentLog, null), document.getElementById('deploymentlog'));
 }();

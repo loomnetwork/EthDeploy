@@ -21370,7 +21370,7 @@ var DeploymentLog = function (_React$Component) {
 
 			this.interval = setInterval(function () {
 				return _this46.tick();
-			}, 3000);
+			}, 5000);
 		}
 	}, {
 		key: 'componentWillUnmount',

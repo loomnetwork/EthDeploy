@@ -1,6 +1,6 @@
 {{ define "_deployment.tmpl"}}
 
-<div role="tabpanel" class="tab-pane" id="deployment">
+<div role="tabpanel" class="tab-pane active" id="deployment">
   <div class="container">
     <div class="row">
     <div class="col-md-6 overview-sidebar">
@@ -8,32 +8,40 @@
       </form>
     </div>
     <div class="col-md-6 content">
+      <div class="d-flex mb-3">
+        <a class="col mr-1 btn btn-outline-success" href="#">
+          <img src="/assets/images/ethereum-1.svg" class="small-icon mr-3">
+          Deploy to MainNet</a>
+        <a class="col ml-1 btn btn-outline-warning" href="#">
+          <img src="/assets/images/ethereum-ropsten.svg" class="small-icon mr-3">
+          Deploy to Ropsten</a>
+      </div>
       <div class="list-group mb-3" id="deploymentlog">
         <h6 class="list-group-header">Deployment Log</h6>
 
         <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
-          <span>v104</span>
-          <span class="text-muted">10.18.13:45 UTC</span>
+          <span></span>
+          <span class="text-muted"></span>
         </a>
         <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
-          <span>v103</span>
-          <span class="text-muted">10.17.21:41 UTC</span>
+          <span></span>
+          <span class="text-muted"></span>
         </a>
         <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
-          <span>v102</span>
-          <span class="text-muted">10.17.21:31 UTC</span>
+          <span></span>
+          <span class="text-muted"></span>
         </a>
         <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
-          <span>v101</span>
-          <span class="text-muted">10.17.21:10 UTC</span>
+          <span></span>
+          <span class="text-muted"></span>
         </a>
         <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
-          <span>v100</span>
-          <span class="text-muted">10.17.20:45 UTC</span>
+          <span></span>
+          <span class="text-muted"></span>
         </a>
         <a class="list-group-item list-group-item-action justify-content-between d-flex" href="#">
-          <span>v99</span>
-          <span class="text-muted">10.17.18:25 UTC</span>
+          <span></span>
+          <span class="text-muted"></span>
         </a>
       </div>
     </div>

@@ -9088,6 +9088,10 @@ canvas {
 .account-dropdown {
   left: -9em; }
 
+.muted-shadow {
+  -webkit-box-shadow: 0 -4px 6px 2px rgba(206, 206, 206, 0.29);
+          box-shadow: 0 -4px 6px 2px rgba(206, 206, 206, 0.29); }
+
 .overview-sidebar .text-white {
   color: white; }
 
@@ -9096,13 +9100,15 @@ canvas {
 
 .overview-sidebar .list-group-header {
   padding: 0.3rem 1.25rem;
-  border: 0;
-  -webkit-box-shadow: 0 -4px 6px 2px rgba(206, 206, 206, 0.29);
-          box-shadow: 0 -4px 6px 2px rgba(206, 206, 206, 0.29); }
+  border: 0; }
 
 .overview-sidebar .upgrade-button {
   float: right;
   font-size: 12px; }
+
+.small-icon {
+  height: 30px;
+  width: auto; }
 
 .login-card {
   -webkit-box-shadow: 0 -4px 6px 2px rgba(206, 206, 206, 0.29);

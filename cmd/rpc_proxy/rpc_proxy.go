@@ -127,7 +127,7 @@ func (a appLogWriter) Write(p []byte) (n int, err error) {
 func spawnChildNetwork(cfg *config.Config) {
 	args := strings.Split(cfg.SpawnNetwork, " ")
 	fmt.Printf("launching -%s -(%d)-%v\n", args[0], len(args[1:]), args[1:])
-	cmd := exec.Command("node", "tmp/testrpc/build/cli.node.js") // (args[0], args[1:]...)
+	cmd := exec.Command("node", "tmp/testrpc/build/cli.node.js", "--acctKeys", "data.json") // (args[0], args[1:]...)
 	/*
 		path, err := os.Getwd()
 		if err != nil {

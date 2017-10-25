@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
+	"os/exec"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -109,6 +111,35 @@ func setup(db *gorm.DB, c *config.Config) *gin.Engine {
 	return r
 }
 
+func spawnChildNetwork() {
+	cmd := exec.Command(buildPath())
+
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		fatal(err)
+	}
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		fatal(err)
+	}
+
+	err = cmd.Start()
+	if err != nil {
+		fatal(err)
+	}
+
+	go io.Copy(appLogWriter{}, stderr)
+	go io.Copy(appLogWriter{}, stdout)
+
+	go func() {
+		<-stopChannel
+		pid := cmd.Process.Pid
+		runnerLog("Killing PID %d", pid)
+		cmd.Process.Kill()
+	}()
+}
+
 func main() {
 	demo := envflag.Bool("DEMO_MODE", true, "Enable demo mode for investors, or local development")
 	level := envflag.String("LOG_LEVEL", "debug", "Log level minimum to output. Info/Debug/Warn")
@@ -146,6 +177,8 @@ func main() {
 		PrivateKeyJsonFile: *privateKeyJsonFile,
 		SpawnNetwork:       *spawnNetwork,
 	}
+
+	go spawnChildNetwork()
 
 	//	database := db.Connect()
 	s := setup(nil, config) //database //TODO readd database

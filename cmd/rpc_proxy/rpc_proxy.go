@@ -51,7 +51,8 @@ func commonHeaders(c *gin.Context) {
 }
 
 func Web3CatchAll(c *gin.Context) {
-	commonHeaders(c)
+	//Test rpc is already putting the headers in, maybe in future we can inspect if they aren't there to add them
+	//commonHeaders(c)
 
 	proxy := c.MustGet("WEB3PROXY").(*httputil.ReverseProxy)
 	proxy.ServeHTTP(c.Writer, c.Request)

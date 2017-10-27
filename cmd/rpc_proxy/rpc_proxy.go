@@ -91,6 +91,24 @@ func LoomAccounts(c *gin.Context) {
 	c.JSON(200, accountJson)
 }
 
+type Contract struct {
+	Name    string
+	Address string
+}
+
+func LoomContracts(c *gin.Context) {
+	commonHeaders(c)
+
+	contracts := []Contract{
+		Contract{
+			Name:    "blockssh",
+			Address: "0x000000",
+		},
+	}
+
+	c.JSON(200, contracts)
+}
+
 func routerInitialize(r *gin.Engine, c *config.Config) {
 	if c.DemoMode == false {
 		//TODO how can we group calls together?
@@ -99,7 +117,7 @@ func routerInitialize(r *gin.Engine, c *config.Config) {
 
 	//We prefix our apis with underscore so there is no conflict with the Web3 RPC APOs
 	r.POST("/_loom/accounts", LoomAccounts) //Returns accounts and private keys for this test network
-
+	r.POST("/_loom/contracts", LoomContracts)
 	// Web3 RPCs
 	r.NoRoute(Web3CatchAll)
 }

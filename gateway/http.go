@@ -15,10 +15,6 @@ import (
 type AccountJson struct {
 	AccountPrivateKeys map[string]string `json:"private_keys"`
 }
-type Contract struct {
-	Name    string
-	Address string
-}
 
 //Loom API KEY -> loom_api_key
 //Loom Application slug -> loom_application_slug
@@ -77,14 +73,18 @@ func readJsonOutput(filename string) (*AccountJson, error) {
 func (g *Gateway) LoomContracts(c *gin.Context) {
 	commonHeaders(c)
 
-	contracts := []Contract{
-		Contract{
-			Name:    "blockssh",
-			Address: "0x000000",
-		},
+	if g.cfg.EnableFakeData {
+		contracts := []Contract{
+			Contract{
+				Name:    "blockssh",
+				Address: "0x000000",
+			},
+		}
+		c.JSON(200, contracts)
+		return
 	}
 
-	c.JSON(200, contracts)
+	c.JSON(200, g.getContracts())
 }
 
 func (g *Gateway) LoomAccounts(c *gin.Context) {

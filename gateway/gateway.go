@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/containous/traefik/log"
@@ -22,6 +23,10 @@ func (a appLogWriter) Write(p []byte) (n int, err error) {
 	//	log.WithField("PID", a.Pid).Info(string(p))
 
 	return len(p), nil
+}
+
+func (g *Gateway) deployContracts() {
+	time.Sleep(2 * time.Second) //To be certain we don't accidentally load to quickly
 }
 
 func (g *Gateway) spawnChildNetwork() {
@@ -56,6 +61,8 @@ func (g *Gateway) spawnChildNetwork() {
 		cmd.Process.Kill()
 	}()
 
+	go g.deployContracts()
+
 	cmd.Wait()
 	//TODO respawn???
 }
@@ -68,10 +75,32 @@ func preKillNode() {
 	}
 }
 
+type Contract struct {
+	Name    string
+	Address string
+}
+
+func (g *Gateway) getContracts() []*Contract {
+	g.RLock()
+	defer g.RUnlock()
+
+	ret := []*Contract{}
+	copy(g.contracts, ret) //the pointers never change only the array, if the pointers change then we need to make copies of them also
+	return ret
+}
+func (g *Gateway) addContracts(c *Contract) {
+	g.Lock()
+	defer g.Unlock()
+
+	g.contracts = append(g.contracts, c)
+}
+
 type Gateway struct {
-	StopChannel chan bool
-	appDir      string
-	cfg         *config.RPCConfig
+	sync.RWMutex // for the contracts
+	StopChannel  chan bool
+	appDir       string
+	cfg          *config.RPCConfig
+	contracts    []*Contract //Only access with helper methods, cause its not threadsafe
 }
 
 func InitGateway(c *config.RPCConfig) *Gateway {

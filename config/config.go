@@ -35,6 +35,7 @@ type RPCConfig struct {
 	SpawnNetwork       string
 	TmpDir             string
 	ApplicationZipPath string
+	EnableFakeData     bool
 }
 
 var (
@@ -47,6 +48,7 @@ var (
 	loomEnv            = envflag.String("LOOM_ENV", "devlopment", "devlopment/staging/production")
 	bindAddr           = envflag.String("BIND_ADDR", ":8081", "What address to bind the main webserver to")
 	applicationZipPath = envflag.String("APP_ZIP_FILE", "misc/block_ssh.zip", "Location of app zip file. Relative or on s3 or Digitalocean bucket. Ex. do://uploads/block_ssh.zip")
+	enableFakeData     = envflag.Bool("ENABLE_FAKE_DATA", false, "Stubs out data")
 )
 
 func GetDefaultedConfig() *Config {
@@ -74,6 +76,7 @@ func GetDefaultedRPCConfig() *RPCConfig {
 		SpawnNetwork:       *spawnNetwork,
 		TmpDir:             *tmpDir,
 		ApplicationZipPath: *applicationZipPath,
+		EnableFakeData:     *enableFakeData,
 		Config:             GetDefaultedConfig()}
 }
 

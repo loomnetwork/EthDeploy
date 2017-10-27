@@ -12,6 +12,14 @@ import (
 	"github.com/loomnetwork/dashboard/middleware"
 )
 
+type AccountJson struct {
+	AccountPrivateKeys map[string]string `json:"private_keys"`
+}
+type Contract struct {
+	Name    string
+	Address string
+}
+
 //Loom API KEY -> loom_api_key
 //Loom Application slug -> loom_application_slug
 
@@ -55,10 +63,6 @@ func (g *Gateway) OptionsCatchAll(c *gin.Context) {
 	c.HTML(200, "", nil)
 }
 
-type AccountJson struct {
-	AccountPrivateKeys map[string]string `json:"private_keys"`
-}
-
 func readJsonOutput(filename string) (*AccountJson, error) {
 	file, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -68,6 +72,19 @@ func readJsonOutput(filename string) (*AccountJson, error) {
 	var data *AccountJson
 	json.Unmarshal(file, &data)
 	return data, nil
+}
+
+func (g *Gateway) LoomContracts(c *gin.Context) {
+	commonHeaders(c)
+
+	contracts := []Contract{
+		Contract{
+			Name:    "blockssh",
+			Address: "0x000000",
+		},
+	}
+
+	c.JSON(200, contracts)
 }
 
 func (g *Gateway) LoomAccounts(c *gin.Context) {
@@ -89,7 +106,8 @@ func (g *Gateway) routerInitialize(r *gin.Engine) {
 
 	r.OPTIONS("/", g.OptionsCatchAll)
 	//We prefix our apis with underscore so there is no conflict with the Web3 RPC APOs
-	r.POST("/_loom/accounts", g.LoomAccounts) //Returns accounts and private keys for this test network
+	r.POST("/_loom/accounts", g.LoomAccounts)   //Returns accounts and private keys for this test network
+	r.POST("/_loom/contracts", g.LoomContracts) //Returns what contracts have been deployed to the smart contract
 
 	// Web3 RPCs
 	r.NoRoute(g.Web3CatchAll)

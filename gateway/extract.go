@@ -26,35 +26,28 @@ func unzip(archive, target string) error {
 
 		fileReader, err := file.Open()
 		if err != nil {
-
 			if fileReader != nil {
 				fileReader.Close()
 			}
-
 			return err
 		}
 
 		targetFile, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, file.Mode())
 		if err != nil {
 			fileReader.Close()
-
 			if targetFile != nil {
 				targetFile.Close()
 			}
-
 			return err
 		}
 
 		if _, err := io.Copy(targetFile, fileReader); err != nil {
 			fileReader.Close()
 			targetFile.Close()
-
 			return err
 		}
-
 		fileReader.Close()
 		targetFile.Close()
 	}
-
 	return nil
 }

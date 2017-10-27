@@ -22,10 +22,6 @@ import:
   version: ~3.0.3
 - package: github.com/sirupsen/logrus
   version: master
-- package: github.com/Sirupsen/logrus
-  version: master
-  repo: git@github.com:/sirupsen/logrus
-  vcs: git
 - package: github.com/go-ini/ini
   version: ~1.30.3
 - package: github.com/minio/go-homedir

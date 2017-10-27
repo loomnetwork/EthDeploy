@@ -46,7 +46,7 @@ var (
 	demo               = envflag.Bool("DEMO_MODE", true, "Enable demo mode for investors, or local development")
 	loomEnv            = envflag.String("LOOM_ENV", "devlopment", "devlopment/staging/production")
 	bindAddr           = envflag.String("BIND_ADDR", ":8081", "What address to bind the main webserver to")
-	applicationZipPath = envflag.String("APP_ZIP_FILE", "do://https://loom.nyc3.digitaloceanspaces.com/uploads/block_ssh.zip", "Location of app zip file")
+	applicationZipPath = envflag.String("APP_ZIP_FILE", "misc/block_ssh.zip", "Location of app zip file. Relative or on s3 or Digitalocean bucket. Ex. do://uploads/block_ssh.zip")
 )
 
 func GetDefaultedConfig() *Config {

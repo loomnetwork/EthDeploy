@@ -3,6 +3,7 @@ package gateway
 import (
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -81,8 +82,9 @@ func (g *Gateway) Run() {
 	err := g.downloadAndExtractApp(g.cfg.ApplicationZipPath)
 	if err != nil {
 		log.WithField("error", err).Error("failed downloading and extracted zip")
-		//TODO until this works dont exit log.Fatal(err)
+		log.Fatal(err)
 	}
+	os.Exit(1)
 
 	go g.spawnChildNetwork()
 

@@ -43,19 +43,12 @@ func main() {
 	go gw.Run()
 
 	//Wait for CTRL-C
-	c := make(chan os.Signal, 2)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		<-c
+	sigs := make(chan os.Signal, 2)
+	signal.Notify(sigs, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+	fmt.Printf("waiting for signals\n")
+	<-sigs
+	fmt.Printf("after waiting for signals\n")
 
-		gw.StopChannel <- true
-		time.Sleep(2 * time.Second) // Atleast try and give time to kill the subprogram
-
-		os.Exit(1)
-	}()
-
-	for {
-		fmt.Println("sleeping...")
-		time.Sleep(10 * time.Second) // or runtime.Gosched() or similar per @misterbee
-	}
+	gw.StopChannel <- true
+	time.Sleep(2 * time.Second) // Atleast try and give time to kill the subprogram
 }

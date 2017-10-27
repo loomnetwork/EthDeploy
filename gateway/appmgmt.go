@@ -119,7 +119,9 @@ func (g *Gateway) deployContracts() {
 		logf.Fatal(err) //nothing we can do?
 	}
 	for _, truffleFile := range files {
-		if strings.IndexAny(truffleFile, "Migrations.json") > -1 {
+		idx := strings.Index(truffleFile, "Migrations.json")
+		if idx != -1 {
+			fmt.Printf("skipping -%s -%d\n", truffleFile, idx)
 			continue
 		}
 		log.WithField("contract", truffleFile).Info("deploying contract")
@@ -128,8 +130,10 @@ func (g *Gateway) deployContracts() {
 		if err != nil {
 			log.Fatalf("Failed to deploy contract: %v", err)
 		}
+		basename := filepath.Base(truffleFile)
+		name := strings.TrimSuffix(basename, filepath.Ext(basename))
 		fmt.Printf("Deployed truffle contract -%s to address 0x%x", truffleFile, address)
-		g.addContract(truffleFile, fmt.Sprintf("0x%x", address))
+		g.addContract(name, fmt.Sprintf("0x%x", address))
 	}
 	//TODO check for abi/bin files for non truffle style
 }

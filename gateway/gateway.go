@@ -62,6 +62,7 @@ func (g *Gateway) spawnChildNetwork() {
 
 	cmd.Wait()
 	//TODO respawn???
+	//	panic("exiting, subprocess quit") //TODO sigterm?
 }
 
 func preKillNode() {
@@ -82,9 +83,12 @@ func (g *Gateway) getContracts() []*Contract {
 	defer g.RUnlock()
 
 	ret := []*Contract{}
-	copy(g.contracts, ret) //the pointers never change only the array, if the pointers change then we need to make copies of them also
-	return g.contracts     //TODO fix
+	for _, contract := range g.contracts {
+		ret = append(ret, contract) //the pointers never change only the array, if the pointers change then we need to make copies of them also
+	}
+	return ret //TODO fix
 }
+
 func (g *Gateway) addContract(name, address string) {
 	g.Lock()
 	defer g.Unlock()

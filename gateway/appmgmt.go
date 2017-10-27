@@ -2,11 +2,15 @@ package gateway
 
 import (
 	"errors"
+	"fmt"
 	"io"
+	logf "log"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
+	"github.com/loomnetwork/ethcontract"
 	minio "github.com/minio/minio-go"
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
@@ -75,4 +79,57 @@ func (g *Gateway) downloadAndExtractApp(applicationZipPath string) error {
 	err = unzip(outFile, appDir)
 	g.appDir = appDir
 	return err
+}
+
+//TODO random, right now always first ;)
+func (g *Gateway) getRandomWalletPrivateKey() (string, error) {
+	accountJson, err := readJsonOutput(g.cfg.PrivateKeyJsonFile) //TODO we should move this to a separate go routine that is spawning the other executable
+	if err != nil {
+		log.WithField("error", err).Error("Failed reading the json file")
+		return "", err
+	}
+	for k, v := range accountJson.AccountPrivateKeys {
+		fmt.Printf("k-%s, v-%s", k, v)
+		return v, nil
+	}
+	return "", nil
+}
+
+func (g *Gateway) deployContracts() {
+	log.Debug("Deploying contracts")
+	time.Sleep(4 * time.Second) //To be certain we don't accidentally load to quickly
+
+	eclient, err := ethcontract.NewEthUtil("http://localhost:8545")
+	if err != nil {
+		log.Fatalf("Failed to connect to the Ethereum client: %v", err)
+	}
+
+	key, err := g.getRandomWalletPrivateKey()
+	if err != nil {
+		log.Fatalf("Failed finding private key: %v", err)
+	}
+	log.WithField("privatekey", key).Debug("found a private key")
+	eclient.SetWalletPrivateKey(key)
+
+	//Currently only handling truffle style json contracts
+	contractDir := filepath.Join(g.appDir, "contracts/*.json")
+	files, err := filepath.Glob(contractDir)
+	if err != nil {
+		log.WithError(err).Error(err)
+		logf.Fatal(err) //nothing we can do?
+	}
+	for _, truffleFile := range files {
+		if strings.IndexAny(truffleFile, "Migrations.json") > -1 {
+			continue
+		}
+		log.WithField("contract", truffleFile).Info("deploying contract")
+
+		address, err := eclient.DeployContractTruffleFromFile(truffleFile)
+		if err != nil {
+			log.Fatalf("Failed to deploy contract: %v", err)
+		}
+		fmt.Printf("Deployed truffle contract -%s to address 0x%x", truffleFile, address)
+		g.addContract(truffleFile, fmt.Sprintf("0x%x", address))
+	}
+	//TODO check for abi/bin files for non truffle style
 }

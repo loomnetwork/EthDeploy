@@ -3,7 +3,6 @@ package gateway
 import (
 	"fmt"
 	"io"
-	"os"
 	"os/exec"
 	"strings"
 	"sync"
@@ -25,12 +24,10 @@ func (a appLogWriter) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-func (g *Gateway) deployContracts() {
-	time.Sleep(2 * time.Second) //To be certain we don't accidentally load to quickly
-}
-
 func (g *Gateway) spawnChildNetwork() {
 	args := strings.Split(g.cfg.SpawnNetwork, " ")
+	args = append(args, "--acctKeys")
+	args = append(args, "data.json")
 	fmt.Printf("launching -%s -(%d)-%v\n", args[0], len(args[1:]), args[1:])
 	cmd := exec.Command(args[0], args[1:]...)
 
@@ -86,11 +83,12 @@ func (g *Gateway) getContracts() []*Contract {
 
 	ret := []*Contract{}
 	copy(g.contracts, ret) //the pointers never change only the array, if the pointers change then we need to make copies of them also
-	return ret
+	return g.contracts     //TODO fix
 }
-func (g *Gateway) addContracts(c *Contract) {
+func (g *Gateway) addContract(name, address string) {
 	g.Lock()
 	defer g.Unlock()
+	c := &Contract{Name: name, Address: address}
 
 	g.contracts = append(g.contracts, c)
 }
@@ -113,7 +111,6 @@ func (g *Gateway) Run() {
 		log.WithField("error", err).Error("failed downloading and extracted zip")
 		log.Fatal(err)
 	}
-	os.Exit(1)
 
 	go g.spawnChildNetwork()
 

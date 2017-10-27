@@ -81,7 +81,7 @@ func (g *Gateway) Run() {
 	err := g.downloadAndExtractApp(g.cfg.ApplicationZipPath)
 	if err != nil {
 		log.WithField("error", err).Error("failed downloading and extracted zip")
-		log.Fatal(err)
+		//TODO until this works dont exit log.Fatal(err)
 	}
 
 	go g.spawnChildNetwork()

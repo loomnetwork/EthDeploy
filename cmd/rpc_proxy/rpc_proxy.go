@@ -1,7 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/ianschenck/envflag"
@@ -38,8 +42,20 @@ func main() {
 
 	go gw.Run()
 
-	// Likely this would never happen, cause the http server would have to close
-	gw.StopChannel <- true
-	time.Sleep(2 * time.Second) // Atleast try and give time to kill the subprogram
+	//Wait for CTRL-C
+	c := make(chan os.Signal, 2)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
 
+		gw.StopChannel <- true
+		time.Sleep(2 * time.Second) // Atleast try and give time to kill the subprogram
+
+		os.Exit(1)
+	}()
+
+	for {
+		fmt.Println("sleeping...")
+		time.Sleep(10 * time.Second) // or runtime.Gosched() or similar per @misterbee
+	}
 }

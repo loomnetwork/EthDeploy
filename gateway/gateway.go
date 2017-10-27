@@ -3,6 +3,7 @@ package gateway
 import (
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
 	"strings"
 	"sync"
@@ -62,7 +63,15 @@ func (g *Gateway) spawnChildNetwork() {
 
 	cmd.Wait()
 	//TODO respawn???
-	//	panic("exiting, subprocess quit") //TODO sigterm?
+
+	log.Error("self killing since the subprocess died\n")
+	//Mildly gross, kill ourselves
+	proc, err := os.FindProcess(os.Getpid())
+	if err != nil {
+		log.Println(err)
+	}
+	// Kill the process
+	proc.Kill()
 }
 
 func preKillNode() {

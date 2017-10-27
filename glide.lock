@@ -1,6 +1,10 @@
-hash: 58239556fba22343e937ea8932db86f6d6854da7e77766b52f827db637e6f331
-updated: 2017-10-20T23:14:09.82813047+07:00
+hash: 525b44ae974976f62b8662019e5b6815cfd9e27c82cf3786efb38d75525d56f8
+updated: 2017-10-27T16:56:42.748039741+07:00
 imports:
+- name: github.com/aristanetworks/goarista
+  version: aa6ce169f053a4951175ecedfdecdc1920abd9d3
+  subpackages:
+  - monotime
 - name: github.com/boj/redistore
   version: 4562487a4bee9a7c272b72bfaeda4917d0a47ab9
 - name: github.com/bradfitz/gomemcache
@@ -9,6 +13,33 @@ imports:
   - memcache
 - name: github.com/bradleypeabody/gorilla-sessions-memcache
   version: 75ee37df8664a47cd5d9eb84d41e1f2b08086893
+- name: github.com/btcsuite/btcd
+  version: 8cea3866d0f7fb12d567a20744942c0d078c7d15
+  subpackages:
+  - btcec
+- name: github.com/ethereum/go-ethereum
+  version: 0095531a58772b1f5bd1547169790dbde84ec78a
+  subpackages:
+  - accounts
+  - accounts/abi
+  - accounts/abi/bind
+  - accounts/keystore
+  - common
+  - common/hexutil
+  - common/math
+  - common/mclock
+  - core/types
+  - crypto
+  - crypto/randentropy
+  - crypto/secp256k1
+  - crypto/sha3
+  - ethclient
+  - event
+  - log
+  - params
+  - rlp
+  - rpc
+  - trie
 - name: github.com/garyburd/redigo
   version: 34a326de1fea52965fa5ad664d3fc7163dd4b0a1
   subpackages:
@@ -27,6 +58,8 @@ imports:
   - render
 - name: github.com/go-sql-driver/mysql
   version: a0583e0143b1624142adab07e0e97fe106d99561
+- name: github.com/go-stack/stack
+  version: 817915b46b97fd7bb80e8ab6b69f01a53ac3eebf
 - name: github.com/golang/protobuf
   version: 130e6b02ab059e7b717a096f397c5b60111cae74
   subpackages:
@@ -48,14 +81,28 @@ imports:
   version: 1c35d901db3da928c72a72d8458480cc9ade058f
 - name: github.com/kidstuff/mongostore
   version: 256d65ac5b0e35e7c5ebb3f175c0bed1e5c2b253
+- name: github.com/loomnetwork/ethcontract
+  version: fb192c2929f0fdcf9fb5e86c2fb3992a619f580c
 - name: github.com/loomnetwork/ez-gin-template
   version: 0a7c3b12c1ea4fa04fc130575592395978a92c4e
 - name: github.com/mattn/go-isatty
   version: a5cdd64afdee435007ee3e9f6ed4684af949d568
+- name: github.com/mholt/archiver
+  version: cdc68dd1f170b8dfc1a0d2231b5bb0967ed67006
 - name: github.com/miekg/dns
   version: 946bd9fbed05568b0f3cd188353d8aa28f38b688
   subpackages:
   - internal/socket
+- name: github.com/minio/minio-go
+  version: 4e0f567303d4cc90ceb055a451959fb9fc391fb9
+- name: github.com/pborman/uuid
+  version: ca53cad383cad2479bbba7f7a1a05797ec1386e4
+- name: github.com/rcrowley/go-metrics
+  version: 1f30fe9094a513ce4c700b9a54458bbb0c96996c
+- name: github.com/rjeczalik/notify
+  version: 767eb674ef14b09119b2fff3601e64558d530c47
+- name: github.com/rs/cors
+  version: eabcc6af4bbe5ad3a949d36450326a2b0b9894b8
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/serenize/snaker
@@ -74,6 +121,8 @@ imports:
   version: bed12803fa9663d7aa2c2346b0c634ad2dcd43b7
   subpackages:
   - ocsp
+  - pbkdf2
+  - scrypt
   - ssh/terminal
 - name: golang.org/x/net
   version: 41bba8d80bbfab43231ffdf4c210037baae5f6a3
@@ -81,6 +130,7 @@ imports:
   - context
   - context/ctxhttp
   - publicsuffix
+  - websocket
 - name: golang.org/x/oauth2
   version: bb50c06baba3d0c76f9d125c0719093e315b5b44
   subpackages:
@@ -95,6 +145,11 @@ imports:
   version: 6dc17368e09b0e8634d71cac8168d853e869a0c7
   subpackages:
   - rate
+- name: golang.org/x/tools
+  version: 9b61fcc4c548d69663d915801fc4b42a43b6cd9c
+  subpackages:
+  - go/ast/astutil
+  - imports
 - name: google.golang.org/appengine
   version: 24e4144ec923c2374f6b06610c0df16a9222c3d9
   subpackages:
@@ -105,8 +160,14 @@ imports:
   - internal/remote_api
   - internal/urlfetch
   - urlfetch
+- name: gopkg.in/fatih/set.v0
+  version: 27c40922c40b43fe04554d8223a402af3ea333f3
 - name: gopkg.in/go-playground/validator.v8
   version: 5f1438d3fca68893a817e4a66806cea46a9e4ebf
+- name: gopkg.in/karalabe/cookiejar.v2
+  version: 8dcd6a7f4951f6ff3ee9cbb919a06d8925822e57
+  subpackages:
+  - collections/prque
 - name: gopkg.in/mgo.v2
   version: 3f83fa5005286a7fe593b055f0d7771a7dce4655
   subpackages:
@@ -114,6 +175,8 @@ imports:
   - internal/json
   - internal/sasl
   - internal/scram
+- name: gopkg.in/natefinch/npipe.v2
+  version: c1b8fa8bdccecb0b8db834ee0b92fdbcfa606dd6
 - name: gopkg.in/square/go-jose.v1
   version: aa2e30fdd1fe9dd3394119af66451ae790d50e0d
   subpackages:

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/loomnetwork/ethutils"
+	"github.com/loomnetwork/ethcontract"
 )
 
 var TokenABI = `[
@@ -108,7 +108,7 @@ const keydata = `3958dcf7ffda44ed0540ab65d05999a56671b10137f2d1fe551c07331b740f7
 
 func main() {
 
-	eclient, err := ethutils.NewEthUtil("http://localhost:8545")
+	eclient, err := ethcontract.NewEthUtil("http://localhost:8545")
 	if err != nil {
 		log.Fatalf("Failed to connect to the Ethereum client: %v", err)
 	}

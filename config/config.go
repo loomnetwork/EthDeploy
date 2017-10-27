@@ -16,6 +16,7 @@ type Config struct {
 	PrivateKeyJsonFile string //File to read Private key files
 	ProxyAddr          string //Address of the testrpc/ethereum instance tied to a specific rpc proxy
 	SpawnNetwork       string
+	TmpDir             string
 }
 
 //Finding the config on the gin context

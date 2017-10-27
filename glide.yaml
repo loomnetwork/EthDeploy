@@ -18,3 +18,7 @@ import:
 - package: github.com/gin-contrib/sessions
 - package: github.com/ianschenck/envflag
 - package: github.com/loomnetwork/ez-gin-template
+- package: github.com/mholt/archiver
+  version: ~2.0.0
+- package: github.com/minio/minio-go
+  version: ~3.0.3

@@ -18,7 +18,14 @@ import:
 - package: github.com/gin-contrib/sessions
 - package: github.com/ianschenck/envflag
 - package: github.com/loomnetwork/ez-gin-template
-- package: github.com/mholt/archiver
-  version: ~2.0.0
 - package: github.com/minio/minio-go
   version: ~3.0.3
+- package: github.com/sirupsen/logrus
+  version: master
+- package: github.com/Sirupsen/logrus
+  version: master
+  repo: git@github.com:/sirupsen/logrus
+  vcs: git
+- package: github.com/go-ini/ini
+  version: ~1.30.3
+- package: github.com/minio/go-homedir

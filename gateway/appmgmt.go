@@ -1,28 +1,31 @@
 package gateway
 
-/*
-func downloadAndExtractApp(applicationZipPath, c *Config) (string, err) {
-	appDir := fmt.Printf("%s/%s", tmpDir, filepath.Base(applicationZipPath))
-	err := os.MkdirAll(tmpDir, 0600)
-	if err != nil {
-		return "", err
-	}
-	//If we need to download from digitalocean
-	if strings.Index(appDir, "do://") == 0 {
-		//TODO download
-		accessKeyID := "Q3AM3UQ867SPQQA43P2F"
-		secretAccessKey := "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
-		useSSL := true
+import (
+	"errors"
+	"io"
+	"os"
+	"path/filepath"
+	"strings"
+
+	uuid "github.com/satori/go.uuid"
+)
+
+func UploadS3CompatibleFile(fileData io.Reader, uploadPath string) error {
+	return nil
+}
+
+func (g *Gateway) downloadS3CompatibleFile(applicationZipPath, outputPath string) error {
+	/*	useSSL := true
 
 		// Initialize minio client object.
-		minioClient, err := minio.New(endpoint, accessKeyID, secretAccessKey, useSSL)
+		minioClient, err := minio.New(g.cfg.S3.EndPoint, accessKeyID, secretAccessKey, useSSL)
 		if err != nil {
 			log.Fatalln(err)
 		}
 
 		// Make a new bucket called mymusic.
-		bucketName := "mymusic"
-		location := "us-east-1"
+		bucketName := "loom"
+		location := "nyc3"
 
 		err = minioClient.MakeBucket(bucketName, location)
 		if err != nil {
@@ -48,9 +51,39 @@ func downloadAndExtractApp(applicationZipPath, c *Config) (string, err) {
 		}
 
 		log.Printf("Successfully uploaded %s of size %d\n", objectName, n)
-	}
-
-	err = archiver.Zip.Open(applicationZipPath, appDir)
-	return appDir, err
+	*/
+	return nil
 }
-*/
+
+func (g *Gateway) downloadAndExtractApp(applicationZipPath string) error {
+	appDir := filepath.Join(g.cfg.TmpDir, filepath.Base(applicationZipPath))
+	err := os.MkdirAll(g.cfg.TmpDir, 0600)
+	if err != nil {
+		return err
+	}
+	if strings.Index(appDir, "s3://") == 0 {
+		return errors.New("We don't support s3 urls yet")
+	}
+	//If we need to download from digitalocean
+	if strings.Index(appDir, "s3://") == 0 {
+		dataPath := strings.Split(appDir, "s3://")[1]
+		outFile := filepath.Join(g.cfg.TmpDir, uuid.NewV4().String()+".zip")
+		err = g.downloadS3CompatibleFile(dataPath, outFile)
+		if err != nil {
+			return err
+		}
+		err = unzip(outFile, appDir)
+		if err != nil {
+			return err
+		}
+
+		err = os.Remove(outFile)
+		if err != nil {
+			return err
+		}
+	} else {
+		err = unzip(applicationZipPath, appDir)
+	}
+	g.appDir = appDir
+	return err
+}

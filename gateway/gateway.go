@@ -27,14 +27,7 @@ func (g *Gateway) spawnChildNetwork() {
 	args := strings.Split(g.cfg.SpawnNetwork, " ")
 	fmt.Printf("launching -%s -(%d)-%v\n", args[0], len(args[1:]), args[1:])
 	cmd := exec.Command(args[0], args[1:]...)
-	/*
-		path, err := os.Getwd()
-		if err != nil {
-			log.WithField("error", err).Error("failed getting path")
-		}
-		fmt.Printf("path-%s-\n", path)
-			cmd.Dir = path
-	*/
+
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		log.WithField("error", err).Error("failed redirecting stderr")
@@ -76,42 +69,28 @@ func preKillNode() {
 
 type Gateway struct {
 	StopChannel chan bool
-	cfg         *config.Config
+	appDir      string
+	cfg         *config.RPCConfig
 }
 
-func InitGateway(c *config.Config) *Gateway {
+func InitGateway(c *config.RPCConfig) *Gateway {
 	return &Gateway{StopChannel: make(chan bool), cfg: c}
 }
 
-func (g *Gateway) Run(bindAddr string, skipLetsEncrypt bool) {
-	/*
-		err := downloadAndExtractApp(*applicationZipPath)
-		if err != nil {
-			log.WithField("error", err).Error("failed downloading and extracted zip")
-			log.Fatal(err)
-		}
-	*/
+func (g *Gateway) Run() {
+	err := g.downloadAndExtractApp(g.cfg.ApplicationZipPath)
+	if err != nil {
+		log.WithField("error", err).Error("failed downloading and extracted zip")
+		log.Fatal(err)
+	}
+
 	go g.spawnChildNetwork()
 
 	//	database := db.Connect()
-	s := setup(nil, g.cfg) //database //TODO readd database
+	s := g.setupHttp(nil) //database //TODO readd database
 
-	//TODO move http to seperate thread, and main thread just checks for Ctrl-C
+	s.Run(g.cfg.BindAddr) //Gin run
 
-	//local dev we will ignore using letsencrypt
-	//	if *skipLetsEncrypt == false {
-	s.Run()
-	/*	} else {
-			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-				s.ServeHTTP(w, r)
-			})
-			var m letsencrypt.Manager
-			if err := m.CacheFile("letsencrypt.cache"); err != nil {
-				log.Fatal(err)
-			}
-			log.Fatal(m.Serve())
-		}
-	*/
 	// Likely this would never happen, cause the http server would have to close
 	g.StopChannel <- true
 	time.Sleep(2 * time.Second) // Atleast try and give time to kill the subprogram

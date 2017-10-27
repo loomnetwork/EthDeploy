@@ -25,7 +25,7 @@ func SetConfigtoContext(conf *config.Config) gin.HandlerFunc {
 	}
 }
 
-func SetProxyToContext(conf *config.Config) gin.HandlerFunc {
+func SetProxyToContext(conf *config.RPCConfig) gin.HandlerFunc {
 	u, _ := url.Parse(conf.ProxyAddr)
 	proxy := httputil.NewSingleHostReverseProxy(u)
 	proxy.Transport = &myTransport{}

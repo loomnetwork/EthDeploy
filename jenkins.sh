@@ -28,4 +28,4 @@ ssh root@128.199.83.146 $sshcommand
 
 echo "Ok now building the RPC Gateway, we don't deploy it anyway automatically yet"
 #todo maybe have two jenkins jobs??
-./build_testrpc_docker.sh
+./build_gateway_docker.sh

@@ -6,16 +6,15 @@ cd tmp
 git clone https://github.com/loomnetwork/testrpc.git
 cd testrpc
 git checkout save-keys
+npm install
+npm run build
 cd .. 
 cd ..
 
-glide install
-CGO_ENABLED=0 GOOS=linux go build -o rpc_proxy cmd/rpc_proxy/rpc_proxy.go
-
 REV=`git rev-parse --short HEAD`
-DOC_IMAGE=loomnetwork/rpc_gateway:$REV
+DOC_IMAGE=loomnetwork/test_rpc_base:$REV
 
 echo "sending $DOC_IMAGE"
-docker build -t $DOC_IMAGE -f Dockerfile-proxy .
+docker build -t $DOC_IMAGE -f Dockerfile-testrpc-base .
 docker push $DOC_IMAGE
 

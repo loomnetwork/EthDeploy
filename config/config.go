@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/ianschenck/envflag"
-	"github.com/labstack/gommon/log"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -57,6 +57,7 @@ func GetDefaultedConfig() *Config {
 	if *loomEnv == "production" {
 		gin.SetMode(gin.ReleaseMode)
 	}
+	log.WithField("loomEnv", loomEnv).Debug("parsing config and setting loom environment")
 
 	//Ghetto for now
 	accessKeyID := "N35N62UCP4AKTEXLVFUP"

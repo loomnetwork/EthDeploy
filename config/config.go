@@ -1,6 +1,8 @@
 package config
 
 import (
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/ianschenck/envflag"
 	log "github.com/sirupsen/logrus"
@@ -49,6 +51,7 @@ var (
 	bindAddr           = envflag.String("BIND_ADDR", ":8081", "What address to bind the main webserver to")
 	applicationZipPath = envflag.String("APP_ZIP_FILE", "misc/block_ssh.zip", "Location of app zip file. Relative or on s3 or Digitalocean bucket. Ex. do://uploads/block_ssh.zip")
 	enableFakeData     = envflag.Bool("ENABLE_FAKE_DATA", false, "Stubs out data")
+	level              = envflag.String("LOG_LEVEL", "debug", "Log level minimum to output. Info/Debug/Warn")
 )
 
 func GetDefaultedConfig() *Config {
@@ -66,6 +69,18 @@ func GetDefaultedConfig() *Config {
 
 	if *demo == true {
 		log.Info("You are running in demo mode, don't use this in production. As it skips authentication and other features")
+	}
+	// Check for log level specified by environment variable
+	if logLevel := strings.ToLower(*level); logLevel != "" {
+		// Check for level, default to info on bad level
+		level, err := log.ParseLevel(logLevel)
+		if err != nil {
+			log.WithField("level", logLevel).Error("invalid log level, defaulting to 'info'")
+			level = log.InfoLevel
+		}
+
+		// Set log level
+		log.SetLevel(log.Level(level))
 	}
 
 	return &Config{

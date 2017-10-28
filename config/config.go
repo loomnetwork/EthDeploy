@@ -53,6 +53,11 @@ var (
 
 func GetDefaultedConfig() *Config {
 	envflag.Parse()
+
+	if *loomEnv == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	//Ghetto for now
 	accessKeyID := "N35N62UCP4AKTEXLVFUP"
 	secretAccessKey := "q9fJnv8IhGpC+tDtpFAOr0mXSRUCJydlOMwW3fNDBQk"
@@ -70,6 +75,7 @@ func GetDefaultedConfig() *Config {
 }
 
 func GetDefaultedRPCConfig() *RPCConfig {
+	cfg := GetDefaultedConfig()
 	return &RPCConfig{
 		ProxyAddr:          *proxyAddr,
 		PrivateKeyJsonFile: *privateKeyJsonFile,
@@ -77,7 +83,7 @@ func GetDefaultedRPCConfig() *RPCConfig {
 		TmpDir:             *tmpDir,
 		ApplicationZipPath: *applicationZipPath,
 		EnableFakeData:     *enableFakeData,
-		Config:             GetDefaultedConfig()}
+		Config:             cfg}
 }
 
 //Finding the config on the gin context

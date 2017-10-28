@@ -1,23 +1,10 @@
-FROM loomnetwork/test_rpc_base:3c25fa9
-
-RUN apk add --no-cache make gcc g++ python git bash
-COPY package.json /src/package.json
-
+FROM loomnetwork/test_rpc_base:0c27bbd
 
 ADD misc/ca-certificates.crt /etc/ssl/certs/
-RUN apk add --update bash && rm -rf /var/cache/apk/*
+EXPOSE 8081
 
 ADD rpc_proxy /rpc_proxy
 
-
-WORKDIR /src
-RUN npm install
-
-#TODO make npm part a seperate image so we dont need to rebuild everything
-
-ADD tmp/testrpc .
-
-EXPOSE 8081
 
 CMD ["/rpc_proxy"]
 

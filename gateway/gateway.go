@@ -29,7 +29,8 @@ func (g *Gateway) spawnChildNetwork() {
 	args := strings.Split(g.cfg.SpawnNetwork, " ")
 	args = append(args, "--acctKeys")
 	args = append(args, "data.json")
-	fmt.Printf("launching -%s -(%d)-%v\n", args[0], len(args[1:]), args[1:])
+	//	fmt.Printf("launching -%s -(%d)-%v\n", args[0], len(args[1:]), args[1:])
+	log.WithField("args", args).Info("Launching childnetwork")
 	cmd := exec.Command(args[0], args[1:]...)
 
 	stderr, err := cmd.StderrPipe()

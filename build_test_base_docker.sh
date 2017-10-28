@@ -6,6 +6,7 @@ cd tmp
 git clone https://github.com/loomnetwork/testrpc.git
 cd testrpc
 git checkout save-keys
+rm -rf build
 npm install
 npm run build
 cd .. 

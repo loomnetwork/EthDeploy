@@ -1,4 +1,4 @@
-FROM loomnetwork/test_rpc_base:0c27bbd
+FROM loomnetwork/test_rpc_base:34de428
 
 ADD misc/ca-certificates.crt /etc/ssl/certs/
 EXPOSE 8081

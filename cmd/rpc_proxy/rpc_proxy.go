@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
 
@@ -33,8 +32,7 @@ func main() {
 	signal.Notify(sigs, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	fmt.Printf("waiting for signals\n")
 	<-sigs
-	fmt.Printf("after 
-		waiting for signals\n")
+	fmt.Printf("after waiting for signals\n")
 
 	gw.StopChannel <- true
 	time.Sleep(2 * time.Second) // Atleast try and give time to kill the subprogram

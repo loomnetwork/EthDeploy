@@ -39,4 +39,4 @@ exposedByDefault = true
 # Optional
 # Default: "Host:{{.ServiceName}}.{{.Domain}}"
 #
-frontEndRule = "Host:{{.ServiceName}}.loomapps.io"
+constraints = ["tag==loomapp"]

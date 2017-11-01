@@ -15,7 +15,8 @@ cd ..
 REV=`git rev-parse --short HEAD`
 DOC_IMAGE=loomnetwork/test_rpc_base:$REV
 
-echo "sending $DOC_IMAGE"
+echo "building $DOC_IMAGE"
 docker build -t $DOC_IMAGE -f Dockerfile-testrpc-base .
+echo "sending $DOC_IMAGE"
 docker push $DOC_IMAGE
 

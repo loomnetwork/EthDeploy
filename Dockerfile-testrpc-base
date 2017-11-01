@@ -1,11 +1,7 @@
-FROM mhart/alpine-node:6.9.2
+FROM node:6
 
-RUN apk add --no-cache make gcc g++ python git bash
+RUN apt install -y make gcc g++ python git bash
 COPY package.json /src/package.json
-
-
-RUN apk add --update bash && rm -rf /var/cache/apk/*
-
 
 WORKDIR /src
 RUN npm install

@@ -3,8 +3,8 @@ FROM loomnetwork/test_rpc_base:34de428
 ADD misc/ca-certificates.crt /etc/ssl/certs/
 EXPOSE 8081
 
-ADD rpc_proxy /rpc_proxy
+ADD rpc_proxy rpc_proxy
 
 
-CMD ["/rpc_proxy"]
+CMD ["./rpc_proxy"]
 

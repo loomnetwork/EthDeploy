@@ -47,7 +47,7 @@ func genObjectName(c *gin.Context) string {
 }
 
 //TODO set NOMAD_ADDR
-func sendNomadJob(filename, slug string) error {
+func SendNomadJob(filename, slug string) error {
 	ncfg := api.DefaultConfig()
 	nomadClient, err := api.NewClient(ncfg)
 	if err != nil {
@@ -81,13 +81,16 @@ func sendNomadJob(filename, slug string) error {
 						Name:   name,
 						Driver: "docker",
 						Config: map[string]interface{}{
-							"image": "loomnetwork/rpc_gateway:21c2fb2", //TODO make this a config option
+							"image": "loomnetwork/rpc_gateway:f0d1db9", //TODO make this a config option
 							"port_map": []map[string]int{{
 								"web": 8080,
 							}},
 						},
 						Env: map[string]string{
-							"SPAWN_NETWORK": "node /src/build/cli.node.js",
+							"SPAWN_NETWORK":         "node /src/build/cli.node.js",
+							"APP_ZIP_FILE":          fmt.Sprintf("do://%s", filename),
+							"DEMO_MODE":             "false",
+							"PRIVATE_KEY_JSON_PATH": "data.json",
 						},
 						Resources: &api.Resources{
 							CPU:      helper.IntToPtr(500),
@@ -156,7 +159,7 @@ func UploadApplication(c *gin.Context) {
 		return
 	}
 
-	err = sendNomadJob(uniqueFilename, "slug") //TODO get slug from database
+	err = SendNomadJob(uniqueFilename, "slug") //TODO get slug from database
 	if err != nil {
 		fmt.Println(err) //TODO log
 

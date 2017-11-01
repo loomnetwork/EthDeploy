@@ -47,15 +47,17 @@ func genObjectName(c *gin.Context) string {
 }
 
 //TODO set NOMAD_ADDR
-func sendNomadJob(filename string) error {
+func sendNomadJob(filename, slug string) error {
 	ncfg := api.DefaultConfig()
 	nomadClient, err := api.NewClient(ncfg)
 	if err != nil {
 		return err
 	}
+	name := fmt.Sprintf("loomapp-%s", slug)
+	traefikTags := fmt.Sprintf("traefik.frontend.rule=Host:%s.loomapps.com", slug)
 	job := &api.Job{
-		ID:          helper.StringToPtr("example_template"),
-		Name:        helper.StringToPtr("example_template"),
+		ID:          helper.StringToPtr(name),
+		Name:        helper.StringToPtr(name),
 		Datacenters: []string{"dc1"},
 		Type:        helper.StringToPtr("service"),
 		Update: &api.UpdateStrategy{
@@ -63,7 +65,7 @@ func sendNomadJob(filename string) error {
 		},
 		TaskGroups: []*api.TaskGroup{
 			{
-				Name:  helper.StringToPtr("cache"),
+				Name:  helper.StringToPtr("loomapps-client"),
 				Count: helper.IntToPtr(1),
 				RestartPolicy: &api.RestartPolicy{
 					Interval: helper.TimeToPtr(5 * time.Minute),
@@ -76,13 +78,17 @@ func sendNomadJob(filename string) error {
 				},
 				Tasks: []*api.Task{
 					{
-						Name:   "redis",
+						Name:   name,
 						Driver: "docker",
 						Config: map[string]interface{}{
-							"image": "redis:3.2",
+							"image": "loomnetwork/rpc_gateway:21c2fb2", //TODO make this a config option
 							"port_map": []map[string]int{{
-								"db": 6379,
-							}}},
+								"web": 8080,
+							}},
+						},
+						Env: map[string]string{
+							"SPAWN_NETWORK": "node /src/build/cli.node.js",
+						},
 						Resources: &api.Resources{
 							CPU:      helper.IntToPtr(500),
 							MemoryMB: helper.IntToPtr(256),
@@ -91,7 +97,7 @@ func sendNomadJob(filename string) error {
 									MBits: helper.IntToPtr(10),
 									DynamicPorts: []api.Port{
 										{
-											Label: "db",
+											Label: "web",
 										},
 									},
 								},
@@ -99,9 +105,9 @@ func sendNomadJob(filename string) error {
 						},
 						Services: []*api.Service{
 							{
-								Name:      "global-redis-check",
-								Tags:      []string{"global", "cache"},
-								PortLabel: "db",
+								Name:      fmt.Sprintf("loomapp-%s-check", slug),
+								Tags:      []string{"global", "traefik.tags=loomapp", traefikTags},
+								PortLabel: "web",
 								Checks: []api.ServiceCheck{
 									{
 										Name:     "alive",
@@ -150,7 +156,7 @@ func UploadApplication(c *gin.Context) {
 		return
 	}
 
-	err = sendNomadJob(uniqueFilename)
+	err = sendNomadJob(uniqueFilename, "slug") //TODO get slug from database
 	if err != nil {
 		fmt.Println(err) //TODO log
 

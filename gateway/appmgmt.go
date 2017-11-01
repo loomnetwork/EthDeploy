@@ -3,7 +3,6 @@ package gateway
 import (
 	"errors"
 	"fmt"
-	"io"
 	logf "log"
 	"os"
 	"path/filepath"
@@ -16,24 +15,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func UploadS3CompatibleFile(fileData io.Reader, uploadPath string) error {
-	/*
-		// Upload the zip file with FPutObject
-		n, err := minioClient.FPutObject(bucketName, objectName, filePath, minio.PutObjectOptions{ContentType: contentType})
-		if err != nil {
-			log.Fatalln(err)
-		}
-
-		log.Printf("Successfully uploaded %s of size %d\n", objectName, n)
-	*/
-	return nil
-}
-
 func (g *Gateway) downloadS3CompatibleFile(applicationZipPath, outputPath string) error {
-	useSSL := true
-
 	// Initialize minio client object.
-	minioClient, err := minio.New(g.cfg.S3.EndPointUrl, g.cfg.S3.AccessKeyID, g.cfg.S3.SecretAccessKey, useSSL)
+	minioClient, err := minio.New(g.cfg.S3.EndPointUrl, g.cfg.S3.AccessKeyID, g.cfg.S3.SecretAccessKey, true)
 	if err != nil {
 		log.Fatalln(err)
 	}

@@ -7,6 +7,7 @@ import (
 	"net/http/httputil"
 
 	"github.com/containous/traefik/log"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/loomnetwork/dashboard/middleware"
@@ -108,9 +109,12 @@ func (g *Gateway) routerInitialize(r *gin.Engine) {
 	//We prefix our apis with underscore so there is no conflict with the Web3 RPC APOs
 	r.POST("/_loom/accounts", g.LoomAccounts)   //Returns accounts and private keys for this test network
 	r.POST("/_loom/contracts", g.LoomContracts) //Returns what contracts have been deployed to the smart contract
-
 	// Web3 RPCs
-	r.NoRoute(g.Web3CatchAll)
+	r.POST("/", g.Web3CatchAll)
+
+	p := g.getextractedDir() + "/static"
+	s := static.Serve("/", static.LocalFile(p, true))
+	r.Use(s)
 }
 
 //TODO maybe split http to a seperate class

@@ -31,15 +31,21 @@ func (g *Gateway) downloadS3CompatibleFile(applicationZipPath, outputPath string
 	return nil
 }
 
+func (g *Gateway) getextractedDir() string {
+	if g.guid == "" {
+		g.guid = uuid.NewV4().String()
+	}
+	return filepath.Join(g.cfg.TmpDir, g.guid)
+}
+
 func (g *Gateway) downloadAndExtractApp(applicationZipPath string) error {
 	var err error
 
-	guid := uuid.NewV4().String()
 	if strings.Index(applicationZipPath, "s3://") == 0 {
 		return errors.New("We don't support s3 urls yet")
 	}
 
-	appDir := filepath.Join(g.cfg.TmpDir, guid)
+	appDir := g.getextractedDir()
 	log.WithField("dir", g.cfg.TmpDir).Debug("creating folder")
 	err = os.MkdirAll(g.cfg.TmpDir, 0766)
 	if err != nil {
@@ -50,7 +56,7 @@ func (g *Gateway) downloadAndExtractApp(applicationZipPath string) error {
 	//If we need to download from digitalocean
 	if strings.Index(applicationZipPath, "do://") == 0 {
 		dataPath := strings.Split(applicationZipPath, "do://")[1]
-		outFile = filepath.Join(g.cfg.TmpDir, guid+".zip")
+		outFile = filepath.Join(g.cfg.TmpDir, g.guid+".zip")
 		log.WithField("dataPath", dataPath).WithField("outFile", outFile).Debug("download file from remote server")
 		err = g.downloadS3CompatibleFile(dataPath, outFile)
 		if err != nil {

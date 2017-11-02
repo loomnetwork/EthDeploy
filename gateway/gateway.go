@@ -111,6 +111,7 @@ type Gateway struct {
 	sync.RWMutex // for the contracts
 	StopChannel  chan bool
 	appDir       string
+	guid         string //unique id for this instance
 	cfg          *config.RPCConfig
 	contracts    []*Contract //Only access with helper methods, cause its not threadsafe
 }

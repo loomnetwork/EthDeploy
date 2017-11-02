@@ -1,12 +1,12 @@
-hash: 4b7da350f89199451308c44e863ab177649dd1ed792cd67d453b7b6169737e21
-updated: 2017-10-27T17:32:42.198372883+07:00
+hash: 4dc86f4f7ef82cf5042b98345d7c6e336d63119abf378186ac332dc62ed5a6aa
+updated: 2017-11-02T17:35:28.32095017+07:00
 imports:
 - name: github.com/aristanetworks/goarista
   version: aa6ce169f053a4951175ecedfdecdc1920abd9d3
   subpackages:
   - monotime
 - name: github.com/boj/redistore
-  version: 4562487a4bee9a7c272b72bfaeda4917d0a47ab9
+  version: fc113767cd6b051980f260d6dbe84b2740c46ab0
 - name: github.com/bradfitz/gomemcache
   version: 1952afaa557dc08e8e0d89eafab110fb501c1a2b
   subpackages:
@@ -70,12 +70,35 @@ imports:
   version: 2bba0603135d7d7f5cb73b2125beeda19c09f4ef
   subpackages:
   - proto
+- name: github.com/gorhill/cronexpr
+  version: d520615e531a6bf3fb69406b9eba718261285ec8
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/securecookie
   version: e59506cc896acb7f7bf732d4fdf5e25f7ccd8983
 - name: github.com/gorilla/sessions
   version: a3acf13e802c358d65f249324d14ed24aac11370
+- name: github.com/hashicorp/errwrap
+  version: 7554cd9344cec97297fa6649b055a8c98c2a1e55
+- name: github.com/hashicorp/go-cleanhttp
+  version: 3573b8b52aa7b37b9358d966a898feb387f62437
+- name: github.com/hashicorp/go-multierror
+  version: 83588e72410abfbe4df460eeb6f30841ae47d4c4
+- name: github.com/hashicorp/go-rootcerts
+  version: 6bb64b370b90e7ef1fa532be9e591a81c3493e00
+- name: github.com/hashicorp/hcl
+  version: 23c074d0eceb2b8a5bfdbb271ab780cde70f05a8
+  subpackages:
+  - hcl/ast
+  - hcl/strconv
+  - hcl/token
+- name: github.com/hashicorp/nomad
+  version: 1292569ac11aacfe8555a6bd94c0faedae2138e7
+  subpackages:
+  - api
+  - api/contexts
+  - helper
+  - helper/uuid
 - name: github.com/ianschenck/envflag
   version: 9111d830d133f952887a936367fb0211c3134f0d
 - name: github.com/jinzhu/gorm
@@ -104,6 +127,8 @@ imports:
   - pkg/s3signer
   - pkg/s3utils
   - pkg/set
+- name: github.com/mitchellh/go-homedir
+  version: b8bc1bf767474819792c23f32d8286a45736f1c6
 - name: github.com/pborman/uuid
   version: ca53cad383cad2479bbba7f7a1a05797ec1386e4
 - name: github.com/rcrowley/go-metrics
@@ -116,6 +141,10 @@ imports:
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/serenize/snaker
   version: c7a77c38c398a5468cac9579c3b2b1de22fb4da6
+- name: github.com/Sirupsen/logrus
+  version: 89742aefa4b206dcf400792f3bd35b542998eb3b
+  repo: git@github.com:/sirupsen/logrus
+  vcs: git
 - name: github.com/sirupsen/logrus
   version: 89742aefa4b206dcf400792f3bd35b542998eb3b
 - name: github.com/ugorji/go

@@ -143,7 +143,7 @@ imports:
   version: c7a77c38c398a5468cac9579c3b2b1de22fb4da6
 - name: github.com/Sirupsen/logrus
   version: 89742aefa4b206dcf400792f3bd35b542998eb3b
-  repo: git@github.com:/sirupsen/logrus
+  repo: https://github.com/sirupsen/logrus
   vcs: git
 - name: github.com/sirupsen/logrus
   version: 89742aefa4b206dcf400792f3bd35b542998eb3b

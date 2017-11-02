@@ -2,15 +2,19 @@
 
 <div class="container">
   <ul class="nav nav-bordered mt-4 mt-md-2 mb-0 clearfix " role="tablist">
+    {{ if .demoMode }}
     <li class="nav-item" role="presentation">
       <a href="#dashboard" class="nav-link" role="tab" data-toggle="tab" aria-controls="Dashboard">Dashboard</a>
     </li>
+    {{ end }}
     <li class="nav-item" role="presentation">
       <a href="#deployment" class="nav-link active" role="tab" data-toggle="tab" aria-controls="Deployment">Deployment</a>
     </li>
+    {{ if .demoMode }}
     <li class="nav-item" role="presentation">
       <a href="#metrics" class="nav-link" role="tab" data-toggle="tab" aria-controls="support">Metrics</a>
     </li>
+    {{ end }}
     <li class="nav-item" role="presentation">
       <a href="#settings" class="nav-link" role="tab" data-toggle="tab" aria-controls="settings">Settings</a>
     </li>

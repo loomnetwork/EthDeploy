@@ -52,7 +52,7 @@
             </div>
             <div class="form-check w-100 justify-content-start">
               <label class="form-check-label">
-                <input class="form-check-input" type="radio" name="default_chain" id="defaultchain2" value="mainnet" {{if eq .app.DefaultChain "mainnet"}} checked {{end}}>
+                <input class="form-check-input" type="radio" name="default_chain" id="defaultchain2" value="mainnet" {{if eq .app.DefaultChain "mainnet"}} checked {{end}} disabled>
                 Ethereum MainNet
               </label>
             </div>
@@ -67,6 +67,7 @@
         </form>
       </div>
     </div>
+  {{ if .demoMode }}
     <div class="row pt-5 pb-3">
       <div class="col-md-4 label-col">
         <h5>Test Faucet</h5>
@@ -82,6 +83,7 @@
         </form>
       </div>
     </div>
+    {{ end }}
     <div class="row pt-5 pb-3">
       <div class="col-md-4 label-col">
         <h5>Transfer Ownership</h5>

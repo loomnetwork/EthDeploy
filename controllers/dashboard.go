@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/loomnetwork/dashboard/config"
 	dbpkg "github.com/loomnetwork/dashboard/db"
 	log "github.com/sirupsen/logrus"
 
@@ -65,10 +66,10 @@ func Dashboard(c *gin.Context) {
 		log.WithField("error", err).Warn("Failed retrieving application for dashboard")
 	}
 
-	fmt.Printf("got app %s", app)
-
+	cfg := config.Default(c)
 	c.HTML(http.StatusOK, "dashboard/dashboard", gin.H{
 		"loggedIn": true,
+		"demoMode": cfg.DemoMode,
 		"app":      app,
 	})
 }

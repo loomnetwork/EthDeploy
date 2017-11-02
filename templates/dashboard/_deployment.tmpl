@@ -10,12 +10,14 @@
     </div>
     <div class="col-md-6 content">
       <div class="d-flex mb-3">
+        {{ if .demoMode }}
         <a class="col mr-1 btn btn-outline-success" href="#">
           <img src="/assets/images/ethereum-1.svg" class="small-icon mr-3">
           Deploy to MainNet</a>
         <a class="col ml-1 btn btn-outline-warning" href="#">
           <img src="/assets/images/ethereum-ropsten.svg" class="small-icon mr-3">
           Deploy to Ropsten</a>
+        {{ end }}
       </div>
       <div class="list-group mb-3" id="deploymentlog">
         <h6 class="list-group-header">Deployment Log</h6>

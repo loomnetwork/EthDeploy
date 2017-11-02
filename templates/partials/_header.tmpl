@@ -28,16 +28,20 @@
           <a class="nav-link" href="/">Account</a>
         </li>
         {{ end }}
+        {{ if .demoMode }}
         <li class="nav-item">
           <a class="nav-link" href="/">Documentation</a>
         </li>
+        {{ end }}
         <li class="nav-item">
         </li>
       </ul>
       {{ if  .loggedIn }}
+      {{ if .demoMode }}
       <form class="form-inline d-none d-md-flex ml-auto">
         <input class="form-control" type="text" data-action="grow" placeholder="Search">
       </form>
+      {{ end }}
       <div class="d-none d-md-flex dropdown">
          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
            <img src="/assets/images/Satoshi-Nakamoto-AP.jpg" alt="" class="rounded-circle" height="30">

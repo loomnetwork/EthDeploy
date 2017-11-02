@@ -24,6 +24,7 @@ type Config struct {
 	ServerHost     string // base domain, useful for absolute redirects and oauth
 	Env            string //Environment we are in
 	BindAddr       string
+	EnableAuth     bool
 
 	S3 *S3EndPoint
 }
@@ -47,6 +48,7 @@ var (
 	tmpDir             = envflag.String("TMP_DIR", "tmp_uploads", "the directory where we will store the uploaded zip")
 	appSlug            = envflag.String("APP_SLUG", "block_ssh", "domain slug for the application")
 	demo               = envflag.Bool("DEMO_MODE", true, "Enable demo mode for investors, or local development")
+	enableAuth         = envflag.Bool("ENABLE_AUTH", true, "Enables/Disables auth for development")
 	loomEnv            = envflag.String("LOOM_ENV", "devlopment", "devlopment/staging/production")
 	bindAddr           = envflag.String("BIND_ADDR", ":8081", "What address to bind the main webserver to")
 	applicationZipPath = envflag.String("APP_ZIP_FILE", "misc/block_ssh.zip", "Location of app zip file. Relative or on s3 or Digitalocean bucket. Ex. do://uploads/block_ssh.zip")
@@ -84,10 +86,11 @@ func GetDefaultedConfig() *Config {
 	}
 
 	return &Config{
-		DemoMode: *demo,
-		Env:      *loomEnv,
-		BindAddr: *bindAddr,
-		S3:       &S3EndPoint{AccessKeyID: accessKeyID, SecretAccessKey: secretAccessKey, EndPointUrl: endpoint}}
+		DemoMode:   *demo,
+		Env:        *loomEnv,
+		BindAddr:   *bindAddr,
+		EnableAuth: *enableAuth,
+		S3:         &S3EndPoint{AccessKeyID: accessKeyID, SecretAccessKey: secretAccessKey, EndPointUrl: endpoint}}
 }
 
 func GetDefaultedRPCConfig() *RPCConfig {

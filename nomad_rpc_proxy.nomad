@@ -1,5 +1,7 @@
 
 job "example" {
+  datacenters = ["dc1"]
+
   type = "service"
 
   update {
@@ -31,19 +33,23 @@ job "example" {
     }
 
     task "rpc_gateway" {
+      driver = "docker"
       config {
-        image = "loomnetwork/rpc_gateway:8ad8cae"
+        image = "loomnetwork/rpc_gateway:70dc654"
         port_map {
-          rpc = 8080
+          rpc = 8081
         }
       }
       env {
-        SPAWN_NETWORK = "node /src/build/cli.node.js --acctKeys data.json"
+          "SPAWN_NETWORK" = "node /src/build/cli.node.js"
+          "APP_ZIP_FILE" = "do://uploads/a4200d60-8817-44a5-92a0-5fe6de44e563.zip"
+          "DEMO_MODE" = "false"
+          "PRIVATE_KEY_JSON_PATH" = "data.json"
       }
 
       resources {
         cpu    = 500 # 500 MHz
-        memory = 256 # 256MB
+        memory = 500 # 256MB
         network {
           mbits = 10
           port "rpc" {}

@@ -69,6 +69,7 @@ func Initialize(r *gin.Engine, c *config.Config) {
 	api := r.Group("")
 	{
 		api.POST("/upload", controllers.UploadApplication)
+		api.POST("/upload/:slug", controllers.UploadApplication)
 
 		//For now a user only has access to one account
 		/*

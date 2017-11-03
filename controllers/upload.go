@@ -145,6 +145,9 @@ func UploadApplication(c *gin.Context) {
 	db := dbpkg.DBInstance(c)
 
 	slugId := models.NormalizeSlug(c.PostForm("application_slug"))
+	if slugId == "" {
+		slugId = c.Params.ByName("slug") // try reading from the url in a restful manner
+	}
 	autoCreate := c.PostForm("auto_create")
 
 	app := models.Application{}

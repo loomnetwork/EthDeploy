@@ -4,8 +4,7 @@
   <div class="container">
     <div class="row">
     <div class="col-md-6 overview-sidebar">
-      <form action="/upload" class="dropzone" id="DApp-uploader">
-          <input type="hidden" id="application_slug" value="{{.app.Slug}}">
+      <form action="/upload/{{.app.Slug}}" class="dropzone" id="DApp-uploader">
       </form>
     </div>
     <div class="col-md-6 content">

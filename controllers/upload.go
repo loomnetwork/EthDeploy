@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/nomad/helper"
 	"github.com/loomnetwork/dashboard/config"
 	dbpkg "github.com/loomnetwork/dashboard/db"
+	"github.com/loomnetwork/dashboard/middleware"
 	minio "github.com/minio/minio-go"
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
@@ -149,12 +150,13 @@ func UploadApplication(c *gin.Context) {
 		slugId = c.Params.ByName("slug") // try reading from the url in a restful manner
 	}
 	autoCreate := c.PostForm("auto_create")
+	accountID := middleware.GetLoggedInUser(c) //TODO get this to work in loggedin scope
 
 	app := models.Application{}
 	if err := db.Where("slug = ?", slugId).Find(&app).Error; err != nil {
 		if autoCreate == "true" {
 			log.WithField("slug", slugId).Warn("Creating new application on upload")
-			application := models.Application{LastDeployed: time.Now(), Name: slugId, Slug: slugId}
+			application := models.Application{AccountID: accountID, LastDeployed: time.Now(), Name: slugId, Slug: slugId}
 
 			if err := db.Create(&application).Error; err != nil {
 				log.WithField("error", err).Warn("Failed creating application in db")
@@ -200,6 +202,7 @@ func UploadApplication(c *gin.Context) {
 	deployHistory := models.DeployHistory{
 		BundleName:     handler.Filename, //uploaded name
 		UniqueFileName: uniqueFilename,
+		AccountID:      accountID,
 	}
 	if err := db.Create(&deployHistory).Error; err != nil {
 		log.WithField("error", err).Warn("Error when storing new version")

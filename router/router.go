@@ -59,8 +59,6 @@ func Initialize(r *gin.Engine, c *config.Config) {
 	}
 
 	// Pages
-	r.GET("/", controllers.ApplicationIndex)
-	r.GET("/dashboard/:id", controllers.Dashboard)
 	r.GET("/newdapp", controllers.NewDApp)
 	r.POST("/updated_default_chain/:id", controllers.UpdateApplication)
 
@@ -106,4 +104,6 @@ func Initialize(r *gin.Engine, c *config.Config) {
 		api.PUT("/deploy_histories/:id", controllers.UpdateDeployHistory)
 		api.DELETE("/deploy_histories/:id", controllers.DeleteDeployHistory)
 	}
+	r.GET("/", controllers.ApplicationIndex)
+	r.GET("/dashboard/:id", controllers.Dashboard)
 }

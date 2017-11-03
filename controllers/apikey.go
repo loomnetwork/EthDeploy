@@ -195,6 +195,8 @@ func UpdateApikey(c *gin.Context) {
 		return
 	}
 
+	accountID := middleware.GetLoggedInUser(c) //TODO get this to work in loggedin scope
+	apikey.AccountID = accountID
 	if err := authDb.Save(&apikey).Error; err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return

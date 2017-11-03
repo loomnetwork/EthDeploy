@@ -8,6 +8,7 @@ import (
 
 	dbpkg "github.com/loomnetwork/dashboard/db"
 	"github.com/loomnetwork/dashboard/helper"
+	"github.com/loomnetwork/dashboard/middleware"
 	"github.com/loomnetwork/dashboard/models"
 	"github.com/loomnetwork/dashboard/version"
 
@@ -21,7 +22,7 @@ func GetApplications(c *gin.Context) {
 		return
 	}
 
-	db := dbpkg.DBInstance(c)
+	db := middleware.GetLoggedInScope(c)
 	parameter, err := dbpkg.NewParameter(c, models.Application{})
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -106,7 +107,7 @@ func GetApplication(c *gin.Context) {
 		return
 	}
 
-	db := dbpkg.DBInstance(c)
+	db := middleware.GetLoggedInScope(c)
 	parameter, err := dbpkg.NewParameter(c, models.Application{})
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -150,7 +151,7 @@ func CreateApplication(c *gin.Context) {
 		return
 	}
 
-	db := dbpkg.DBInstance(c)
+	db := middleware.GetLoggedInScope(c)
 	application := models.Application{LastDeployed: time.Now()}
 
 	if err := c.Bind(&application); err != nil {
@@ -167,6 +168,8 @@ func CreateApplication(c *gin.Context) {
 		return
 	}
 
+	accountID := middleware.GetLoggedInUser(c) //TODO get this to work in loggedin scope
+	application.AccountID = accountID
 	if err := db.Create(&application).Error; err != nil {
 		switch c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON) {
 		case gin.MIMEHTML:
@@ -204,7 +207,7 @@ func UpdateApplication(c *gin.Context) {
 		return
 	}
 
-	db := dbpkg.DBInstance(c)
+	db := middleware.GetLoggedInScope(c)
 	id := c.Params.ByName("id")
 	application := models.Application{}
 
@@ -219,6 +222,8 @@ func UpdateApplication(c *gin.Context) {
 		return
 	}
 
+	accountID := middleware.GetLoggedInUser(c) //TODO get this to work in loggedin scope
+	application.AccountID = accountID
 	if err := db.Save(&application).Error; err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -246,7 +251,7 @@ func DeleteApplication(c *gin.Context) {
 		return
 	}
 
-	db := dbpkg.DBInstance(c)
+	db := middleware.GetLoggedInScope(c)
 	id := c.Params.ByName("id")
 	application := models.Application{}
 

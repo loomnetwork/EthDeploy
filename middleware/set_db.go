@@ -1,14 +1,18 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strconv"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/loomnetwork/dashboard/config"
+	dbpkg "github.com/loomnetwork/dashboard/db"
 )
 
 func SetDBtoContext(db *gorm.DB) gin.HandlerFunc {
@@ -16,6 +20,29 @@ func SetDBtoContext(db *gorm.DB) gin.HandlerFunc {
 		c.Set("DB", db)
 		c.Next()
 	}
+}
+
+func GetLoggedInScope(c *gin.Context) *gorm.DB {
+	session := sessions.Default(c)
+	accountID := session.Get("account_id")
+
+	fmt.Printf("GetLoggedInScope--%s", accountID)
+	db := dbpkg.DBInstance(c)
+	return db.Where("account_id = ?", accountID)
+
+}
+
+func GetLoggedInUser(c *gin.Context) uint {
+	session := sessions.Default(c)
+	accountID := session.Get("account_id")
+
+	res, err := strconv.Atoi(accountID.(string))
+	if err != nil {
+		panic("impossible")
+	}
+
+	return uint(res)
+
 }
 
 func SetConfigtoContext(conf *config.Config) gin.HandlerFunc {

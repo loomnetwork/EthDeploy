@@ -16,6 +16,7 @@ type Application struct {
 	Account      *Account  `json:"account form:"account`
 	LastDeployed time.Time `json:"lastdeployed" form:"lastdeployed"`
 	DefaultChain string    `json:"default_chain" form:"default_chain" gorm:"default:'loom'"`
+	AccountID    uint      `json:"account_id" form:"account_id"`
 }
 
 func NormalizeSlug(slug string) string {

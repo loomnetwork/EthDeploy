@@ -32,6 +32,13 @@ func LoggedInMiddleWare() gin.HandlerFunc {
 	}
 }
 
+func FakedLoggedInMiddleWare() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session := sessions.Default(c)
+		session.Set("account_id", "1")
+	}
+}
+
 func Initialize(r *gin.Engine, c *config.Config) {
 
 	s := static.Serve("/assets", static.LocalFile("static", true))
@@ -44,10 +51,12 @@ func Initialize(r *gin.Engine, c *config.Config) {
 	r.GET("/oauth/callback_linkedin", controllers.RedirectOauthLinkedIn)
 	r.GET("/oauth/callback_github", controllers.RedirectOauthGithub)
 
-	if c.EnableAuth == true {
-		//TODO how can we group calls together?
-		r.Use(LoggedInMiddleWare())
-	}
+	//	if c.EnableAuth == true {
+	//TODO how can we group calls together?
+	//		r.Use(LoggedInMiddleWare())
+	//	} else {
+	r.Use(FakedLoggedInMiddleWare())
+	//	}
 
 	// Pages
 	r.GET("/", controllers.ApplicationIndex)
@@ -63,12 +72,14 @@ func Initialize(r *gin.Engine, c *config.Config) {
 	{
 		api.POST("/upload", controllers.UploadApplication)
 
-		api.GET("/accounts", controllers.GetAccounts)
-		api.GET("/accounts/:id", controllers.GetAccount)
-		api.POST("/accounts", controllers.CreateAccount)
-		api.PUT("/accounts/:id", controllers.UpdateAccount)
-		api.DELETE("/accounts/:id", controllers.DeleteAccount)
-
+		//For now a user only has access to one account
+		/*
+			api.GET("/accounts", controllers.GetAccounts)
+			api.GET("/accounts/:id", controllers.GetAccount)
+			api.POST("/accounts", controllers.CreateAccount)
+			api.PUT("/accounts/:id", controllers.UpdateAccount)
+			api.DELETE("/accounts/:id", controllers.DeleteAccount)
+		*/
 		api.GET("/apikeys", controllers.GetApikeys)
 		api.GET("/apikeys/:id", controllers.GetApikey)
 		api.POST("/apikeys", controllers.CreateApikey)

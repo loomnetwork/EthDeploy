@@ -6,6 +6,7 @@ import (
 
 	dbpkg "github.com/loomnetwork/dashboard/db"
 	"github.com/loomnetwork/dashboard/helper"
+	"github.com/loomnetwork/dashboard/middleware"
 	"github.com/loomnetwork/dashboard/models"
 	"github.com/loomnetwork/dashboard/version"
 
@@ -19,27 +20,28 @@ func GetApikeys(c *gin.Context) {
 		return
 	}
 
-	db := dbpkg.DBInstance(c)
+	authDb := middleware.GetLoggedInScope(c)
+
 	parameter, err := dbpkg.NewParameter(c, models.Apikey{})
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	db, err = parameter.Paginate(db)
+	authDb, err = parameter.Paginate(authDb)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	db = parameter.SetPreloads(db)
-	db = parameter.SortRecords(db)
-	db = parameter.FilterFields(db)
+	authDb = parameter.SetPreloads(authDb)
+	authDb = parameter.SortRecords(authDb)
+	authDb = parameter.FilterFields(authDb)
 	apikeys := []models.Apikey{}
 	fields := helper.ParseFields(c.DefaultQuery("fields", "*"))
 	queryFields := helper.QueryFields(models.Apikey{}, fields)
 
-	if err := db.Select(queryFields).Find(&apikeys).Error; err != nil {
+	if err := authDb.Where(queryFields).Find(&apikeys).Error; err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
@@ -104,20 +106,20 @@ func GetApikey(c *gin.Context) {
 		return
 	}
 
-	db := dbpkg.DBInstance(c)
+	authDb := middleware.GetLoggedInScope(c)
 	parameter, err := dbpkg.NewParameter(c, models.Apikey{})
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	db = parameter.SetPreloads(db)
+	authDb = parameter.SetPreloads(authDb)
 	apikey := models.Apikey{}
 	id := c.Params.ByName("id")
 	fields := helper.ParseFields(c.DefaultQuery("fields", "*"))
 	queryFields := helper.QueryFields(models.Apikey{}, fields)
 
-	if err := db.Select(queryFields).First(&apikey, id).Error; err != nil {
+	if err := authDb.Select(queryFields).First(&apikey, id).Error; err != nil {
 		content := gin.H{"error": "apikey with id#" + id + " not found"}
 		c.JSON(404, content)
 		return
@@ -148,15 +150,17 @@ func CreateApikey(c *gin.Context) {
 		return
 	}
 
-	db := dbpkg.DBInstance(c)
+	authDb := middleware.GetLoggedInScope(c)
+	accountID := middleware.GetLoggedInUser(c) //TODO get this to work in loggedin scope
 	apikey := models.Apikey{}
 
 	if err := c.Bind(&apikey); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+	apikey.AccountID = accountID
 
-	if err := db.Create(&apikey).Error; err != nil {
+	if err := authDb.Create(&apikey).Error; err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
@@ -176,11 +180,11 @@ func UpdateApikey(c *gin.Context) {
 		return
 	}
 
-	db := dbpkg.DBInstance(c)
+	authDb := middleware.GetLoggedInScope(c)
 	id := c.Params.ByName("id")
 	apikey := models.Apikey{}
 
-	if db.First(&apikey, id).Error != nil {
+	if authDb.First(&apikey, id).Error != nil {
 		content := gin.H{"error": "apikey with id#" + id + " not found"}
 		c.JSON(404, content)
 		return
@@ -191,7 +195,7 @@ func UpdateApikey(c *gin.Context) {
 		return
 	}
 
-	if err := db.Save(&apikey).Error; err != nil {
+	if err := authDb.Save(&apikey).Error; err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
@@ -211,17 +215,17 @@ func DeleteApikey(c *gin.Context) {
 		return
 	}
 
-	db := dbpkg.DBInstance(c)
+	authDb := middleware.GetLoggedInScope(c)
 	id := c.Params.ByName("id")
 	apikey := models.Apikey{}
 
-	if db.First(&apikey, id).Error != nil {
+	if authDb.First(&apikey, id).Error != nil {
 		content := gin.H{"error": "apikey with id#" + id + " not found"}
 		c.JSON(404, content)
 		return
 	}
 
-	if err := db.Delete(&apikey).Error; err != nil {
+	if err := authDb.Delete(&apikey).Error; err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}

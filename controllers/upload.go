@@ -166,7 +166,6 @@ func UploadApplication(c *gin.Context) {
 			return
 		}
 	}
-	fmt.Printf("----%v----%v\n", app.Slug, app)
 
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("uploadfile")

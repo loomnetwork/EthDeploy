@@ -52,6 +52,9 @@ func Connect() *gorm.DB {
 func DBInstance(c *gin.Context) *gorm.DB {
 	return c.MustGet("DB").(*gorm.DB)
 }
+func AuthDBInstance(c *gin.Context) *gorm.DB {
+	return c.MustGet("AUTHDB").(*gorm.DB)
+}
 
 func (self *Parameter) SetPreloads(db *gorm.DB) *gorm.DB {
 	if self.Preloads == "" {

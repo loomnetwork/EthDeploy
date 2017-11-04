@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/loomnetwork/dashboard/config"
 	"github.com/loomnetwork/dashboard/controllers"
+	"github.com/loomnetwork/dashboard/middleware"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/gin-contrib/sessions"
@@ -13,21 +14,36 @@ import (
 func LoggedInMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
+		accountIDstr := ""
 		accountID := session.Get("account_id")
+		if accountID != nil && len(accountID.(string)) > 0 {
+			accountIDstr = accountID.(string)
+		}
 
 		//Check if there is an apikey header for commandline clients
+		if len(accountIDstr) < 1 {
+			accountIDstr = middleware.GetAccountFromApiKey(c)
+			session.Set("account_id", accountIDstr)
+		}
 
 		//If we find one, look it up in the database and set it into the gin context
-
-		if accountID != nil && len(accountID.(string)) > 0 {
+		if len(accountIDstr) > 0 {
 			log.WithField("account_id", accountID).Debug("[AuthFilter] User is logged in")
 
 			//do something here
 			c.Next()
 		} else {
+
 			c.Abort()
 			log.Debug("[AuthFilter]No user is logged in, redirect to login")
-			c.Redirect(302, "/login")
+
+			switch c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON) {
+			case gin.MIMEHTML:
+				c.Redirect(302, "/login")
+			case gin.MIMEJSON:
+				c.JSON(400, gin.H{"error": "Invalid or missing api key"})
+			}
+
 		}
 	}
 }

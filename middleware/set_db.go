@@ -13,6 +13,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/loomnetwork/dashboard/config"
 	dbpkg "github.com/loomnetwork/dashboard/db"
+	"github.com/loomnetwork/dashboard/models"
 )
 
 func SetDBtoContext(db *gorm.DB) gin.HandlerFunc {
@@ -26,19 +27,34 @@ func GetLoggedInScope(c *gin.Context) *gorm.DB {
 	session := sessions.Default(c)
 	accountID := session.Get("account_id")
 
-	fmt.Printf("GetLoggedInScope--%s", accountID)
 	db := dbpkg.DBInstance(c)
 	return db.Where("account_id = ?", accountID)
 
 }
+func GetAccountFromApiKey(c *gin.Context) string {
+	apikeyheader := c.GetHeader("Loom-Api-Key")
+	if apikeyheader != "" {
 
+		db := dbpkg.DBInstance(c)
+		apikey := &models.Apikey{}
+		if err := db.Where("`key` = ?", apikeyheader).Find(&apikey).Error; err == nil {
+
+			return strconv.Itoa(int(apikey.AccountID))
+			//session doesn't work for api clients, maybe revisit that
+			//			session.Set("account_id", string(apikey.AccountID))
+		}
+	}
+	return ""
+}
+
+//TODO: this is convoluted refactor
 func GetLoggedInUser(c *gin.Context) uint {
 	session := sessions.Default(c)
 	accountID := session.Get("account_id")
 
 	res, err := strconv.Atoi(accountID.(string))
 	if err != nil {
-		panic("impossible")
+		panic(fmt.Sprintf("impossible-%v", accountID))
 	}
 
 	return uint(res)

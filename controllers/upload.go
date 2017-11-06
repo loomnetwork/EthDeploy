@@ -60,7 +60,7 @@ func SendNomadJob(filename, slug string) error {
 		return err
 	}
 	name := fmt.Sprintf("loomapp-%s", slug)
-	traefikTags := fmt.Sprintf("traefik.frontend.rule=Host:%s.loomapps.com", slug)
+	traefikTags := fmt.Sprintf("traefik.frontend.rule=Host:%s.loomapps.io", slug)
 	job := &api.Job{
 		ID:          helper.StringToPtr(name),
 		Name:        helper.StringToPtr(name),

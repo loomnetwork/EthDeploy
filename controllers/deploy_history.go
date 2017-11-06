@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"encoding/json"
-	"net/http"
 
 	dbpkg "github.com/loomnetwork/dashboard/db"
 	"github.com/loomnetwork/dashboard/helper"
+	"github.com/loomnetwork/dashboard/middleware"
 	"github.com/loomnetwork/dashboard/models"
 	"github.com/loomnetwork/dashboard/version"
 
@@ -19,7 +19,7 @@ func GetDeployHistories(c *gin.Context) {
 		return
 	}
 
-	db := dbpkg.DBInstance(c)
+	db := middleware.GetLoggedInScope(c)
 	parameter, err := dbpkg.NewParameter(c, models.DeployHistory{})
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -104,7 +104,7 @@ func GetDeployHistory(c *gin.Context) {
 		return
 	}
 
-	db := dbpkg.DBInstance(c)
+	db := middleware.GetLoggedInScope(c)
 	parameter, err := dbpkg.NewParameter(c, models.DeployHistory{})
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -141,95 +141,9 @@ func GetDeployHistory(c *gin.Context) {
 	}
 }
 
+//Users can't modify a deploy history
+/*
 func CreateDeployHistory(c *gin.Context) {
-	ver, err := version.New(c)
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	db := dbpkg.DBInstance(c)
-	deployHistory := models.DeployHistory{}
-
-	if err := c.Bind(&deployHistory); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := db.Create(&deployHistory).Error; err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	if version.Range("1.0.0", "<=", ver) && version.Range(ver, "<", "2.0.0") {
-		// conditional branch by version.
-		// 1.0.0 <= this version < 2.0.0 !!
-	}
-
-	c.JSON(201, deployHistory)
-}
-
 func UpdateDeployHistory(c *gin.Context) {
-	ver, err := version.New(c)
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	db := dbpkg.DBInstance(c)
-	id := c.Params.ByName("id")
-	deployHistory := models.DeployHistory{}
-
-	if db.First(&deployHistory, id).Error != nil {
-		content := gin.H{"error": "deploy_history with id#" + id + " not found"}
-		c.JSON(404, content)
-		return
-	}
-
-	if err := c.Bind(&deployHistory); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := db.Save(&deployHistory).Error; err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	if version.Range("1.0.0", "<=", ver) && version.Range(ver, "<", "2.0.0") {
-		// conditional branch by version.
-		// 1.0.0 <= this version < 2.0.0 !!
-	}
-
-	c.JSON(200, deployHistory)
-}
-
 func DeleteDeployHistory(c *gin.Context) {
-	ver, err := version.New(c)
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	db := dbpkg.DBInstance(c)
-	id := c.Params.ByName("id")
-	deployHistory := models.DeployHistory{}
-
-	if db.First(&deployHistory, id).Error != nil {
-		content := gin.H{"error": "deploy_history with id#" + id + " not found"}
-		c.JSON(404, content)
-		return
-	}
-
-	if err := db.Delete(&deployHistory).Error; err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	if version.Range("1.0.0", "<=", ver) && version.Range(ver, "<", "2.0.0") {
-		// conditional branch by version.
-		// 1.0.0 <= this version < 2.0.0 !!
-	}
-
-	c.Writer.WriteHeader(http.StatusNoContent)
-}
+*/

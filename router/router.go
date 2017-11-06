@@ -87,14 +87,6 @@ func Initialize(r *gin.Engine, c *config.Config) {
 		api.POST("/upload", controllers.UploadApplication)
 		api.POST("/upload/:slug", controllers.UploadApplication)
 
-		//For now a user only has access to one account
-		/*
-			api.GET("/accounts", controllers.GetAccounts)
-			api.GET("/accounts/:id", controllers.GetAccount)
-			api.POST("/accounts", controllers.CreateAccount)
-			api.PUT("/accounts/:id", controllers.UpdateAccount)
-			api.DELETE("/accounts/:id", controllers.DeleteAccount)
-		*/
 		api.GET("/apikeys", controllers.GetApikeys)
 		api.GET("/apikeys/:id", controllers.GetApikey)
 		api.POST("/apikeys", controllers.CreateApikey)
@@ -106,20 +98,8 @@ func Initialize(r *gin.Engine, c *config.Config) {
 		api.POST("/applications", controllers.CreateApplication)
 		api.PUT("/applications/:id", controllers.UpdateApplication)
 		api.DELETE("/applications/:id", controllers.DeleteApplication)
-
-		//Not sure we need to expose this, maybe just edit database
-		/*
-			api.GET("/beta_users", controllers.GetBetaUsers)
-			api.GET("/beta_users/:id", controllers.GetBetaUsers)
-			api.POST("/beta_users", controllers.CreateBetaUsers)
-			api.PUT("/beta_users/:id", controllers.UpdateBetaUsers)
-			api.DELETE("/beta_users/:id", controllers.DeleteBetaUsers)
-		*/
 		api.GET("/deploy_histories", controllers.GetDeployHistories)
 		api.GET("/deploy_histories/:id", controllers.GetDeployHistory)
-		api.POST("/deploy_histories", controllers.CreateDeployHistory)
-		api.PUT("/deploy_histories/:id", controllers.UpdateDeployHistory)
-		api.DELETE("/deploy_histories/:id", controllers.DeleteDeployHistory)
 	}
 	r.GET("/", controllers.ApplicationIndex)
 	r.GET("/dashboard/:id", controllers.Dashboard)

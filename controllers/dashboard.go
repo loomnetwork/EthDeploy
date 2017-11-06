@@ -6,6 +6,7 @@ import (
 
 	"github.com/loomnetwork/dashboard/config"
 	dbpkg "github.com/loomnetwork/dashboard/db"
+	"github.com/loomnetwork/dashboard/middleware"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +14,7 @@ import (
 )
 
 func ApplicationIndex(c *gin.Context) {
-	db := dbpkg.DBInstance(c)
+	db := middleware.GetLoggedInScope(c)
 	parameter, err := dbpkg.NewParameter(c, models.Application{})
 	if err != nil {
 		log.WithField("error", err).Warn("Failed retrieving applications")
@@ -46,7 +47,7 @@ func Dashboard(c *gin.Context) {
 	// 	c.Redirect(301, "/")
 	// }
 
-	db := dbpkg.DBInstance(c)
+	db := middleware.GetLoggedInScope(c)
 	parameter, err := dbpkg.NewParameter(c, models.Application{})
 	if err != nil {
 		log.WithField("error", err).Warn("Failed retrieving application for dashboard")

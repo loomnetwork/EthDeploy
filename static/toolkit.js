@@ -21348,8 +21348,9 @@ var DeploymentLog = function (_React$Component) {
 		value: function tick() {
 			var items = [];
 			var component = this;
+			var applicationId =  $("#application_id").val();
 
-			axios.get("/deploy_histories").then(function (histories) {
+			axios.get("/deploy_histories?q[application_id]=" + applicationId).then(function (histories) {
 				items = histories.data.map(function (item) {
 					return { version: item.bundle_name, timestamp: new Date(item.CreatedAt) };
 				});

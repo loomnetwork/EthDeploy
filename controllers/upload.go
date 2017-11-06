@@ -183,26 +183,32 @@ func UploadApplication(c *gin.Context) {
 	defer file.Close()
 
 	uniqueFilename := genObjectName(c)
-	err = uploadS3CompatibleFile(cfg, uniqueFilename, file)
-	if err != nil {
-		log.WithField("error", err).Warn("upload to s3 failed")
 
-		c.JSON(http.StatusBadRequest, gin.H{"Error": "storage of data failed"})
-		return
+	//speed up development testing
+	if cfg.DisableUpload == false {
+		err = uploadS3CompatibleFile(cfg, uniqueFilename, file)
+		if err != nil {
+			log.WithField("error", err).Warn("upload to s3 failed")
+
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "storage of data failed"})
+			return
+		}
+
+		err = SendNomadJob(uniqueFilename, app.Slug) //TODO get slug from database
+		if err != nil {
+			log.WithField("error", err).Warn("sendnomadjob failed")
+
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Could not create test network"})
+			return
+		}
 	}
 
-	err = SendNomadJob(uniqueFilename, app.Slug) //TODO get slug from database
-	if err != nil {
-		log.WithField("error", err).Warn("sendnomadjob failed")
-
-		c.JSON(http.StatusBadRequest, gin.H{"Error": "Could not create test network"})
-		return
-	}
 	// create new version
 	deployHistory := models.DeployHistory{
 		BundleName:     handler.Filename, //uploaded name
 		UniqueFileName: uniqueFilename,
 		AccountID:      accountID,
+		ApplicationID:  app.ID,
 	}
 	if err := db.Create(&deployHistory).Error; err != nil {
 		log.WithField("error", err).Warn("Error when storing new version")

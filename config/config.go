@@ -25,6 +25,7 @@ type Config struct {
 	Env            string //Environment we are in
 	BindAddr       string
 	EnableAuth     bool
+	DisableUpload  bool
 
 	S3 *S3EndPoint
 }
@@ -53,6 +54,7 @@ var (
 	bindAddr           = envflag.String("BIND_ADDR", ":8081", "What address to bind the main webserver to")
 	applicationZipPath = envflag.String("APP_ZIP_FILE", "misc/block_ssh.zip", "Location of app zip file. Relative or on s3 or Digitalocean bucket. Ex. do://uploads/block_ssh.zip")
 	enableFakeData     = envflag.Bool("ENABLE_FAKE_DATA", false, "Stubs out data")
+	disableUpload      = envflag.Bool("DISABLE_UPLOAD", false, "Doesn't upload to s3 or nomad. Maybe in future we store to local disk?")
 	level              = envflag.String("LOG_LEVEL", "debug", "Log level minimum to output. Info/Debug/Warn")
 )
 
@@ -86,11 +88,12 @@ func GetDefaultedConfig() *Config {
 	}
 
 	return &Config{
-		DemoMode:   *demo,
-		Env:        *loomEnv,
-		BindAddr:   *bindAddr,
-		EnableAuth: *enableAuth,
-		S3:         &S3EndPoint{AccessKeyID: accessKeyID, SecretAccessKey: secretAccessKey, EndPointUrl: endpoint}}
+		DemoMode:      *demo,
+		Env:           *loomEnv,
+		BindAddr:      *bindAddr,
+		EnableAuth:    *enableAuth,
+		DisableUpload: *disableUpload,
+		S3:            &S3EndPoint{AccessKeyID: accessKeyID, SecretAccessKey: secretAccessKey, EndPointUrl: endpoint}}
 }
 
 func GetDefaultedRPCConfig() *RPCConfig {

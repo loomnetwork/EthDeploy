@@ -5,6 +5,7 @@
     <div class="row">
     <div class="col-md-6 overview-sidebar">
       <form action="/upload/{{.app.Slug}}" class="dropzone" id="DApp-uploader">
+        <input type="hidden" id="application_id" value="{{.app.ID}}" />
       </form>
     </div>
     <div class="col-md-6 content">

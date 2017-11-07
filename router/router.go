@@ -91,7 +91,6 @@ func Initialize(r *gin.Engine, c *config.Config) {
 
 	// Pages
 	r.GET("/newdapp", controllers.NewDApp)
-	r.POST("/updated_default_chain/:id", controllers.UpdateApplication)
 
 	r.GET("/apis.json", controllers.APIEndpoints)
 

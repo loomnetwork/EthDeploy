@@ -42,7 +42,8 @@
         <p>Change which chain to direct users to by default</p>
       </div>
       <div class="col-md-8 content-col">
-        <form class="form-inline mt-2" action="/updated_default_chain/{{ .app.ID}}" method="POST">
+        <form class="form-inline mt-2" action="/applications/{{ .app.ID}}" encytype="application/x-www-form-urlencoded" method="POST">
+          <input type="hidden" name="_method" value="put" />
           <div class="form-group col-9">
             <div class="form-check w-100 justify-content-start">
               <label class="form-check-label">
@@ -52,7 +53,7 @@
             </div>
             <div class="form-check w-100 justify-content-start">
               <label class="form-check-label">
-                <input class="form-check-input" type="radio" name="default_chain" id="defaultchain2" value="mainnet" {{if eq .app.DefaultChain "mainnet"}} checked {{end}} disabled>
+                <input class="form-check-input" type="radio" name="default_chain" id="defaultchain2" value="mainnet" {{if eq .app.DefaultChain "mainnet"}} checked {{end}} >
                 Ethereum MainNet
               </label>
             </div>

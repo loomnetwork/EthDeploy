@@ -111,6 +111,7 @@ func Initialize(r *gin.Engine, c *config.Config) {
 		api.GET("/applications/:id", controllers.GetApplication)
 		api.POST("/applications", controllers.CreateApplication)
 		api.PUT("/applications/:id", controllers.UpdateApplication)
+		api.POST("/applications/:id", controllers.UpdateApplication) //We should make a filter that can handle puts from HTML
 		api.DELETE("/applications/:id", controllers.DeleteApplication)
 		api.GET("/deploy_histories", controllers.GetDeployHistories)
 		api.GET("/deploy_histories/:id", controllers.GetDeployHistory)

@@ -88,6 +88,13 @@ func (g *Gateway) LoomContracts(c *gin.Context) {
 	c.JSON(200, g.getContracts())
 }
 
+func (g *Gateway) LoomNetwork(c *gin.Context) {
+	commonHeaders(c)
+
+	network := "mainnet"
+	c.JSON(200, gin.H{"network": network})
+}
+
 func (g *Gateway) LoomAccounts(c *gin.Context) {
 	commonHeaders(c)
 	fmt.Printf("serving file-%s\n", g.cfg.PrivateKeyJsonFile)
@@ -109,6 +116,7 @@ func (g *Gateway) routerInitialize(r *gin.Engine) {
 	//We prefix our apis with underscore so there is no conflict with the Web3 RPC APOs
 	r.POST("/_loom/accounts", g.LoomAccounts)   //Returns accounts and private keys for this test network
 	r.POST("/_loom/contracts", g.LoomContracts) //Returns what contracts have been deployed to the smart contract
+	r.POST("/_loom/network", g.LoomNetwork)     //Returns what contracts have been deployed to the smart contract
 	// Web3 RPCs
 	r.POST("/", g.Web3CatchAll)
 

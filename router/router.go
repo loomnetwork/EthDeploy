@@ -55,11 +55,24 @@ func FakedLoggedInMiddleWare() gin.HandlerFunc {
 	}
 }
 
+func commonHeaders(c *gin.Context) {
+	c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "*")
+}
+
+func optionsCatchAll(c *gin.Context) {
+	commonHeaders(c)
+	c.Header("Content-Type", "text/plain")
+	c.HTML(200, "", nil)
+}
+
 func Initialize(r *gin.Engine, c *config.Config) {
 
 	s := static.Serve("/assets", static.LocalFile("static", true))
 	r.Use(s)
 
+	r.OPTIONS("/", optionsCatchAll)
 	r.GET("/login", controllers.Login)
 	r.GET("/logout", controllers.Logout)
 	r.POST("/login_oauth", controllers.LoginOauth)

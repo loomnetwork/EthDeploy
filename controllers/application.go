@@ -146,6 +146,9 @@ func GetApplication(c *gin.Context) {
 
 func GetApplicationNetwork(c *gin.Context) {
 	network := "mainnet"
+	c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "*")
 
 	slugId := models.NormalizeSlug(c.PostForm("application_slug"))
 	if slugId == "" {

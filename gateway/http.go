@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"net/http/httputil"
+	"net/url"
+	"path"
 
 	"github.com/containous/traefik/log"
 	"github.com/gin-contrib/static"
@@ -88,11 +91,40 @@ func (g *Gateway) LoomContracts(c *gin.Context) {
 	c.JSON(200, g.getContracts())
 }
 
+type NetworkResponse struct {
+	Network string `json:"network,omitempty"`
+}
+
 func (g *Gateway) LoomNetwork(c *gin.Context) {
 	commonHeaders(c)
-
 	network := "mainnet"
-	c.JSON(200, gin.H{"network": network})
+	client := &http.Client{}
+
+	u, err := url.Parse(g.cfg.LoomDashboardHost)
+	u.Path = path.Join(u.Path, fmt.Sprintf("/applications/%s/network", g.cfg.AppSlug))
+
+	req, err := http.NewRequest("GET", u.String(), nil)
+	req.Header.Add("accept", "application/json")
+	resp, err := client.Do(req)
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 { // OK
+		fmt.Printf("bad response code %d\n", resp.StatusCode)
+	}
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var nresp NetworkResponse
+	err = json.Unmarshal(bodyBytes, &nresp)
+	if err != nil || nresp.Network == "" {
+		fmt.Println("error:", err)
+		c.JSON(200, gin.H{"network": network})
+	}
+
+	c.JSON(200, nresp)
 }
 
 func (g *Gateway) LoomAccounts(c *gin.Context) {

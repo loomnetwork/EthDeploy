@@ -35,7 +35,7 @@ job "example" {
     task "rpc_gateway" {
       driver = "docker"
       config {
-        image = "loomnetwork/rpc_gateway:70dc654"
+        image = "loomnetwork/rpc_gateway:4b27581"
         port_map {
           rpc = 8081
         }

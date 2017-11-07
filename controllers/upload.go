@@ -87,7 +87,7 @@ func SendNomadJob(filename, slug string) error {
 						Name:   name,
 						Driver: "docker",
 						Config: map[string]interface{}{
-							"image": "loomnetwork/rpc_gateway:ade3e62", //TODO make this a config option
+							"image": "loomnetwork/rpc_gateway:4b27581", //TODO make this a config option
 							"port_map": []map[string]int{{
 								"web": 8081,
 							}},

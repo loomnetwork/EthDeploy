@@ -40,6 +40,8 @@ type RPCConfig struct {
 	TmpDir             string
 	ApplicationZipPath string
 	EnableFakeData     bool
+	LoomDashboardHost  string
+	AppSlug            string
 }
 
 var (
@@ -57,6 +59,7 @@ var (
 	disableUpload      = envflag.Bool("DISABLE_UPLOAD", false, "Doesn't upload to s3 or nomad. Maybe in future we store to local disk?")
 	level              = envflag.String("LOG_LEVEL", "debug", "Log level minimum to output. Info/Debug/Warn")
 	serverHost         = envflag.String("SERVER_HOST", "http://127.0.0.1:8080", "hostname for oauth redirects")
+	loomDashboardHost  = envflag.String("LOOM_DASHBOARD_API_HOST", "https://dashboard.loomx.io", "hostname for production dashboard to read data from it, for the gateway.")
 )
 
 func GetDefaultedConfig() *Config {
@@ -107,6 +110,8 @@ func GetDefaultedRPCConfig() *RPCConfig {
 		TmpDir:             *tmpDir,
 		ApplicationZipPath: *applicationZipPath,
 		EnableFakeData:     *enableFakeData,
+		LoomDashboardHost:  *loomDashboardHost,
+		AppSlug:            *appSlug,
 		Config:             cfg}
 }
 

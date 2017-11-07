@@ -144,6 +144,24 @@ func GetApplication(c *gin.Context) {
 	}
 }
 
+func GetApplicationNetwork(c *gin.Context) {
+	network := "mainnet"
+
+	slugId := models.NormalizeSlug(c.PostForm("application_slug"))
+	if slugId == "" {
+		slugId = c.Params.ByName("id") // try reading from the url in a restful manner
+	}
+
+	db := dbpkg.DBInstance(c)
+	app := models.Application{}
+	if err := db.Where("slug = ?", slugId).Find(&app).Error; err == nil {
+		if app.DefaultChain == "loom" {
+			network = "loom"
+		}
+	}
+	c.JSON(200, gin.H{"network": network})
+}
+
 func CreateApplication(c *gin.Context) {
 	ver, err := version.New(c)
 	if err != nil {

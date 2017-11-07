@@ -67,6 +67,8 @@ func Initialize(r *gin.Engine, c *config.Config) {
 	r.GET("/oauth/callback_linkedin", controllers.RedirectOauthLinkedIn)
 	r.GET("/oauth/callback_github", controllers.RedirectOauthGithub)
 
+	r.GET("/applications/:id/network", controllers.GetApplicationNetwork)
+
 	if c.EnableAuth == true {
 		//TODO how can we group calls together?
 		r.Use(LoggedInMiddleWare())

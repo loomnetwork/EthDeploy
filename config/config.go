@@ -56,6 +56,7 @@ var (
 	enableFakeData     = envflag.Bool("ENABLE_FAKE_DATA", false, "Stubs out data")
 	disableUpload      = envflag.Bool("DISABLE_UPLOAD", false, "Doesn't upload to s3 or nomad. Maybe in future we store to local disk?")
 	level              = envflag.String("LOG_LEVEL", "debug", "Log level minimum to output. Info/Debug/Warn")
+	serverHost         = envflag.String("SERVER_HOST", "http://127.0.0.1:8080", "hostname for oauth redirects")
 )
 
 func GetDefaultedConfig() *Config {
@@ -93,6 +94,7 @@ func GetDefaultedConfig() *Config {
 		BindAddr:      *bindAddr,
 		EnableAuth:    *enableAuth,
 		DisableUpload: *disableUpload,
+		ServerHost:    *serverHost,
 		S3:            &S3EndPoint{AccessKeyID: accessKeyID, SecretAccessKey: secretAccessKey, EndPointUrl: endpoint}}
 }
 

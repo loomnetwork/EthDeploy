@@ -19,13 +19,14 @@ type S3EndPoint struct {
 }
 
 type Config struct {
-	DemoMode       bool   //Disables Auth and enables all UI
-	InviteOnlyMode bool   //Requires users to be whitelisted before creating an account
-	ServerHost     string // base domain, useful for absolute redirects and oauth
-	Env            string //Environment we are in
-	BindAddr       string
-	EnableAuth     bool
-	DisableUpload  bool
+	DemoMode           bool   //Disables Auth and enables all UI
+	InviteOnlyMode     bool   //Requires users to be whitelisted before creating an account
+	ServerHost         string // base domain, useful for absolute redirects and oauth
+	Env                string //Environment we are in
+	BindAddr           string
+	EnableAuth         bool
+	DisableUpload      bool
+	GatewayDockerImage string
 
 	S3 *S3EndPoint
 }
@@ -60,6 +61,7 @@ var (
 	level              = envflag.String("LOG_LEVEL", "debug", "Log level minimum to output. Info/Debug/Warn")
 	serverHost         = envflag.String("SERVER_HOST", "http://127.0.0.1:8080", "hostname for oauth redirects")
 	loomDashboardHost  = envflag.String("LOOM_DASHBOARD_API_HOST", "https://dashboard.loomx.io", "hostname for production dashboard to read data from it, for the gateway.")
+	gatewayDockerImage = envflag.String("GATEWAY_DOCKER_IMAGE", "c59342e", "Gateway docker image version")
 )
 
 func GetDefaultedConfig() *Config {
@@ -92,13 +94,14 @@ func GetDefaultedConfig() *Config {
 	}
 
 	return &Config{
-		DemoMode:      *demo,
-		Env:           *loomEnv,
-		BindAddr:      *bindAddr,
-		EnableAuth:    *enableAuth,
-		DisableUpload: *disableUpload,
-		ServerHost:    *serverHost,
-		S3:            &S3EndPoint{AccessKeyID: accessKeyID, SecretAccessKey: secretAccessKey, EndPointUrl: endpoint}}
+		DemoMode:           *demo,
+		Env:                *loomEnv,
+		BindAddr:           *bindAddr,
+		EnableAuth:         *enableAuth,
+		DisableUpload:      *disableUpload,
+		ServerHost:         *serverHost,
+		GatewayDockerImage: *gatewayDockerImage,
+		S3:                 &S3EndPoint{AccessKeyID: accessKeyID, SecretAccessKey: secretAccessKey, EndPointUrl: endpoint}}
 }
 
 func GetDefaultedRPCConfig() *RPCConfig {

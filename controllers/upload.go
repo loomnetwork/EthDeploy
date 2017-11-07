@@ -49,7 +49,7 @@ func genObjectName(c *gin.Context) string {
 }
 
 //TODO set NOMAD_ADDR
-func SendNomadJob(filename, slug string) error {
+func SendNomadJob(filename, slug, dockerVersion string) error {
 	if slug == "" {
 		return errors.New("slug is blank won't send to nomad")
 	}
@@ -87,7 +87,7 @@ func SendNomadJob(filename, slug string) error {
 						Name:   name,
 						Driver: "docker",
 						Config: map[string]interface{}{
-							"image": "loomnetwork/rpc_gateway:4b27581", //TODO make this a config option
+							"image": fmt.Sprintf("loomnetwork/rpc_gateway:%s", dockerVersion), //TODO make this a config option
 							"port_map": []map[string]int{{
 								"web": 8081,
 							}},
@@ -97,6 +97,7 @@ func SendNomadJob(filename, slug string) error {
 							"APP_ZIP_FILE":          fmt.Sprintf("do://uploads/%s", filename),
 							"DEMO_MODE":             "false",
 							"PRIVATE_KEY_JSON_PATH": "data.json",
+							"APP_SLUG":              slug,
 						},
 						Resources: &api.Resources{
 							CPU:      helper.IntToPtr(500),
@@ -194,7 +195,7 @@ func UploadApplication(c *gin.Context) {
 			return
 		}
 
-		err = SendNomadJob(uniqueFilename, app.Slug) //TODO get slug from database
+		err = SendNomadJob(uniqueFilename, slugId, cfg.GatewayDockerImage)
 		if err != nil {
 			log.WithField("error", err).Warn("sendnomadjob failed")
 

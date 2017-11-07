@@ -215,7 +215,7 @@ func CreateApplication(c *gin.Context) {
 	fmt.Printf("NegotiateFormat-%s\n", asdf)
 	switch c.NegotiateFormat(gin.MIMEHTML, gin.MIMEJSON) {
 	case gin.MIMEHTML:
-		c.Redirect(301, fmt.Sprintf("/dashboard/%d", application.ID))
+		c.Redirect(301, fmt.Sprintf("/dashboard/%s", application.Slug))
 	case gin.MIMEJSON:
 		c.JSON(201, application)
 	}

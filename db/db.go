@@ -42,6 +42,7 @@ func Connect() *gorm.DB {
 			&models.Account{},
 			&models.Apikey{},
 			&models.Application{},
+			&models.BetaUser{},
 			&models.DeployHistory{},
 		)
 	}

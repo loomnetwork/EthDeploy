@@ -47,6 +47,27 @@ func GetAccountFromApiKey(c *gin.Context) string {
 	return ""
 }
 
+func CheckBetaAccess(accountID string, c *gin.Context) bool {
+	cfg := config.Default(c)
+	if !cfg.InviteOnlyMode {
+		return true
+	}
+
+	db := dbpkg.DBInstance(c)
+	account := &models.Account{}
+	if err := db.Find(&account, accountID).Error; err != nil {
+		return false
+	}
+	fmt.Printf("found account-%v", account)
+	betaUser := &models.BetaUser{}
+	if err := db.Where("`email` = ?", account.Email).Find(&betaUser).Error; err != nil {
+		return false
+	}
+	fmt.Printf("found betaUser-%v", betaUser)
+
+	return true
+}
+
 //TODO: this is convoluted refactor
 func GetLoggedInUser(c *gin.Context) uint {
 	session := sessions.Default(c)

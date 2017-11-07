@@ -1,6 +1,8 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/loomnetwork/dashboard/config"
 	"github.com/loomnetwork/dashboard/controllers"
 	"github.com/loomnetwork/dashboard/middleware"
@@ -24,6 +26,15 @@ func LoggedInMiddleWare() gin.HandlerFunc {
 		if len(accountIDstr) < 1 {
 			accountIDstr = middleware.GetAccountFromApiKey(c)
 			session.Set("account_id", accountIDstr)
+		}
+
+		if len(accountIDstr) > 0 {
+			hasBetaAccess := middleware.CheckBetaAccess(accountIDstr, c)
+			if !hasBetaAccess {
+				c.Abort()
+				c.HTML(http.StatusOK, "dashboard/beta", gin.H{})
+				return
+			}
 		}
 
 		//If we find one, look it up in the database and set it into the gin context

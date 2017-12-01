@@ -43,8 +43,8 @@ job "dashboard-web" {
         BIND_ADDR = "8080"
         LOOM_ENV = "production"
         SERVER_HOST = "https://dashboard.loomx.io"
-        DEMO_MODE = "false
-        BETA_MODE = "false
+        DEMO_MODE = "false"
+        BETA_MODE = "false"
         LOG_LEVEL = "debug"  
       }
 

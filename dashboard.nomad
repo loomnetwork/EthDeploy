@@ -40,7 +40,7 @@ job "dashboard-web" {
         DATABASE_HOST = "138.197.37.181"
         #TODO should probably have more then one?
         NOMAD_ADDR = "http://45.55.246.200:4646"
-        BIND_ADDR = "8080"
+        BIND_ADDR = ":8080"
         LOOM_ENV = "production"
         SERVER_HOST = "https://dashboard.loomx.io"
         DEMO_MODE = "false"

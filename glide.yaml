@@ -34,3 +34,9 @@ import:
   version: ~0.7.0
   subpackages:
   - api
+- package: github.com/pkg/errors
+  version: ~0.8.0
+- package: k8s.io/client-go
+  version: ~5.0.1
+  subpackages:
+  - '...'

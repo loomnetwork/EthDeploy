@@ -29,6 +29,7 @@ import:
 - package: github.com/go-ini/ini
   version: ~1.30.3
 - package: github.com/minio/go-homedir
+  version: 4d76aabb80b22bad8695d3904e943f1fb5e6199f
 - package: github.com/hashicorp/nomad
   version: ~0.7.0
   subpackages:

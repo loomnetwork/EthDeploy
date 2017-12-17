@@ -19,12 +19,12 @@ import (
 	"github.com/loomnetwork/dashboard/models"
 	"github.com/pkg/errors"
 
+	"github.com/loomnetwork/dashboard/k8s"
 	appsv1beta1 "k8s.io/api/apps/v1beta1"
-
 	apiv1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 )
 
 func uploadS3CompatibleFile(cfg *config.Config, objectName string, reader io.Reader) error {
@@ -56,127 +56,19 @@ func genObjectName(c *gin.Context) string {
 }
 
 func deployToK8s(filename, slug string, cfg *config.Config) error {
-	client, err := createK8sClient(cfg)
-	if err != nil {
-		return errors.Wrap(err, "Error creating k8s client")
+	env := map[string]interface{}{
+		"SPAWN_NETWORK":         "node /src/build/cli.node.js",
+		"APP_ZIP_FILE":          fmt.Sprintf("do,//uploads/%s", filename),
+		"DEMO_MODE":             "false",
+		"PRIVATE_KEY_JSON_PATH": "data.json",
+		"APP_SLUG":              slug,
 	}
 
-	zone, err := selectZone(slug, client)
-	if err != nil {
-		return errors.Wrapf(err,"Cannot assign a zone for %s", slug)
-	}
-
-	if err := createDeployment(filename, slug, zone, cfg.GatewayDockerImage, client); err != nil {
-		return errors.Wrapf(err, "Could not deploy the k8s application for %s.", slug)
-	}
-
-	if err := createService(slug, client); err != nil {
-		return errors.Wrapf(err, "could not create k8s service for %s", slug)
-	}
-
-	if err := createIngress(slug, client); err != nil {
-		return errors.Wrapf(err, "could not create k8s Ingress for %s", slug)
+	if err := k8s.Install(k8s.Gateway, slug, env, cfg); err != nil {
+		return errors.Wrapf(err, "Cannot deploy", slug)
 	}
 
 	return nil
-}
-
-func createK8sClient(cfg *config.Config) (*kubernetes.Clientset, error) {
-	return nil, nil
-}
-
-// createIngress registers a new rule for slug.loomapps.io on the K8s ingress controller.
-// Skips if already present.
-func createIngress(slug string, client *kubernetes.Clientset) error {
-	return nil
-}
-
-func createService(slug string, client *kubernetes.Clientset) error {
-	return nil
-}
-
-func int32Ptr(i int32) *int32 { return &i }
-
-func backendPtr(bptr extensionsv1beta1.IngressBackend) *extensionsv1beta1.IngressBackend { return &bptr }
-
-func createDeployment(filename, slug, zone, image string, client *kubernetes.Clientset) error {
-	//Create ganache deployment definition
-	deployment := &appsv1beta1.Deployment{
-		TypeMeta: metav1.TypeMeta{
-			Kind: "Deployment",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name: fmt.Sprintf("gateway-%v", slug),
-		},
-		Spec: appsv1beta1.DeploymentSpec{
-			Replicas: int32Ptr(1),
-			Selector: &metav1.LabelSelector{
-				MatchLabels: map[string]string{
-					"app": "gateway",
-				},
-			},
-			Template: apiv1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels: map[string]string{
-						"app":  "gateway",
-						"slug": slug,
-					},
-				},
-				Spec: apiv1.PodSpec{
-					NodeSelector: map[string]string{
-						"failure-domain.beta.kubernetes.io/zone": zone,
-					},
-					Containers: []apiv1.Container{
-						{
-							Name:    "gateway",
-							Image:   image,
-							Command: []string{"./root/start.sh"},
-							Ports: []apiv1.ContainerPort{
-								{
-									Protocol:      apiv1.ProtocolTCP,
-									ContainerPort: 8081,
-								},
-							},
-							Env: []apiv1.EnvVar{
-								{Name: "SPAWN_NETWORK", Value: "node /src/build/cli.node.js"},
-								{Name: "APP_ZIP_FILE", Value: fmt.Sprintf("do,//uploads/%s", filename)},
-								{Name: "DEMO_MODE", Value: "false"},
-								{Name: "PRIVATE_KEY_JSON_PATH", Value: "data.json"},
-								{Name: "APP_SLUG", Value: slug},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-
-	deploymentsClient := client.AppsV1beta1().Deployments(apiv1.NamespaceDefault)
-
-	// Create Deployment
-	fmt.Println("Creating ganache deployment...")
-	result, err := deploymentsClient.Create(deployment)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("Created deployment %q.\n", result.GetObjectMeta().GetName())
-
-	//List deployments
-	fmt.Printf("Listing deployments in namespace %q:\n", apiv1.NamespaceDefault)
-	list, err := deploymentsClient.List(metav1.ListOptions{})
-	if err != nil {
-		return err
-	}
-
-	for _, d := range list.Items {
-		fmt.Printf(" * %s (%d replicas)\n", d.Name, *d.Spec.Replicas)
-	}
-
-	return nil
-}
-
-func selectZone(s string, client *kubernetes.Clientset) (string, error) {
-    return "f", nil
 }
 
 //TODO set NOMAD_ADDR

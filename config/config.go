@@ -27,6 +27,7 @@ type Config struct {
 	EnableAuth         bool
 	DisableUpload      bool
 	GatewayDockerImage string
+	KubeConfigPath     string // Path to GCP Kubernetes config file for out-of-cluster authentication.
 
 	S3 *S3EndPoint
 }

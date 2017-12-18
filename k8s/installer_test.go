@@ -29,7 +29,7 @@ func TestInstall(t *testing.T) {
 }
 
 func TestMain(m *testing.M) {
-	flag.StringVar(&kubeConfigPath, "kubeconfig", "/home/surabhi/.kube/config", "Path to Kubernetes config.")
+	flag.StringVar(&kubeConfigPath, "kubeconfig", "", "Path to Kubernetes config.")
 	if !flag.Parsed() {
 		flag.Parse()
 	}

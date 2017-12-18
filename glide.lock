@@ -1,12 +1,16 @@
-hash: 92801fe969198e8d40c3b3801537330f4252be3025219ea31181462b55acbeb6
-updated: 2017-12-18T01:13:34.80087442+05:30
+hash: 251e1c24b14f2f6f9615fab1fefc20935c17a94536dd02e55ca2e41e659b597d
+updated: 2017-12-18T11:25:36.03126426+05:30
 imports:
+- name: cloud.google.com/go
+  version: 050b16d2314d5fc3d4c9a51e4cd5c7468e77f162
+  subpackages:
+  - compute/metadata
 - name: github.com/aristanetworks/goarista
-  version: aa6ce169f053a4951175ecedfdecdc1920abd9d3
+  version: 18a2f1dd52bb9abbc1e898439df06c74f28f63a4
   subpackages:
   - monotime
 - name: github.com/boj/redistore
-  version: fc113767cd6b051980f260d6dbe84b2740c46ab0
+  version: 4562487a4bee9a7c272b72bfaeda4917d0a47ab9
 - name: github.com/bradfitz/gomemcache
   version: 1952afaa557dc08e8e0d89eafab110fb501c1a2b
   subpackages:
@@ -14,11 +18,11 @@ imports:
 - name: github.com/bradleypeabody/gorilla-sessions-memcache
   version: 75ee37df8664a47cd5d9eb84d41e1f2b08086893
 - name: github.com/btcsuite/btcd
-  version: 8cea3866d0f7fb12d567a20744942c0d078c7d15
+  version: 2e60448ffcc6bf78332d1fe590260095f554dd78
   subpackages:
   - btcec
 - name: github.com/containous/traefik
-  version: d1d8b01dfb7d21b8823a518de681eb720de1db46
+  version: f6520727a34dea4322cd43a0dcb424af49876c75
   subpackages:
   - log
 - name: github.com/davecgh/go-spew
@@ -32,7 +36,7 @@ imports:
 - name: github.com/emicklei/go-restful-swagger12
   version: dcef7f55730566d41eae5db10e7d6981829720f6
 - name: github.com/ethereum/go-ethereum
-  version: 6dafec06662bbfbf4d36497ff7165fc3c9129e2f
+  version: c6069a627c42c21fc02d0770d39db9a9be45b180
   subpackages:
   - accounts
   - accounts/abi
@@ -55,7 +59,7 @@ imports:
   - rpc
   - trie
 - name: github.com/garyburd/redigo
-  version: 34a326de1fea52965fa5ad664d3fc7163dd4b0a1
+  version: 5f161ed9cfbce31e5a0ec0b1c3c81087e2e9cbef
   subpackages:
   - internal
   - redis
@@ -83,9 +87,9 @@ imports:
 - name: github.com/go-openapi/swag
   version: 1d0bd113de87027671077d3c71eb3ac5d7dbba72
 - name: github.com/go-sql-driver/mysql
-  version: a0583e0143b1624142adab07e0e97fe106d99561
+  version: 9181e3a86a19bacd63e68d43ae8b7b36320d8092
 - name: github.com/go-stack/stack
-  version: 817915b46b97fd7bb80e8ab6b69f01a53ac3eebf
+  version: 259ab82a6cad3992b4e21ff5cac294ccb06474bc
 - name: github.com/gogo/protobuf
   version: c0656edd0d9eab7c66d1eb0c568f9039345796f7
   subpackages:
@@ -126,9 +130,9 @@ imports:
 - name: github.com/hashicorp/errwrap
   version: 7554cd9344cec97297fa6649b055a8c98c2a1e55
 - name: github.com/hashicorp/go-cleanhttp
-  version: 3573b8b52aa7b37b9358d966a898feb387f62437
+  version: 33f138d01ac027decb9a5bd76ad6e7c7c701b0c4
 - name: github.com/hashicorp/go-multierror
-  version: 83588e72410abfbe4df460eeb6f30841ae47d4c4
+  version: b7773ae218740a7be65057fc60b366a49b538a44
 - name: github.com/hashicorp/go-rootcerts
   version: 6bb64b370b90e7ef1fa532be9e591a81c3493e00
 - name: github.com/hashicorp/hcl
@@ -166,7 +170,7 @@ imports:
 - name: github.com/loomnetwork/ethcontract
   version: fb192c2929f0fdcf9fb5e86c2fb3992a619f580c
 - name: github.com/loomnetwork/ez-gin-template
-  version: 0a7c3b12c1ea4fa04fc130575592395978a92c4e
+  version: 5ea573948bd2fd4a43054eb24c17ced5bcc675bc
 - name: github.com/mailru/easyjson
   version: d5b7844b561a7bc640052f1b935f7b800330d7e0
   subpackages:
@@ -174,7 +178,7 @@ imports:
   - jlexer
   - jwriter
 - name: github.com/mattn/go-isatty
-  version: a5cdd64afdee435007ee3e9f6ed4684af949d568
+  version: 6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c
 - name: github.com/minio/go-homedir
   version: 4d76aabb80b22bad8695d3904e943f1fb5e6199f
 - name: github.com/minio/minio-go
@@ -199,25 +203,25 @@ imports:
 - name: github.com/PuerkitoBio/urlesc
   version: 5bd2802263f21d8788851d5305584c82a5c75d7e
 - name: github.com/rcrowley/go-metrics
-  version: 1f30fe9094a513ce4c700b9a54458bbb0c96996c
+  version: e181e095bae94582363434144c61a9653aff6e50
 - name: github.com/rjeczalik/notify
-  version: 767eb674ef14b09119b2fff3601e64558d530c47
+  version: e1801ee34d54c4bf45126ef51fe9750b4e42bee8
 - name: github.com/rs/cors
   version: eabcc6af4bbe5ad3a949d36450326a2b0b9894b8
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/serenize/snaker
-  version: c7a77c38c398a5468cac9579c3b2b1de22fb4da6
+  version: a683aaf2d516deecd70cad0c72e3ca773ecfcef0
+- name: github.com/sirupsen/logrus
+  version: d682213848ed68c0a260ca37d6dd5ace8423f5ba
 - name: github.com/Sirupsen/logrus
   version: d682213848ed68c0a260ca37d6dd5ace8423f5ba
   repo: git@github.com:/sirupsen/logrus
   vcs: git
-- name: github.com/sirupsen/logrus
-  version: d682213848ed68c0a260ca37d6dd5ace8423f5ba
 - name: github.com/spf13/pflag
   version: 9ff6c6923cfffbcd502984b8e0c80539a94968b7
 - name: github.com/ugorji/go
-  version: f26fc641ec9d52a2161443cf9bb9fd53b9062a22
+  version: 0e0d6e869525973a9b36093f6ddc9d91b9fc2d71
   subpackages:
   - codec
 - name: golang.org/x/crypto
@@ -237,10 +241,13 @@ imports:
   - lex/httplex
   - websocket
 - name: golang.org/x/oauth2
-  version: bb50c06baba3d0c76f9d125c0719093e315b5b44
+  version: a6bd8cefa1811bd24b86f8902872e4e8225f74c4
   subpackages:
   - github
+  - google
   - internal
+  - jws
+  - jwt
   - linkedin
 - name: golang.org/x/sys
   version: 7ddbeae9ae08c6a06a59597f0c9edbc5ff2444ce
@@ -262,17 +269,20 @@ imports:
   - unicode/norm
   - width
 - name: golang.org/x/tools
-  version: 9b61fcc4c548d69663d915801fc4b42a43b6cd9c
+  version: 64890f4e2b733655fee5077a5435a8812404c3a3
   subpackages:
   - go/ast/astutil
   - imports
 - name: google.golang.org/appengine
-  version: 24e4144ec923c2374f6b06610c0df16a9222c3d9
+  version: 5bee14b453b4c71be47ec1781b0fa61c2ea182db
   subpackages:
+  - cloudsql
   - internal
+  - internal/app_identity
   - internal/base
   - internal/datastore
   - internal/log
+  - internal/modules
   - internal/remote_api
   - internal/urlfetch
   - urlfetch
@@ -397,8 +407,10 @@ imports:
   - kubernetes/typed/storage/v1
   - kubernetes/typed/storage/v1beta1
   - pkg/version
+  - plugin/pkg/client/auth/gcp
   - rest
   - rest/watch
+  - third_party/forked/golang/template
   - tools/auth
   - tools/clientcmd
   - tools/clientcmd/api
@@ -411,6 +423,7 @@ imports:
   - util/flowcontrol
   - util/homedir
   - util/integer
+  - util/jsonpath
 - name: k8s.io/kube-openapi
   version: 868f2f29720b192240e18284659231b440f9cda5
   subpackages:

@@ -41,9 +41,9 @@ func Install(ident, slug string, env map[string]interface{}, cfg *config.Config)
 		return errors.Wrap(err, "could not create k8s service.")
 	}
 
-	//if err := i.createIngress(slug, client); err != nil {
-	//	return errors.Wrap(err, "could not create k8s Ingress.")
-	//}
+	if err := i.createIngress(slug, client); err != nil {
+		return errors.Wrap(err, "could not create k8s Ingress.")
+	}
 
 	return nil
 }

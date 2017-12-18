@@ -43,3 +43,7 @@ import:
 - package: github.com/imdario/mergo
   version: ^0.2.4
 - package: github.com/howeyc/gopass
+- package: cloud.google.com/go
+  version: ^0.17.0
+  subpackages:
+  - compute/metadata

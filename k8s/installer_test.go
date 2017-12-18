@@ -1,19 +1,35 @@
 package k8s
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/containous/traefik/log"
+	"flag"
+	"log"
+	"os"
 	"github.com/loomnetwork/dashboard/config"
 )
 
+var kubeConfigPath string
+
 func TestInstall(t *testing.T) {
-	c, err := makeClient(&config.Config{KubeConfigPath: "/home/meson10/workspace/loomx/kubeconfig"})
-	log.Println(c, err)
+	c := &config.Config{KubeConfigPath: kubeConfigPath}
+
+	err := Install(Gateway, "hello-world", map[string]interface{}{"a": 1}, c)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func TestMain(m *testing.M) {
-	fmt.Println("ok")
+	flag.StringVar(&kubeConfigPath, "kubeconfig", "", "Path to Kubernetes config.")
+	if !flag.Parsed() {
+		flag.Parse()
+	}
+
+	if kubeConfigPath == "" {
+		log.Println("Missing -kubeconfig")
+		os.Exit(127)
+	}
+
 	m.Run()
 }

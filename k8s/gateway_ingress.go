@@ -2,8 +2,8 @@ package k8s
 
 import (
 	"fmt"
+	"log"
 
-	"github.com/containous/traefik/log"
 	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	apputils "k8s.io/apimachinery/pkg/util/intstr"

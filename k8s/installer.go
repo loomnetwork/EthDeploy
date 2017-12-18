@@ -1,7 +1,7 @@
 package k8s
 
 import (
-	"github.com/loomnetwork/dashboard/config"
+	"dashboard/config"
 	"github.com/pkg/errors"
 	"k8s.io/client-go/kubernetes"
 )

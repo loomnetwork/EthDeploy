@@ -8,6 +8,7 @@ import (
 
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"github.com/pkg/errors"
 )
 
 func makeGatewayName(slug string) string {
@@ -15,6 +16,21 @@ func makeGatewayName(slug string) string {
 }
 
 func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clientset) error {
+
+	s, err := g.getService(makeGatewayName(slug), client)
+	if s != nil {
+		updated, err := client.CoreV1().Services("default").Update(s)
+		if err != nil {
+			return errors.Wrap(err, "Update service failed.")
+		}
+		log.Println(updated)
+		return nil
+	}
+
+	if err.Error() != fmt.Sprintf("Cannot get service: services \"%s\" not found", makeGatewayName(slug)) {
+		return errors.Wrap(err, "Error in checking if service exists.")
+	}
+
 	// Create a service
 	service := &apiv1.Service{
 		TypeMeta: metav1.TypeMeta{
@@ -40,26 +56,20 @@ func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clients
 		},
 	}
 
-	log.Println(service)
-
-	////Create a defined service
-	//fmt.Println("\n Creating ganache service.")
-	//result, err := client.Services("default").Create(service)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//fmt.Printf("Created service: %s !!", result.GetObjectMeta().GetName())
-	//
-	////List Services
-	//services, err := client.Services("").List(metav1.ListOptions{})
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//for _, s := range services.Items {
-	//	fmt.Printf(" Service created: %s \n", s.Name)
-	//}
+	//Create a defined service
+	result, err := client.CoreV1().Services("default").Create(service)
+	if err != nil {
+		return err
+	}
+	log.Println(result)
 
 	return nil
+}
+
+func (g *GatewayInstaller) getService(slug string, client *kubernetes.Clientset) (*apiv1.Service, error) {
+	s, err := client.CoreV1().Services("default").Get(slug, metav1.GetOptions{})
+	if err != nil {
+		return nil, errors.Wrap(err, "Cannot get service")
+	}
+	return s, nil
 }

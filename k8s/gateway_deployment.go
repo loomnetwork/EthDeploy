@@ -9,6 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+	"fmt"
 )
 
 // How many pods should be created for this service.
@@ -20,12 +21,21 @@ const (
 )
 
 func (g *GatewayInstaller) createDeployment(slug string, env map[string]interface{}, client *kubernetes.Clientset) error {
+	dClient := client.AppsV1beta2().Deployments(apiv1.NamespaceDefault)
+
 	d, err := g.getDeployment(slug, client)
-	if err != nil {
-		return errors.Wrap(err, "Cannot get deployment")
+	if d != nil  {
+		updated, err := dClient.Update(d)
+		if err != nil {
+			return errors.Wrap(err, "Update to deployment failed.")
+		}
+		log.Println(updated)
+		return nil
 	}
 
-	log.Println(d)
+	if err.Error() != fmt.Sprintf("Cannot get deployment: deployments.apps \"%s\" not found", slug) {
+		return errors.Wrap(err, "Error in checking if deployment exists.")
+	}
 
 	zone, err := g.getZone(slug, client)
 	if err != nil {
@@ -94,16 +104,11 @@ func (g *GatewayInstaller) createDeployment(slug string, env map[string]interfac
 	}
 
 	log.Println(deployment)
-	//
-	//dClient := client.AppsV1beta2().Deployments(apiv1.NamespaceDefault)
-	//// Create Deployment
-	//fmt.Println("Creating ganache deployment...")
-	//result, err := dClient.Create(deployment)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//fmt.Printf("Created deployment %q.\n", result.GetObjectMeta().GetName())
-	//
+
+	_, err = dClient.Create(deployment)
+	if err != nil {
+		panic(err)
+	}
 
 	return nil
 }

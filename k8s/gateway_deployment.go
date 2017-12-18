@@ -107,7 +107,7 @@ func (g *GatewayInstaller) createDeployment(slug string, env map[string]interfac
 
 	_, err = dClient.Create(deployment)
 	if err != nil {
-		panic(err)
+		return errors.Wrap(err, "Deployment creation failed.")
 	}
 
 	return nil

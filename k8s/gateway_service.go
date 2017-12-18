@@ -59,7 +59,7 @@ func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clients
 	//Create a defined service
 	result, err := client.CoreV1().Services("default").Create(service)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Service creation failed.")
 	}
 	log.Println(result)
 

@@ -75,7 +75,7 @@ func (g *GatewayInstaller) createIngress(slug string, client *kubernetes.Clients
 
 	result, err := client.ExtensionsV1beta1().Ingresses("default").Create(ingress)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Ingress creration failed.")
 	}
 	log.Println(result)
 

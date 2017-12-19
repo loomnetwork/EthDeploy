@@ -9,7 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"fmt"
+	"strings"
 )
 
 // How many pods should be created for this service.
@@ -23,7 +23,7 @@ const (
 func (g *GatewayInstaller) createDeployment(slug string, env map[string]interface{}, client *kubernetes.Clientset) error {
 	dClient := client.AppsV1beta2().Deployments(apiv1.NamespaceDefault)
 
-	d, err := g.getDeployment(slug, client)
+	d, err := g.getDeployment(makeGatewayName(slug), client)
 	if d != nil  {
 		updated, err := dClient.Update(d)
 		if err != nil {
@@ -33,7 +33,7 @@ func (g *GatewayInstaller) createDeployment(slug string, env map[string]interfac
 		return nil
 	}
 
-	if err.Error() != fmt.Sprintf("Cannot get deployment: deployments.apps \"%s\" not found", slug) {
+	if !strings.Contains(err.Error(), "not found"){
 		return errors.Wrap(err, "Error in checking if deployment exists.")
 	}
 
@@ -103,19 +103,19 @@ func (g *GatewayInstaller) createDeployment(slug string, env map[string]interfac
 		},
 	}
 
-	log.Println(deployment)
 
-	_, err = dClient.Create(deployment)
+	result, err := dClient.Create(deployment)
 	if err != nil {
 		return errors.Wrap(err, "Deployment creation failed.")
 	}
+	log.Println(result)
 
 	return nil
 }
 
 func (g *GatewayInstaller) getDeployment(slug string, client *kubernetes.Clientset) (*v1beta2.Deployment, error) {
 	dClient := client.AppsV1beta2().Deployments(apiv1.NamespaceDefault)
-	d, err := dClient.Get(makeGatewayName(slug), metav1.GetOptions{})
+	d, err := dClient.Get(slug, metav1.GetOptions{})
 	if err != nil {
 		return nil, errors.Wrap(err, "Cannot get deployment")
 	}

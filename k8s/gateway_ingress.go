@@ -10,6 +10,7 @@ import (
 
 	"k8s.io/client-go/kubernetes"
 	"github.com/pkg/errors"
+	"strings"
 )
 
 const ingressControllerClass = "traefik"
@@ -35,7 +36,7 @@ func (g *GatewayInstaller) createIngress(slug string, client *kubernetes.Clients
 		return nil
 	}
 
-	if err.Error() != fmt.Sprintf("Cannot get ingress: ingress \"%s\" not found", makeGatewayName(slug)) {
+	if !strings.Contains(err.Error(), "not found") {
 		return errors.Wrap(err, "Error in checking if ingress exists.")
 	}
 

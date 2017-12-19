@@ -9,6 +9,7 @@ import (
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"github.com/pkg/errors"
+	"strings"
 )
 
 func makeGatewayName(slug string) string {
@@ -19,15 +20,16 @@ func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clients
 
 	s, err := g.getService(makeGatewayName(slug), client)
 	if s != nil {
-		updated, err := client.CoreV1().Services("default").Update(s)
+		updatedService, err := client.CoreV1().Services("default").Update(s)
 		if err != nil {
 			return errors.Wrap(err, "Update service failed.")
 		}
-		log.Println(updated)
+
+		log.Println(updatedService)
 		return nil
 	}
 
-	if err.Error() != fmt.Sprintf("Cannot get service: services \"%s\" not found", makeGatewayName(slug)) {
+	if !strings.Contains(err.Error(), "not found") {
 		return errors.Wrap(err, "Error in checking if service exists.")
 	}
 

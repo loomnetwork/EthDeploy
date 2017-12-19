@@ -1,8 +1,6 @@
 package k8s
 
 import (
-	"log"
-
 	"github.com/pkg/errors"
 	"k8s.io/api/apps/v1beta2"
 	apiv1 "k8s.io/api/core/v1"
@@ -24,16 +22,14 @@ func (g *GatewayInstaller) createDeployment(slug string, env map[string]interfac
 	dClient := client.AppsV1beta2().Deployments(apiv1.NamespaceDefault)
 
 	d, err := g.getDeployment(makeGatewayName(slug), client)
-	if d != nil  {
-		updated, err := dClient.Update(d)
-		if err != nil {
+	if d != nil {
+		if _, err := dClient.Update(d); err != nil {
 			return errors.Wrap(err, "Update to deployment failed.")
 		}
-		log.Println(updated)
 		return nil
 	}
 
-	if !strings.Contains(err.Error(), "not found"){
+	if !strings.Contains(err.Error(), "not found") {
 		return errors.Wrap(err, "Error in checking if deployment exists.")
 	}
 
@@ -103,12 +99,9 @@ func (g *GatewayInstaller) createDeployment(slug string, env map[string]interfac
 		},
 	}
 
-
-	result, err := dClient.Create(deployment)
-	if err != nil {
+	if _, err := dClient.Create(deployment); err != nil {
 		return errors.Wrap(err, "Deployment creation failed.")
 	}
-	log.Println(result)
 
 	return nil
 }

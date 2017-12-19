@@ -1,7 +1,7 @@
 package k8s
 
 import (
-	"github.com/dashboard/config"
+	"github.com/loomnetwork/dashboard/config"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	// Uncomment the following line to load the gcp plugin (only required to authenticate against GKE clusters).

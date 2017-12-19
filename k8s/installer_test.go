@@ -6,7 +6,7 @@ import (
 	"flag"
 	"log"
 	"os"
-	"github.com/dashboard/config"
+	"github.com/loomnetwork/dashboard/config"
 
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -32,6 +32,32 @@ func TestInstall(t *testing.T) {
 	assertIngressExists(slug, c, t)
 
 	err = Install(Gateway, slug, map[string]interface{}{"a": 1}, c)
+	if err != nil {
+		log.Println(err)
+	}
+
+	assertDeploymentExists(slug, c, t)
+	assertServiceExists(slug, c, t)
+	assertIngressExists(slug, c, t)
+}
+
+func TestInstallAndUpdate(t *testing.T) {
+	c := &config.Config{KubeConfigPath: kubeConfigPath}
+
+	slug := fmt.Sprintf("slug-test-%s", strconv.Itoa(rand.Int()))
+
+	//create setup
+	err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c)
+	if err != nil {
+		log.Println(err)
+	}
+
+	assertDeploymentExists(slug, c, t)
+	assertServiceExists(slug, c, t)
+	assertIngressExists(slug, c, t)
+
+	//update setup
+	err = Install(Gateway, slug, map[string]interface{}{"b": 2}, c)
 	if err != nil {
 		log.Println(err)
 	}

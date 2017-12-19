@@ -30,10 +30,6 @@ import:
   version: ~1.30.3
 - package: github.com/minio/go-homedir
   version: 4d76aabb80b22bad8695d3904e943f1fb5e6199f
-- package: github.com/hashicorp/nomad
-  version: ~0.7.0
-  subpackages:
-  - api
 - package: github.com/pkg/errors
   version: ~0.8.0
 - package: k8s.io/client-go
@@ -47,3 +43,5 @@ import:
   version: ^0.17.0
   subpackages:
   - compute/metadata
+- package: github.com/spf13/pflag
+  version: ^1.0.0

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	apiv1 "k8s.io/api/core/v1"
 	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	apputils "k8s.io/apimachinery/pkg/util/intstr"
@@ -23,10 +24,12 @@ func makeIngressName(slug string) string {
 }
 
 func (g *GatewayInstaller) createIngress(slug string, client *kubernetes.Clientset) error {
+	iClient := client.ExtensionsV1beta1().Ingresses(apiv1.NamespaceDefault)
+	ingress := g.createIngressStruct(slug)
 
 	i, err := g.getIngress(makeIngressName(slug), client)
 	if i != nil {
-		if _, err := client.ExtensionsV1beta1().Ingresses("default").Update(i); err != nil {
+		if _, err := iClient.Update(ingress); err != nil {
 			return errors.Wrap(err, "Ingress update failed.")
 		}
 
@@ -34,10 +37,28 @@ func (g *GatewayInstaller) createIngress(slug string, client *kubernetes.Clients
 	}
 
 	if !strings.Contains(err.Error(), "not found") {
-		return errors.Wrap(err, "Error in checking if ingress exists.")
+		return errors.Wrap(err, "Cannot fetch Ingress rule")
 	}
 
-	ingress := &extensionsv1beta1.Ingress{
+	if _, err := iClient.Create(ingress); err != nil {
+		return errors.Wrap(err, "Cannot create Ingress rule")
+	}
+
+	return nil
+}
+
+func (g *GatewayInstaller) getIngress(slug string, client *kubernetes.Clientset) (*extensionsv1beta1.Ingress, error) {
+	iClient := client.ExtensionsV1beta1().Ingresses(apiv1.NamespaceDefault)
+	i, err := iClient.Get(slug, metav1.GetOptions{})
+	if err != nil {
+		return nil, errors.Wrap(err, "Cannot get Ingress rule")
+	}
+	return i, nil
+}
+
+// Create an Ingress document.
+func (g *GatewayInstaller) createIngressStruct(slug string) *extensionsv1beta1.Ingress {
+	return &extensionsv1beta1.Ingress{
 		TypeMeta: metav1.TypeMeta{
 			Kind: "Ingress",
 		},
@@ -68,18 +89,4 @@ func (g *GatewayInstaller) createIngress(slug string, client *kubernetes.Clients
 			},
 		},
 	}
-
-	if _, err := client.ExtensionsV1beta1().Ingresses("default").Create(ingress); err != nil {
-		return errors.Wrap(err, "Ingress creration failed.")
-	}
-
-	return nil
-}
-
-func (g *GatewayInstaller) getIngress(slug string, client *kubernetes.Clientset) (*extensionsv1beta1.Ingress, error) {
-	i, err := client.ExtensionsV1beta1().Ingresses("default").Get(slug, metav1.GetOptions{})
-	if err != nil {
-		return nil, errors.Wrap(err, "Could not get ingress")
-	}
-	return i, nil
 }

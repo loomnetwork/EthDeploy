@@ -2,33 +2,21 @@ package k8s
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/pkg/errors"
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"strings"
 )
 
 func makeGatewayName(slug string) string {
 	return fmt.Sprintf("%v-%v", Gateway, slug)
 }
 
-func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clientset) error {
-
-	s, err := g.getService(makeGatewayName(slug), client)
-	if s != nil {
-		if _, err := client.CoreV1().Services("default").Update(s); err != nil {
-			return errors.Wrap(err, "Update service failed.")
-		}
-		return nil
-	}
-
-	if !strings.Contains(err.Error(), "not found") {
-		return errors.Wrap(err, "Error in checking if service exists.")
-	}
-
+func (g *GatewayInstaller) createServiceStruct(slug string) *apiv1.Service {
 	// Create a service
-	service := &apiv1.Service{
+	return &apiv1.Service{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "Service",
 			APIVersion: "v1",
@@ -51,9 +39,26 @@ func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clients
 			},
 		},
 	}
+}
+
+func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clientset) error {
+	sClient := client.CoreV1().Services(apiv1.NamespaceDefault)
+
+	service := g.createServiceStruct(slug)
+	s, err := g.getService(makeGatewayName(slug), client)
+	if s != nil {
+		if _, err := sClient.Update(s); err != nil {
+			return errors.Wrap(err, "Service update failed.")
+		}
+		return nil
+	}
+
+	if !strings.Contains(err.Error(), "not found") {
+		return errors.Wrap(err, "Cannot fetch service.")
+	}
 
 	//Create a defined service
-	if _, err := client.CoreV1().Services("default").Create(service); err != nil {
+	if _, err := sClient.Create(service); err != nil {
 		return errors.Wrap(err, "Service creation failed.")
 	}
 
@@ -61,7 +66,8 @@ func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clients
 }
 
 func (g *GatewayInstaller) getService(slug string, client *kubernetes.Clientset) (*apiv1.Service, error) {
-	s, err := client.CoreV1().Services("default").Get(slug, metav1.GetOptions{})
+	sClient := client.CoreV1().Services(apiv1.NamespaceDefault)
+	s, err := sClient.Get(slug, metav1.GetOptions{})
 	if err != nil {
 		return nil, errors.Wrap(err, "Cannot get service")
 	}

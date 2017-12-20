@@ -10,6 +10,8 @@ import (
 
 	"github.com/loomnetwork/dashboard/config"
 
+	"strings"
+
 	"github.com/pkg/errors"
 )
 
@@ -20,6 +22,23 @@ const slug = "hello-world"
 
 func TestInstallAndUpdate(t *testing.T) {
 	c := &config.Config{KubeConfigPath: kubeConfigPath}
+
+	t.Run("Install without a valid docker image should raise an error", func(t *testing.T) {
+		err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c)
+		if err == nil {
+			t.Fatal("Should have raised an Error")
+			return
+		}
+
+		if !strings.Contains(err.Error(), "Config has no gateway image defined") {
+			t.Errorf("Should complain about missing Image. Got %v instead", err.Error())
+			return
+		}
+
+	})
+
+	// Set the Image Path.
+	c.GatewayDockerImage = "gcr.io/robotic-catwalk-188706/rpc_gateway"
 
 	t.Run("Install a gateway and wait for service, deployment and ingress", func(t *testing.T) {
 		if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {

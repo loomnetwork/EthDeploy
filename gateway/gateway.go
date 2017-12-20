@@ -127,7 +127,8 @@ func (g *Gateway) Run() {
 		log.Fatal(err)
 	}
 
-	go g.spawnChildNetwork()
+	//go g.spawnChildNetwork()
+	go g.deployContracts()
 
 	//	database := db.Connect()
 	s := g.setupHttp(nil) //database //TODO readd database

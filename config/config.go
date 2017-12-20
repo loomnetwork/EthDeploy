@@ -44,6 +44,7 @@ type RPCConfig struct {
 	EnableFakeData     bool
 	LoomDashboardHost  string
 	AppSlug            string
+	EthereumURI        string
 }
 
 var (
@@ -64,6 +65,7 @@ var (
 	serverHost         = envflag.String("SERVER_HOST", "http://127.0.0.1:8080", "hostname for oauth redirects")
 	loomDashboardHost  = envflag.String("LOOM_DASHBOARD_API_HOST", "https://dashboard.loomx.io", "hostname for production dashboard to read data from it, for the gateway.")
 	gatewayDockerImage = envflag.String("GATEWAY_DOCKER_IMAGE", "c59342e", "Gateway docker image version")
+	ethereumURI        = envflag.String("ETHEREUM_URI", "http://localhost:8545", "Test RPC Host address")
 )
 
 func GetDefaultedConfig() *Config {
@@ -118,7 +120,9 @@ func GetDefaultedRPCConfig() *RPCConfig {
 		EnableFakeData:     *enableFakeData,
 		LoomDashboardHost:  *loomDashboardHost,
 		AppSlug:            *appSlug,
-		Config:             cfg}
+		EthereumURI:        *ethereumURI,
+		Config:             cfg,
+	}
 }
 
 //Finding the config on the gin context

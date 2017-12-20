@@ -20,7 +20,7 @@ const (
 	gatewayReplicas = 1
 	gatewayPort     = 8081
 	gatewayMemLimit = "500M"
-	gatewayCPULimit = "5300m"
+	gatewayCPULimit = "530m"
 	notFoundMessage = "the server could not find the requested resource"
 )
 

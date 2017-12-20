@@ -100,8 +100,8 @@ func (g *GatewayInstaller) createDeployment(image, slug string, env map[string]i
 	//check if deployment exists
 	d, err := g.getDeployment(makeGatewayName(slug), client)
 	if err == nil && d != nil {
-		g.updateStruct(d, deployment)
-		if _, err := dClient.Update(d); err != nil {
+		g.updateStruct(deployment, d)
+		if _, err := dClient.Update(deployment); err != nil {
 			return errors.Wrap(err, "Deployment update failed")
 		}
 		return nil

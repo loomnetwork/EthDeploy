@@ -31,8 +31,8 @@ func (g *GatewayInstaller) createIngress(slug string, client *kubernetes.Clients
 
 	ig, err := g.getIngress(makeIngressName(slug), client)
 	if err == nil && ig != nil {
-		g.updateStruct(ig, ingress)
-		if _, err := iClient.Update(ig); err != nil {
+		g.updateStruct(ingress, ig)
+		if _, err := iClient.Update(ingress); err != nil {
 			return errors.Wrap(err, "Ingress update failed")
 		}
 

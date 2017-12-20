@@ -2,12 +2,14 @@ package k8s
 
 import (
 	"fmt"
-	"strings"
 
 	apiv1 "k8s.io/api/core/v1"
 	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
+	k8serror "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	apputils "k8s.io/apimachinery/pkg/util/intstr"
+
+	"strings"
 
 	"github.com/pkg/errors"
 	"k8s.io/client-go/kubernetes"
@@ -27,33 +29,35 @@ func (g *GatewayInstaller) createIngress(slug string, client *kubernetes.Clients
 	iClient := client.ExtensionsV1beta1().Ingresses(apiv1.NamespaceDefault)
 	ingress := g.createIngressStruct(slug)
 
-	i, err := g.getIngress(makeIngressName(slug), client)
-	if i != nil {
-		if _, err := iClient.Update(ingress); err != nil {
-			return errors.Wrap(err, "Ingress update failed.")
+	ig, err := g.getIngress(makeIngressName(slug), client)
+	if err == nil && ig != nil {
+		g.updateStruct(ig, ingress)
+		if _, err := iClient.Update(ig); err != nil {
+			return errors.Wrap(err, "Ingress update failed")
 		}
 
 		return nil
 	}
 
-	if !strings.Contains(err.Error(), "not found") {
-		return errors.Wrap(err, "Cannot fetch Ingress rule")
+	// Transform the Error.
+	ss, ok := err.(k8serror.APIStatus)
+	if !ok {
+		return errors.Wrapf(err, "Unexpected error message %v", err)
 	}
 
-	if _, err := iClient.Create(ingress); err != nil {
-		return errors.Wrap(err, "Cannot create Ingress rule")
+	if strings.Contains(ss.Status().Message, "not found") {
+		if _, err := iClient.Create(ingress); err != nil {
+			return errors.Wrap(err, "Ingress rule creation failed")
+		}
+		return nil
 	}
 
-	return nil
+	return errors.Errorf("Unhandled Error %v", ss.Status().Message)
 }
 
 func (g *GatewayInstaller) getIngress(slug string, client *kubernetes.Clientset) (*extensionsv1beta1.Ingress, error) {
 	iClient := client.ExtensionsV1beta1().Ingresses(apiv1.NamespaceDefault)
-	i, err := iClient.Get(slug, metav1.GetOptions{})
-	if err != nil {
-		return nil, errors.Wrap(err, "Cannot get Ingress rule")
-	}
-	return i, nil
+	return iClient.Get(slug, metav1.GetOptions{})
 }
 
 // Create an Ingress document.

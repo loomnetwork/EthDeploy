@@ -13,11 +13,10 @@ import (
 	"github.com/loomnetwork/dashboard/config"
 
 	"github.com/pkg/errors"
-	apiv1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var kubeConfigPath string
+var gwi GatewayInstaller
 
 func TestInstall(t *testing.T) {
 	c := &config.Config{KubeConfigPath: kubeConfigPath}
@@ -25,7 +24,8 @@ func TestInstall(t *testing.T) {
 	slug := fmt.Sprintf("hello-world-%s", strconv.Itoa(rand.Int()))
 
 	if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {
-		t.Error("Gateway installation failed: ", err)
+		t.Fatal(err)
+		return
 	}
 
 	if err := assertDeploymentExists(slug); err != nil {
@@ -111,6 +111,7 @@ func TestMain(m *testing.M) {
 		os.Exit(127)
 	}
 
+	gwi = GatewayInstaller{}
 	m.Run()
 }
 
@@ -121,9 +122,7 @@ func assertDeploymentExists(slug string) error {
 		return err
 	}
 
-	dClient := client.AppsV1beta2().Deployments(apiv1.NamespaceDefault)
-
-	d, err := dClient.Get(makeGatewayName(slug), metav1.GetOptions{})
+	d, err := gwi.getDeployment(makeGatewayName(slug), client)
 	if err != nil {
 		return errors.Errorf("Cannot get deployment: %v", err)
 	}
@@ -142,7 +141,7 @@ func assertServiceExists(slug string) error {
 		return err
 	}
 
-	s, err := client.CoreV1().Services("default").Get(makeGatewayName(slug), metav1.GetOptions{})
+	s, err := gwi.getService(makeGatewayName(slug), client)
 	if err != nil {
 		return errors.Errorf("Cannot get service: %v", err)
 	}
@@ -161,7 +160,7 @@ func assertIngressExists(slug string) error {
 		return err
 	}
 
-	i, err := client.ExtensionsV1beta1().Ingresses("default").Get(makeIngressName(slug), metav1.GetOptions{})
+	i, err := gwi.getIngress(makeIngressName(slug), client)
 	if err != nil {
 		return errors.Errorf("Cannot get ingress: %v", err)
 	}
@@ -179,11 +178,9 @@ func assertDeploymentUpdated(slug string, cfg *config.Config, env map[string]int
 		return err
 	}
 
-	dClient := client.AppsV1beta2().Deployments(apiv1.NamespaceDefault)
-
-	d, err := dClient.Get(makeGatewayName(slug), metav1.GetOptions{})
+	d, err := gwi.getDeployment(makeGatewayName(slug), client)
 	if err != nil {
-		return err
+		return errors.Errorf("Cannot get deployment: %v", err)
 	}
 
 	expectedEnv := makeEnv(env)

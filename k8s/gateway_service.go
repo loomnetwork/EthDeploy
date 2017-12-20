@@ -2,10 +2,12 @@ package k8s
 
 import (
 	"fmt"
+
 	"strings"
 
 	"github.com/pkg/errors"
 	apiv1 "k8s.io/api/core/v1"
+	k8serror "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )
@@ -45,31 +47,33 @@ func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clients
 	sClient := client.CoreV1().Services(apiv1.NamespaceDefault)
 
 	service := g.createServiceStruct(slug)
+
 	s, err := g.getService(makeGatewayName(slug), client)
-	if s != nil {
+	if err == nil && s != nil {
+		g.updateStruct(s, service)
 		if _, err := sClient.Update(s); err != nil {
-			return errors.Wrap(err, "Service update failed.")
+			return errors.Wrap(err, "Service update failed")
 		}
 		return nil
 	}
 
-	if !strings.Contains(err.Error(), "not found") {
-		return errors.Wrap(err, "Cannot fetch service.")
+	// Transform the Error.
+	ss, ok := err.(k8serror.APIStatus)
+	if !ok {
+		return errors.Wrapf(err, "Unexpected error message %v", err)
 	}
 
-	//Create a defined service
-	if _, err := sClient.Create(service); err != nil {
-		return errors.Wrap(err, "Service creation failed.")
+	if strings.Contains(ss.Status().Message, "not found") {
+		if _, err := sClient.Create(service); err != nil {
+			return errors.Wrap(err, "Service creation failed")
+		}
+		return nil
 	}
 
-	return nil
+	return errors.Errorf("Unhandled Error %v", ss.Status().Message)
 }
 
 func (g *GatewayInstaller) getService(slug string, client *kubernetes.Clientset) (*apiv1.Service, error) {
 	sClient := client.CoreV1().Services(apiv1.NamespaceDefault)
-	s, err := sClient.Get(slug, metav1.GetOptions{})
-	if err != nil {
-		return nil, errors.Wrap(err, "Cannot get service")
-	}
-	return s, nil
+	return sClient.Get(slug, metav1.GetOptions{})
 }

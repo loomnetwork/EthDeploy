@@ -1,87 +1,83 @@
 package gateway
 
 import (
-	"fmt"
-	"io"
-	"os"
-	"os/exec"
-	"strings"
 	"sync"
 	"time"
 
-	"github.com/containous/traefik/log"
+	"log"
+
 	"github.com/loomnetwork/dashboard/config"
 )
 
-type appLogWriter struct{ Pid int }
+//type appLogWriter struct{ Pid int }
+//
+//func (a appLogWriter) Write(p []byte) (n int, err error) {
+//	//Non structured logs from executable
+//	fmt.Print(string(p))
+//
+//	//In prod use structured
+//	//	log.WithField("PID", a.Pid).Info(string(p))
+//
+//	return len(p), nil
+//}
 
-func (a appLogWriter) Write(p []byte) (n int, err error) {
-	//Non structured logs from executable
-	fmt.Print(string(p))
+//func (g *Gateway) spawnChildNetwork() {
+//	args := strings.Split(g.cfg.SpawnNetwork, " ")
+//	args = append(args, "--acctKeys")
+//	args = append(args, "data.json")
+//	//	fmt.Printf("launching -%s -(%d)-%v\n", args[0], len(args[1:]), args[1:])
+//	log.WithField("args", args).Info("Launching childnetwork")
+//	cmd := exec.Command(args[0], args[1:]...)
+//
+//	stderr, err := cmd.StderrPipe()
+//	if err != nil {
+//		log.WithField("error", err).Error("failed redirecting stderr")
+//	}
+//
+//	stdout, err := cmd.StdoutPipe()
+//	if err != nil {
+//		log.WithField("error", err).Error("failed redirecting stdout")
+//	}
+//
+//	err = cmd.Start()
+//	if err != nil {
+//		log.WithField("error", err).Error("failed starting child network")
+//	}
+//
+//	go io.Copy(appLogWriter{cmd.Process.Pid}, stderr)
+//	go io.Copy(appLogWriter{cmd.Process.Pid}, stdout)
+//
+//	log.WithField("pid", cmd.Process.Pid).Error("Launched!")
+//	go func() {
+//		<-g.StopChannel
+//		pid := cmd.Process.Pid
+//		log.WithField("pid", pid).Error("killing pid")
+//
+//		cmd.Process.Kill()
+//	}()
+//
+//	go g.deployContracts()
+//
+//	cmd.Wait()
+//	//TODO respawn???
+//
+//	log.Error("self killing since the subprocess died\n")
+//	//Mildly gross, kill ourselves
+//	proc, err := os.FindProcess(os.Getpid())
+//	if err != nil {
+//		log.Println(err)
+//	}
+//	// Kill the process
+//	proc.Kill()
+//}
 
-	//In prod use structured
-	//	log.WithField("PID", a.Pid).Info(string(p))
-
-	return len(p), nil
-}
-
-func (g *Gateway) spawnChildNetwork() {
-	args := strings.Split(g.cfg.SpawnNetwork, " ")
-	args = append(args, "--acctKeys")
-	args = append(args, "data.json")
-	//	fmt.Printf("launching -%s -(%d)-%v\n", args[0], len(args[1:]), args[1:])
-	log.WithField("args", args).Info("Launching childnetwork")
-	cmd := exec.Command(args[0], args[1:]...)
-
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		log.WithField("error", err).Error("failed redirecting stderr")
-	}
-
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		log.WithField("error", err).Error("failed redirecting stdout")
-	}
-
-	err = cmd.Start()
-	if err != nil {
-		log.WithField("error", err).Error("failed starting child network")
-	}
-
-	go io.Copy(appLogWriter{cmd.Process.Pid}, stderr)
-	go io.Copy(appLogWriter{cmd.Process.Pid}, stdout)
-
-	log.WithField("pid", cmd.Process.Pid).Error("Launched!")
-	go func() {
-		<-g.StopChannel
-		pid := cmd.Process.Pid
-		log.WithField("pid", pid).Error("killing pid")
-
-		cmd.Process.Kill()
-	}()
-
-	go g.deployContracts()
-
-	cmd.Wait()
-	//TODO respawn???
-
-	log.Error("self killing since the subprocess died\n")
-	//Mildly gross, kill ourselves
-	proc, err := os.FindProcess(os.Getpid())
-	if err != nil {
-		log.Println(err)
-	}
-	// Kill the process
-	proc.Kill()
-}
-
-func preKillNode() {
-	cmd := exec.Command("pkill", "node")
-	err := cmd.Start()
-	if err != nil {
-		log.WithField("error", err).Error("failed killing node")
-	}
-}
+//func preKillNode() {
+//	cmd := exec.Command("pkill", "node")
+//	err := cmd.Start()
+//	if err != nil {
+//		log.Errorf("Failed killing Node %v", err)
+//	}
+//}
 
 type Contract struct {
 	Name    string
@@ -123,11 +119,9 @@ func InitGateway(c *config.RPCConfig) *Gateway {
 func (g *Gateway) Run() {
 	err := g.downloadAndExtractApp(g.cfg.ApplicationZipPath)
 	if err != nil {
-		log.WithField("error", err).Error("failed downloading and extracted zip")
 		log.Fatal(err)
 	}
 
-	//go g.spawnChildNetwork()
 	go g.deployContracts()
 
 	//	database := db.Connect()

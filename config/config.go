@@ -78,8 +78,8 @@ func GetDefaultedConfig() *Config {
 	log.WithField("loomEnv", loomEnv).Debug("parsing config and setting loom environment")
 
 	//Ghetto for now
-	accessKeyID := "N35N62UCP4AKTEXLVFUP"
-	secretAccessKey := "q9fJnv8IhGpC+tDtpFAOr0mXSRUCJydlOMwW3fNDBQk"
+	accessKeyID := "5X5SWWI4MYYT2K4HQE4S"
+	secretAccessKey := "2s29YdRWnox3fixcPpZPsE4FWo/U+06LitAM3oWh820"
 	endpoint := "nyc3.digitaloceanspaces.com"
 
 	if *demo == true {

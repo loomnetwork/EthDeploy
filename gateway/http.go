@@ -9,11 +9,11 @@ import (
 	"net/url"
 	"path"
 
-	"github.com/containous/traefik/log"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/loomnetwork/dashboard/middleware"
+	log "github.com/sirupsen/logrus"
 )
 
 type AccountJson struct {

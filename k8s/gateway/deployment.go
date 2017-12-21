@@ -19,8 +19,8 @@ import (
 const (
 	gatewayReplicas = 1
 	gatewayPort     = 8081
-	gatewayMemLimit = "500M"
-	gatewayCPULimit = "530m"
+	gatewayMemLimit = "200M"
+	gatewayCPULimit = "200m"
 	notFoundMessage = "the server could not find the requested resource"
 )
 
@@ -66,7 +66,7 @@ func (g *Installer) createDeploymentStruct(image, slug string, env []apiv1.EnvVa
 							//Command: []string{"./root/start.sh"},
 							Resources: apiv1.ResourceRequirements{
 								Limits: apiv1.ResourceList{
-									apiv1.ResourceCPU:    resource.MustParse(gatewayCPULimit),
+									//apiv1.ResourceCPU:    resource.MustParse(gatewayCPULimit),
 									apiv1.ResourceMemory: resource.MustParse(gatewayMemLimit),
 									//I don't think Kubernetes can limit Network bandwidth as of yet.
 								},

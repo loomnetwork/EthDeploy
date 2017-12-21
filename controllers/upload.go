@@ -18,6 +18,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/loomnetwork/dashboard/k8s"
+	"github.com/loomnetwork/dashboard/k8s/ganache"
 	"github.com/loomnetwork/dashboard/k8s/gateway"
 )
 
@@ -50,6 +51,10 @@ func genObjectName(c *gin.Context) string {
 }
 
 func deployToK8s(filename, slug string, cfg *config.Config) error {
+	if err := k8s.Install(ganache.Ident, slug, map[string]interface{}{}, cfg); err != nil {
+		return errors.Wrapf(err, "Cannot deploy Ganache for %v", slug)
+	}
+
 	env := map[string]interface{}{
 		"SPAWN_NETWORK":         "node /src/build/cli.node.js",
 		"APP_ZIP_FILE":          fmt.Sprintf("do,//uploads/%s", filename),
@@ -59,7 +64,7 @@ func deployToK8s(filename, slug string, cfg *config.Config) error {
 	}
 
 	if err := k8s.Install(gateway.Ident, slug, env, cfg); err != nil {
-		return errors.Wrapf(err, "Cannot deploy", slug)
+		return errors.Wrapf(err, "Cannot deploy Gateway for %v", slug)
 	}
 
 	return nil

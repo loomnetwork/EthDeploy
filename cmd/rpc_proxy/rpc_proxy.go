@@ -1,12 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
-
 	"github.com/ianschenck/envflag"
 	"github.com/loomnetwork/dashboard/config"
 	"github.com/loomnetwork/dashboard/gateway"
@@ -24,16 +18,5 @@ func main() {
 	}
 
 	gw := gateway.InitGateway(cfg)
-
-	go gw.Run()
-
-	//Wait for CTRL-C
-	sigs := make(chan os.Signal, 2)
-	signal.Notify(sigs, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
-	fmt.Printf("waiting for signals\n")
-	<-sigs
-	fmt.Printf("after waiting for signals\n")
-
-	gw.StopChannel <- true
-	time.Sleep(2 * time.Second) // Atleast try and give time to kill the subprogram
+	gw.Run()
 }

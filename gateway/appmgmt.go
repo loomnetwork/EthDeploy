@@ -72,19 +72,19 @@ func (g *Gateway) downloadAndExtractApp(applicationZipPath string) error {
 	return err
 }
 
-//TODO random, right now always first ;)
-func (g *Gateway) getRandomWalletPrivateKey() (string, error) {
-	accountJson, err := readJsonOutput(g.cfg.PrivateKeyJsonFile) //TODO we should move this to a separate go routine that is spawning the other executable
-	if err != nil {
-		log.WithField("error", err).Error("Failed reading the json file")
-		return "", err
-	}
-	for k, v := range accountJson.AccountPrivateKeys {
-		fmt.Printf("k-%s, v-%s", k, v)
-		return v, nil
-	}
-	return "", nil
-}
+////TODO random, right now always first ;)
+//func (g *Gateway) getRandomWalletPrivateKey() (string, error) {
+//	accountJson, err := readJsonOutput(g.cfg.PrivateKeyJsonFile) //TODO we should move this to a separate go routine that is spawning the other executable
+//	if err != nil {
+//		log.WithField("error", err).Error("Failed reading the json file")
+//		return "", err
+//	}
+//	for k, v := range accountJson.AccountPrivateKeys {
+//		fmt.Printf("k-%s, v-%s", k, v)
+//		return v, nil
+//	}
+//	return "", nil
+//}
 
 func (g *Gateway) deployContracts() {
 	log.Debug("Deploying contracts")
@@ -121,8 +121,9 @@ func (g *Gateway) deployContracts() {
 
 		address, err := eclient.DeployContractTruffleFromFile(truffleFile)
 		if err != nil {
-			log.Fatalf("Failed to deploy contract: %v", err)
+			log.Fatalf("Failed to deploy contract file %v: %v", truffleFile, err)
 		}
+
 		basename := filepath.Base(truffleFile)
 		name := strings.TrimSuffix(basename, filepath.Ext(basename))
 		fmt.Printf("Deployed truffle contract -%s to address 0x%x", truffleFile, address)
@@ -131,20 +132,26 @@ func (g *Gateway) deployContracts() {
 	//TODO check for abi/bin files for non truffle style
 }
 
-var testKeyspace = []string{
-	"174c5054ddfc4994d79f7d75616ed50d1159ccfffb6542efdeeca16a12bb3e76",
-	"58099adea0b246f6f716f082480d0d22145563b88a9731618ea5d68673a69eb6",
-	"1bf096c11e1e18898a6674b649855c6c9d448f3d806ed0f368f9b263bd7c9126",
-	"6bb5c7975d01c8a27e53428a01b12781cd6a13dff7272d597dcbfab826e1b595",
-	"dfeb9d26e02bb6f818d05a0912b487c5a3c37ce476063b0a7382f1256307e7c1",
-	"e0c8166aa3e6ae65f8b48756dcd5b6d89003e6357a3aa5dd735f9e1a8059452a",
-	"7559857c2b83dfccda942600c8189e3eea0505e51c2c47a2be85a1b73ff0283b",
-	"d4b7485fdb7eae9ea2ccd99317e2784b2efd8e87eb9bb402833712ce57105147",
-	"f499d4b12cd99818991a2630d63997860dd1a105ecce8e1c1321ff32b10509de",
-	"e0857acc170ff2fee45e0dc99118b02a356d0f1ab754905d440ae347fb4959ee",
-}
+var testKeyspace = &AccountJson{AccountPrivateKeys: map[string]string{
+	"0xefa479be14bc9fd809f3e4aeb8cb053b96f27318": "174c5054ddfc4994d79f7d75616ed50d1159ccfffb6542efdeeca16a12bb3e76",
+	"0xd597ad3cf62c886cb35484f6e267f4a44cfc469d": "58099adea0b246f6f716f082480d0d22145563b88a9731618ea5d68673a69eb6",
+	"0x6349883feb556aba531c2f1dae0e04989f56d45a": "1bf096c11e1e18898a6674b649855c6c9d448f3d806ed0f368f9b263bd7c9126",
+	"0xa3a5131b61e7d83bcb3942f17b58820150d17cc7": "6bb5c7975d01c8a27e53428a01b12781cd6a13dff7272d597dcbfab826e1b595",
+	"0x182df3c60c41039c7208155b40e085ef33afd527": "dfeb9d26e02bb6f818d05a0912b487c5a3c37ce476063b0a7382f1256307e7c1",
+	"0x5233b94618ea42579f62b46df4fdffe43266eeb0": "e0c8166aa3e6ae65f8b48756dcd5b6d89003e6357a3aa5dd735f9e1a8059452a",
+	"0x54254787940709212e3638e932d4766383c56992": "7559857c2b83dfccda942600c8189e3eea0505e51c2c47a2be85a1b73ff0283b",
+	"0x4e8d58973e3e87880b115adb0487cd03de1da967": "d4b7485fdb7eae9ea2ccd99317e2784b2efd8e87eb9bb402833712ce57105147",
+	"0x26a28508664df36ccfc703a3f8d683b433a72f1b": "f499d4b12cd99818991a2630d63997860dd1a105ecce8e1c1321ff32b10509de",
+	"0x82cec069299a0c62cecbc433ee280e13234a17ac": "e0857acc170ff2fee45e0dc99118b02a356d0f1ab754905d440ae347fb4959ee",
+}}
 
 func (g *Gateway) getTestRPCPrivateKey() (string, error) {
 	rand.Seed(time.Now().Unix())
-	return testKeyspace[rand.Intn(len(testKeyspace))], nil
+	testSpace := []string{}
+
+	for _, v := range testKeyspace.AccountPrivateKeys {
+		testSpace = append(testSpace, v)
+	}
+
+	return testSpace[rand.Intn(len(testSpace))], nil
 }

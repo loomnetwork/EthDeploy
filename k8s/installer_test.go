@@ -22,7 +22,7 @@ var gwi gateway.Installer
 
 const (
 	slug                 = "hello-world"
-	gatewayDockerVersion = "gcr.io/robotic-catwalk-188706/rpc_gateway:a3e7508"
+	gatewayDockerVersion = "gcr.io/robotic-catwalk-188706/rpc_gateway:6fa56b0"
 	ganacheDockerVersion = "gcr.io/robotic-catwalk-188706/loom-ganache:5a4cfce"
 )
 
@@ -79,7 +79,7 @@ func TestInstallAndUpdate(t *testing.T) {
 	t.Run("Updating a few components should update the k8s resourece", func(t *testing.T) {
 		newEnv := map[string]interface{}{
 			"SPAWN_NETWORK":         "node /src/build/cli.node.js",
-			"APP_ZIP_FILE":          "do://nyc3.digitaloceanspaces.com/loomx/block_ssh.zip",
+			"APP_ZIP_FILE":          "do://block_ssh.zip",
 			"DEMO_MODE":             "false",
 			"PRIVATE_KEY_JSON_PATH": "data.json",
 			"APP_SLUG":              slug,

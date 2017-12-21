@@ -22,7 +22,7 @@ func (g *Gateway) downloadS3CompatibleFile(applicationZipPath, outputPath string
 	if err != nil {
 		log.Fatalln(err)
 	}
-	bucketName := "loom"
+	bucketName := "loomx"
 	//	minioClient.TraceOn(os.Stderr)
 
 	err = minioClient.FGetObject(bucketName, applicationZipPath, outputPath)

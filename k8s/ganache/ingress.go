@@ -1,4 +1,4 @@
-package k8s
+package ganache
 
 import (
 	"fmt"
@@ -21,15 +21,15 @@ func makeHost(slug string) string {
 	return fmt.Sprintf("%v.loomapps.io", slug)
 }
 
-func makeIngressName(slug string) string {
-	return fmt.Sprintf("%v-%v-%v", ingressControllerClass, Gateway, slug)
+func MakeIngressName(slug string) string {
+	return fmt.Sprintf("%v-%v-%v", ingressControllerClass, Ident, slug)
 }
 
-func (g *GatewayInstaller) createIngress(slug string, client *kubernetes.Clientset) error {
+func (g *Installer) CreateIngress(slug string, client *kubernetes.Clientset) error {
 	iClient := client.ExtensionsV1beta1().Ingresses(apiv1.NamespaceDefault)
 	ingress := g.createIngressStruct(slug)
 
-	ig, err := g.getIngress(makeIngressName(slug), client)
+	ig, err := g.GetIngress(MakeIngressName(slug), client)
 	if err == nil && ig != nil {
 		g.updateStruct(ingress, ig)
 		if _, err := iClient.Update(ingress); err != nil {
@@ -55,19 +55,19 @@ func (g *GatewayInstaller) createIngress(slug string, client *kubernetes.Clients
 	return errors.Errorf("Unhandled Error %v", ss.Status().Message)
 }
 
-func (g *GatewayInstaller) getIngress(slug string, client *kubernetes.Clientset) (*extensionsv1beta1.Ingress, error) {
+func (g *Installer) GetIngress(slug string, client *kubernetes.Clientset) (*extensionsv1beta1.Ingress, error) {
 	iClient := client.ExtensionsV1beta1().Ingresses(apiv1.NamespaceDefault)
 	return iClient.Get(slug, metav1.GetOptions{})
 }
 
 // Create an Ingress document.
-func (g *GatewayInstaller) createIngressStruct(slug string) *extensionsv1beta1.Ingress {
+func (g *Installer) createIngressStruct(slug string) *extensionsv1beta1.Ingress {
 	return &extensionsv1beta1.Ingress{
 		TypeMeta: metav1.TypeMeta{
 			Kind: "Ingress",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name: makeIngressName(slug),
+			Name: MakeIngressName(slug),
 			Annotations: map[string]string{
 				"kubernetes.io/ingress.class": ingressControllerClass,
 			},
@@ -82,8 +82,8 @@ func (g *GatewayInstaller) createIngressStruct(slug string) *extensionsv1beta1.I
 								{
 									Path: "/",
 									Backend: extensionsv1beta1.IngressBackend{
-										ServiceName: makeGatewayName(slug),
-										ServicePort: apputils.IntOrString{IntVal: gatewayPort},
+										ServiceName: MakeName(slug),
+										ServicePort: apputils.IntOrString{IntVal: ganachePort},
 									},
 								},
 							},

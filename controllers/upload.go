@@ -62,6 +62,7 @@ func deployToK8s(filename, slug string, cfg *config.Config) error {
 		"PRIVATE_KEY_JSON_PATH": "data.json",
 		"APP_SLUG":              slug,
 		"ETHEREUM_URI":          fmt.Sprintf("http://%v.loomapps.io:8545", slug),
+		"PROXY_ADDR":            fmt.Sprintf("http://%v.loomapps.io:8545", slug),
 	}
 
 	if err := k8s.Install(gateway.Ident, slug, env, cfg); err != nil {

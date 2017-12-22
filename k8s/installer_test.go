@@ -22,7 +22,7 @@ var gwi gateway.Installer
 
 const (
 	slug                 = "hello-world"
-	gatewayDockerVersion = "gcr.io/robotic-catwalk-188706/rpc_gateway:c42ddfe"
+	gatewayDockerVersion = "gcr.io/robotic-catwalk-188706/rpc_gateway:b913aae"
 	ganacheDockerVersion = "gcr.io/robotic-catwalk-188706/loom-ganache:5a4cfce"
 )
 

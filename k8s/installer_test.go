@@ -22,7 +22,7 @@ var gwi gateway.Installer
 
 const (
 	slug                 = "hello-world"
-	gatewayDockerVersion = "gcr.io/robotic-catwalk-188706/rpc_gateway:6fa56b0"
+	gatewayDockerVersion = "gcr.io/robotic-catwalk-188706/rpc_gateway:c42ddfe"
 	ganacheDockerVersion = "gcr.io/robotic-catwalk-188706/loom-ganache:5a4cfce"
 )
 
@@ -55,9 +55,19 @@ func TestInstallAndUpdate(t *testing.T) {
 	})
 
 	t.Run("Install a gateway and wait for service, deployment and ingress", func(t *testing.T) {
-		if err := Install(gateway.Ident, slug, map[string]interface{}{"a": 1}, c); err != nil {
-			t.Fatal(err)
-			return
+		newEnv := map[string]interface{}{
+			"APP_ZIP_FILE": "do://block_ssh.zip",
+			"DEMO_MODE":    "false",
+			"APP_SLUG":     slug,
+			"ETHEREUM_URI": fmt.Sprintf("http://ganache-%v:8545", slug),
+			"PROXY_ADDR":   fmt.Sprintf("http://ganache-%v:8545", slug),
+			//"PRIVATE_KEY_JSON_PATH": "data.json",
+			//"SPAWN_NETWORK":         "node /src/build/cli.node.js",
+		}
+
+		//update setupO
+		if err := Install(gateway.Ident, slug, newEnv, c); err != nil {
+			t.Errorf("Ident updation failed: %v", err)
 		}
 
 		if err := assertDeploymentExists(slug); err != nil {
@@ -74,24 +84,6 @@ func TestInstallAndUpdate(t *testing.T) {
 			t.Error(err)
 			return
 		}
-	})
-
-	t.Run("Updating a few components should update the k8s resourece", func(t *testing.T) {
-		newEnv := map[string]interface{}{
-			"APP_ZIP_FILE": "do://block_ssh.zip",
-			"DEMO_MODE":    "false",
-			"APP_SLUG":     slug,
-			"ETHEREUM_URI": fmt.Sprintf("http://%v.loomapps.io:8545", slug),
-			"PROXY_ADDR":   fmt.Sprintf("http://%v.loomapps.io:8545", slug),
-			//"PRIVATE_KEY_JSON_PATH": "data.json",
-			//"SPAWN_NETWORK":         "node /src/build/cli.node.js",
-		}
-
-		//update setupO
-		if err := Install(gateway.Ident, slug, newEnv, c); err != nil {
-			t.Errorf("Ident updation failed: %v", err)
-		}
-
 		if err := assertDeploymentUpdated(slug, c, newEnv); err != nil {
 			t.Error(err)
 		}

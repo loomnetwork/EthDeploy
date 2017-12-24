@@ -2,13 +2,10 @@ package k8s
 
 import (
 	"fmt"
-	"log"
-
-	"k8s.io/client-go/kubernetes"
-
+	"github.com/pkg/errors"
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"github.com/pkg/errors"
+	"k8s.io/client-go/kubernetes"
 	"strings"
 )
 
@@ -20,12 +17,9 @@ func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clients
 
 	s, err := g.getService(makeGatewayName(slug), client)
 	if s != nil {
-		updatedService, err := client.CoreV1().Services("default").Update(s)
-		if err != nil {
+		if _, err := client.CoreV1().Services("default").Update(s); err != nil {
 			return errors.Wrap(err, "Update service failed.")
 		}
-
-		log.Println(updatedService)
 		return nil
 	}
 
@@ -59,11 +53,9 @@ func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clients
 	}
 
 	//Create a defined service
-	result, err := client.CoreV1().Services("default").Create(service)
-	if err != nil {
+	if _, err := client.CoreV1().Services("default").Create(service); err != nil {
 		return errors.Wrap(err, "Service creation failed.")
 	}
-	log.Println(result)
 
 	return nil
 }

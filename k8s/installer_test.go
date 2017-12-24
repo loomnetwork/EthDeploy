@@ -4,13 +4,13 @@ import (
 	"testing"
 
 	"flag"
+	"github.com/loomnetwork/dashboard/config"
 	"log"
 	"os"
-	"github.com/loomnetwork/dashboard/config"
 
+	"fmt"
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"fmt"
 	"math/rand"
 	"strconv"
 )
@@ -22,8 +22,7 @@ func TestInstall(t *testing.T) {
 
 	slug := fmt.Sprintf("hello-world-%s", strconv.Itoa(rand.Int()))
 
-	err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c)
-	if err != nil {
+	if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {
 		log.Println(err)
 	}
 
@@ -31,8 +30,7 @@ func TestInstall(t *testing.T) {
 	assertServiceExists(slug, c, t)
 	assertIngressExists(slug, c, t)
 
-	err = Install(Gateway, slug, map[string]interface{}{"a": 1}, c)
-	if err != nil {
+	if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {
 		log.Println(err)
 	}
 
@@ -47,8 +45,7 @@ func TestInstallAndUpdate(t *testing.T) {
 	slug := fmt.Sprintf("slug-test-%s", strconv.Itoa(rand.Int()))
 
 	//create setup
-	err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c)
-	if err != nil {
+	if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {
 		log.Println(err)
 	}
 
@@ -57,8 +54,7 @@ func TestInstallAndUpdate(t *testing.T) {
 	assertIngressExists(slug, c, t)
 
 	//update setup
-	err = Install(Gateway, slug, map[string]interface{}{"b": 2}, c)
-	if err != nil {
+	if err := Install(Gateway, slug, map[string]interface{}{"b": 2}, c); err != nil {
 		log.Println(err)
 	}
 
@@ -66,7 +62,6 @@ func TestInstallAndUpdate(t *testing.T) {
 	assertServiceExists(slug, c, t)
 	assertIngressExists(slug, c, t)
 }
-
 
 func TestMain(m *testing.M) {
 	flag.StringVar(&kubeConfigPath, "kubeconfig", "", "Path to Kubernetes config.")
@@ -82,24 +77,21 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
-func assertDeploymentExists(slug string,  cfg *config.Config, t *testing.T) {
+func assertDeploymentExists(slug string, cfg *config.Config, t *testing.T) {
 	client, err := makeClient(cfg)
 	if err != nil {
 		t.Fail()
 	}
 
 	dClient := client.AppsV1beta2().Deployments(apiv1.NamespaceDefault)
+
 	d, err := dClient.Get(makeGatewayName(slug), metav1.GetOptions{})
 	if err != nil {
 		fmt.Println("Cannot get deployment.")
 		t.Fail()
 	}
 
-
-	expected := fmt.Sprintf("%v-%v", Gateway, slug)
-
-
-	if expected != d.ObjectMeta.GetName()  {
+	if expected := fmt.Sprintf("%v-%v", Gateway, slug); expected != d.ObjectMeta.GetName() {
 		fmt.Println("Expected: ", slug, "Actual: ", d.ObjectMeta.GetName())
 		t.Fail()
 	}
@@ -117,15 +109,13 @@ func assertServiceExists(slug string, cfg *config.Config, t *testing.T) {
 		t.Fail()
 	}
 
-	expected := fmt.Sprintf("%v-%v", Gateway, slug)
-
-	if expected != s.ObjectMeta.GetName() {
+	if expected := fmt.Sprintf("%v-%v", Gateway, slug); expected != s.ObjectMeta.GetName() {
 		fmt.Println("Expected: ", expected, "Actual: ", s.ObjectMeta.GetName())
 		t.Fail()
 	}
 }
 
-func assertIngressExists(slug string, cfg *config.Config, t *testing.T)  {
+func assertIngressExists(slug string, cfg *config.Config, t *testing.T) {
 	client, err := makeClient(cfg)
 	if err != nil {
 		t.Fail()
@@ -137,9 +127,7 @@ func assertIngressExists(slug string, cfg *config.Config, t *testing.T)  {
 		t.Fail()
 	}
 
-	expected := makeIngressName(slug)
-
-	if expected != i.ObjectMeta.GetName() {
+	if expected := makeIngressName(slug); expected != i.ObjectMeta.GetName() {
 		fmt.Println("Expected: ", expected, "Actual: ", i.ObjectMeta.GetName())
 	}
 }

@@ -5,8 +5,8 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	// Uncomment the following line to load the gcp plugin (only required to authenticate against GKE clusters).
-	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	"github.com/pkg/errors"
+	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 )
 
 func int32Ptr(i int32) *int32 {

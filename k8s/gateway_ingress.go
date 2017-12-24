@@ -2,15 +2,14 @@ package k8s
 
 import (
 	"fmt"
-	"log"
+	"strings"
 
 	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	apputils "k8s.io/apimachinery/pkg/util/intstr"
 
-	"k8s.io/client-go/kubernetes"
 	"github.com/pkg/errors"
-	"strings"
+	"k8s.io/client-go/kubernetes"
 )
 
 const ingressControllerClass = "traefik"
@@ -27,19 +26,16 @@ func (g *GatewayInstaller) createIngress(slug string, client *kubernetes.Clients
 
 	i, err := g.getIngress(makeIngressName(slug), client)
 	if i != nil {
-		updatedIngress, err := client.ExtensionsV1beta1().Ingresses("default").Update(i)
-		if err != nil {
+		if _, err := client.ExtensionsV1beta1().Ingresses("default").Update(i); err != nil {
 			return errors.Wrap(err, "Ingress update failed.")
 		}
 
-		log.Println(updatedIngress)
 		return nil
 	}
 
 	if !strings.Contains(err.Error(), "not found") {
 		return errors.Wrap(err, "Error in checking if ingress exists.")
 	}
-
 
 	ingress := &extensionsv1beta1.Ingress{
 		TypeMeta: metav1.TypeMeta{
@@ -73,12 +69,9 @@ func (g *GatewayInstaller) createIngress(slug string, client *kubernetes.Clients
 		},
 	}
 
-
-	result, err := client.ExtensionsV1beta1().Ingresses("default").Create(ingress)
-	if err != nil {
+	if _, err := client.ExtensionsV1beta1().Ingresses("default").Create(ingress); err != nil {
 		return errors.Wrap(err, "Ingress creration failed.")
 	}
-	log.Println(result)
 
 	return nil
 }

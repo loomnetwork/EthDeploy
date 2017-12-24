@@ -21,11 +21,19 @@ const (
 func (g *GatewayInstaller) createDeployment(slug string, env map[string]interface{}, client *kubernetes.Clientset) error {
 	dClient := client.AppsV1beta2().Deployments(apiv1.NamespaceDefault)
 
+	//check if deployment exists
 	d, err := g.getDeployment(makeGatewayName(slug), client)
 	if d != nil {
-		if _, err := dClient.Update(d); err != nil {
-			return errors.Wrap(err, "Update to deployment failed.")
+		if env != nil {
+			for i := 0; i < len(d.Spec.Template.Spec.Containers); i++ {
+				d.Spec.Template.Spec.Containers[i].Env = makeEnv(env)
+			}
+
+			if _, err := dClient.Update(d); err != nil {
+				return errors.Wrap(err, "Update to deployment failed.")
+			}
 		}
+
 		return nil
 	}
 

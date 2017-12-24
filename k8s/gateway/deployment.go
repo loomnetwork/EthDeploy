@@ -11,6 +11,7 @@ import (
 
 	"strings"
 
+	"github.com/loomnetwork/dashboard/k8s/helper"
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -42,7 +43,7 @@ func (g *Installer) createDeploymentStruct(image, slug string, env []apiv1.EnvVa
 			},
 		},
 		Spec: v1beta1.DeploymentSpec{
-			Replicas: int32Ptr(gatewayReplicas),
+			Replicas: helper.Int32Ptr(gatewayReplicas),
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
 					"app": Ident,

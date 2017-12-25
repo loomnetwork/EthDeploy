@@ -4,10 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"math/rand"
 	"os"
 	"reflect"
-	"strconv"
 	"testing"
 
 	"github.com/loomnetwork/dashboard/config"
@@ -18,86 +16,64 @@ import (
 var kubeConfigPath string
 var gwi GatewayInstaller
 
-func TestInstall(t *testing.T) {
-	c := &config.Config{KubeConfigPath: kubeConfigPath}
-
-	slug := fmt.Sprintf("hello-world-%s", strconv.Itoa(rand.Int()))
-
-	if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {
-		t.Fatal(err)
-		return
-	}
-
-	if err := assertDeploymentExists(slug); err != nil {
-		t.Error(err)
-		return
-	}
-
-	if err := assertServiceExists(slug); err != nil {
-		t.Error(err)
-		return
-	}
-
-	if err := assertIngressExists(slug); err != nil {
-		t.Error(err)
-		return
-	}
-
-	if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {
-		t.Error("Gateway installation failed: ", err)
-	}
-
-	if err := assertDeploymentExists(slug); err != nil {
-		t.Error(err)
-		return
-	}
-
-	if err := assertServiceExists(slug); err != nil {
-		t.Error(err)
-		return
-	}
-
-	if err := assertIngressExists(slug); err != nil {
-		t.Error(err)
-		return
-	}
-}
+const slug = "hello-world"
 
 func TestInstallAndUpdate(t *testing.T) {
 	c := &config.Config{KubeConfigPath: kubeConfigPath}
 
-	slug := fmt.Sprintf("slug-test-%s", strconv.Itoa(rand.Int()))
+	t.Run("Install a gateway and wait for service, deployment and ingress", func(t *testing.T) {
+		if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {
+			t.Fatal(err)
+			return
+		}
 
-	//create setup
-	if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {
-		t.Error("Gateway installation failed: ", err)
-	}
+		if err := assertDeploymentExists(slug); err != nil {
+			t.Error(err)
+			return
+		}
 
-	if err := assertDeploymentExists(slug); err != nil {
-		t.Error(err)
-		return
-	}
+		if err := assertServiceExists(slug); err != nil {
+			t.Error(err)
+			return
+		}
 
-	if err := assertServiceExists(slug); err != nil {
-		t.Error(err)
-		return
-	}
+		if err := assertIngressExists(slug); err != nil {
+			t.Error(err)
+			return
+		}
 
-	if err := assertIngressExists(slug); err != nil {
-		t.Error(err)
-		return
-	}
+		if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {
+			t.Error("Gateway installation failed: ", err)
+		}
 
-	newEnv := map[string]interface{}{"b": 2}
+		if err := assertDeploymentExists(slug); err != nil {
+			t.Error(err)
+			return
+		}
 
-	//update setupO
-	if err := Install(Gateway, slug, newEnv, c); err != nil {
-		t.Errorf("Gateway updation failed: %v", err)
-	}
+		if err := assertServiceExists(slug); err != nil {
+			t.Error(err)
+			return
+		}
 
-	if err := assertDeploymentUpdated(slug, c, newEnv); err != nil {
-		t.Error(err)
-	}
+		if err := assertIngressExists(slug); err != nil {
+			t.Error(err)
+			return
+		}
+	})
+
+	t.Run("Updating a few components should update the k8s resourece", func(t *testing.T) {
+		newEnv := map[string]interface{}{"b": 2}
+
+		//update setupO
+		if err := Install(Gateway, slug, newEnv, c); err != nil {
+			t.Errorf("Gateway updation failed: %v", err)
+		}
+
+		if err := assertDeploymentUpdated(slug, c, newEnv); err != nil {
+			t.Error(err)
+		}
+	})
 }
 
 func TestMain(m *testing.M) {

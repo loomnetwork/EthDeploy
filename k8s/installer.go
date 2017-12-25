@@ -7,12 +7,12 @@ import (
 )
 
 type installer interface {
-	getImage() (string, error)
+	getImage(*config.Config) (string, error)
 	getZone(slug string, c *kubernetes.Clientset) (string, error)
 
 	createService(slug string, c *kubernetes.Clientset) error
 	createIngress(slug string, c *kubernetes.Clientset) error
-	createDeployment(slug string, env map[string]interface{}, c *kubernetes.Clientset) error
+	createDeployment(image, slug string, env map[string]interface{}, c *kubernetes.Clientset) error
 }
 
 func getInstaller(ident string) installer {
@@ -33,7 +33,12 @@ func Install(ident, slug string, env map[string]interface{}, cfg *config.Config)
 
 	i := getInstaller(ident)
 
-	if err := i.createDeployment(slug, env, client); err != nil {
+	image, err := i.getImage(cfg)
+	if err != nil {
+		return errors.Wrap(err, "Cannot find a valid Image file")
+	}
+
+	if err := i.createDeployment(image, slug, env, client); err != nil {
 		return errors.Wrap(err, "Could not deploy the k8s application")
 	}
 

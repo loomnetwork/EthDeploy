@@ -3,6 +3,8 @@ package k8s
 import (
 	"fmt"
 
+	"github.com/loomnetwork/dashboard/config"
+	"github.com/pkg/errors"
 	apiv1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
 )
@@ -19,8 +21,12 @@ func makeEnv(env map[string]interface{}) []apiv1.EnvVar {
 	return e
 }
 
-func (g *GatewayInstaller) getImage() (string, error) {
-	return "image", nil
+func (g *GatewayInstaller) getImage(cfg *config.Config) (string, error) {
+	if cfg.GatewayDockerImage == "" {
+		return "", errors.New("Config has no gateway image defined")
+	}
+
+	return cfg.GatewayDockerImage, nil
 }
 
 // Get the zone this Slug should be installed in.

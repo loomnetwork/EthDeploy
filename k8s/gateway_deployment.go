@@ -24,15 +24,10 @@ const (
 	notFoundMessage = "the server could not find the requested resource"
 )
 
-func (g *GatewayInstaller) createDeploymentStruct(slug string, env map[string]interface{}, client *kubernetes.Clientset) (*v1beta1.Deployment, error) {
+func (g *GatewayInstaller) createDeploymentStruct(image, slug string, env map[string]interface{}, client *kubernetes.Clientset) (*v1beta1.Deployment, error) {
 	zone, err := g.getZone(slug, client)
 	if err != nil {
 		return nil, errors.Wrap(err, "Cannot select zone")
-	}
-
-	image, err := g.getImage()
-	if err != nil {
-		return nil, errors.Wrap(err, "Cannot get Image")
 	}
 
 	d := &v1beta1.Deployment{
@@ -93,11 +88,11 @@ func (g *GatewayInstaller) createDeploymentStruct(slug string, env map[string]in
 	return d, nil
 }
 
-func (g *GatewayInstaller) createDeployment(slug string, env map[string]interface{}, client *kubernetes.Clientset) error {
+func (g *GatewayInstaller) createDeployment(image, slug string, env map[string]interface{}, client *kubernetes.Clientset) error {
 	dClient := client.AppsV1beta1().Deployments(apiv1.NamespaceDefault)
 
 	//Create deployment definition
-	deployment, derr := g.createDeploymentStruct(slug, env, client)
+	deployment, derr := g.createDeploymentStruct(image, slug, env, client)
 	if derr != nil {
 		return errors.Wrap(derr, "Cannot create deployment request")
 	}

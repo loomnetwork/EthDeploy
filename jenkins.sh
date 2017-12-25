@@ -36,4 +36,4 @@ NOMAD_ADDR=http://45.55.246.200:4646 nomad run $TMP_FILE
 
 echo "Ok now building the RPC Gateway, we don't deploy it anyway automatically yet"
 #todo maybe have two jenkins jobs??
-./build_gateway_docker.sh
+./build_proxy_docker.sh

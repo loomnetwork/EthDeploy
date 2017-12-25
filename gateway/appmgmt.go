@@ -89,7 +89,7 @@ func (g *Gateway) deployContracts() {
 	log.Debug("Deploying contracts")
 	time.Sleep(4 * time.Second) //To be certain we don't accidentally load to quickly
 
-	eclient, err := ethcontract.NewEthUtil("http://localhost:8545")
+	eclient, err := ethcontract.NewEthUtil(g.cfg.EthereumURI)
 	if err != nil {
 		log.Fatalf("Failed to connect to the Ethereum client: %v", err)
 	}

@@ -180,10 +180,6 @@ imports:
   version: a683aaf2d516deecd70cad0c72e3ca773ecfcef0
 - name: github.com/sirupsen/logrus
   version: d682213848ed68c0a260ca37d6dd5ace8423f5ba
-- name: github.com/Sirupsen/logrus
-  version: d682213848ed68c0a260ca37d6dd5ace8423f5ba
-  repo: git@github.com:/sirupsen/logrus
-  vcs: git
 - name: github.com/spf13/pflag
   version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: github.com/ugorji/go

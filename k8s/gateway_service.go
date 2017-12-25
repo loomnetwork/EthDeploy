@@ -50,8 +50,8 @@ func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clients
 
 	s, err := g.getService(makeGatewayName(slug), client)
 	if err == nil && s != nil {
-		g.updateStruct(s, service)
-		if _, err := sClient.Update(s); err != nil {
+		g.updateStruct(service, s)
+		if _, err := sClient.Update(service); err != nil {
 			return errors.Wrap(err, "Service update failed")
 		}
 		return nil

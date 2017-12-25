@@ -38,7 +38,7 @@ func TestInstallAndUpdate(t *testing.T) {
 	})
 
 	// Set the Image Path.
-	c.GatewayDockerImage = "gcr.io/robotic-catwalk-188706/rpc_gateway"
+	c.GatewayDockerImage = "gcr.io/robotic-catwalk-188706/rpc_gateway:6fa56b0"
 
 	t.Run("Install a gateway and wait for service, deployment and ingress", func(t *testing.T) {
 		if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {
@@ -82,7 +82,13 @@ func TestInstallAndUpdate(t *testing.T) {
 	})
 
 	t.Run("Updating a few components should update the k8s resourece", func(t *testing.T) {
-		newEnv := map[string]interface{}{"b": 2}
+		newEnv := map[string]interface{}{
+			"SPAWN_NETWORK":         "node /src/build/cli.node.js",
+			"APP_ZIP_FILE":          "https://storage.googleapis.com/loomnetwork/block_ssh.zip",
+			"DEMO_MODE":             "false",
+			"PRIVATE_KEY_JSON_PATH": "data.json",
+			"APP_SLUG":              slug,
+		}
 
 		//update setupO
 		if err := Install(Gateway, slug, newEnv, c); err != nil {

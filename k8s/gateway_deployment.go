@@ -1,13 +1,15 @@
 package k8s
 
 import (
-	"strings"
-
+	"github.com/imdario/mergo"
 	"github.com/pkg/errors"
 
-	"k8s.io/api/apps/v1beta2"
+	"k8s.io/api/apps/v1beta1"
+	k8serror "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/client-go/kubernetes"
+
+	"strings"
 
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -19,9 +21,10 @@ const (
 	gatewayPort     = 8081
 	gatewayMemLimit = "500M"
 	gatewayCPULimit = "5300m"
+	notFoundMessage = "the server could not find the requested resource"
 )
 
-func (g *GatewayInstaller) createDeploymentStruct(slug string, env map[string]interface{}, client *kubernetes.Clientset) (*v1beta2.Deployment, error) {
+func (g *GatewayInstaller) createDeploymentStruct(slug string, env map[string]interface{}, client *kubernetes.Clientset) (*v1beta1.Deployment, error) {
 	zone, err := g.getZone(slug, client)
 	if err != nil {
 		return nil, errors.Wrap(err, "Cannot select zone")
@@ -32,7 +35,7 @@ func (g *GatewayInstaller) createDeploymentStruct(slug string, env map[string]in
 		return nil, errors.Wrap(err, "Cannot get Image")
 	}
 
-	d := &v1beta2.Deployment{
+	d := &v1beta1.Deployment{
 		TypeMeta: metav1.TypeMeta{
 			Kind: "Deployment",
 		},
@@ -43,7 +46,7 @@ func (g *GatewayInstaller) createDeploymentStruct(slug string, env map[string]in
 				"slug": slug,
 			},
 		},
-		Spec: v1beta2.DeploymentSpec{
+		Spec: v1beta1.DeploymentSpec{
 			Replicas: int32Ptr(gatewayReplicas),
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
@@ -91,40 +94,45 @@ func (g *GatewayInstaller) createDeploymentStruct(slug string, env map[string]in
 }
 
 func (g *GatewayInstaller) createDeployment(slug string, env map[string]interface{}, client *kubernetes.Clientset) error {
-	dClient := client.AppsV1beta2().Deployments(apiv1.NamespaceDefault)
+	dClient := client.AppsV1beta1().Deployments(apiv1.NamespaceDefault)
 
 	//Create deployment definition
-	deployment, err := g.createDeploymentStruct(slug, env, client)
-	if err != nil {
-		return errors.Wrap(err, "Cannot create deployment request.")
+	deployment, derr := g.createDeploymentStruct(slug, env, client)
+	if derr != nil {
+		return errors.Wrap(derr, "Cannot create deployment request")
 	}
 
 	//check if deployment exists
 	d, err := g.getDeployment(makeGatewayName(slug), client)
-	if d != nil {
+	if err == nil && d != nil {
+		g.updateStruct(d, deployment)
 		if _, err := dClient.Update(d); err != nil {
-			return errors.Wrap(err, "Deployment update failed.")
+			return errors.Wrap(err, "Deployment update failed")
 		}
-
 		return nil
 	}
 
-	if !strings.Contains(err.Error(), "not found") {
-		return errors.Wrap(err, "Cannot get deployment.")
+	// Transform the Error.
+	ss, ok := err.(k8serror.APIStatus)
+	if !ok {
+		return errors.Wrapf(err, "Unexpected error message %v", err)
 	}
 
-	if _, err := dClient.Create(deployment); err != nil {
-		return errors.Wrap(err, "Deployment creation failed.")
+	if strings.Contains(ss.Status().Message, "not found") {
+		if _, err := dClient.Create(deployment); err != nil {
+			return errors.Wrap(err, "Deployment creation failed")
+		}
+		return nil
 	}
 
-	return nil
+	return errors.Errorf("Unhandled Error %v", ss.Status().Message)
 }
 
-func (g *GatewayInstaller) getDeployment(slug string, client *kubernetes.Clientset) (*v1beta2.Deployment, error) {
-	dClient := client.AppsV1beta2().Deployments(apiv1.NamespaceDefault)
-	d, err := dClient.Get(slug, metav1.GetOptions{})
-	if err != nil {
-		return nil, errors.Wrap(err, "Cannot get deployment")
-	}
-	return d, nil
+func (g *GatewayInstaller) getDeployment(slug string, client *kubernetes.Clientset) (*v1beta1.Deployment, error) {
+	dClient := client.AppsV1beta1().Deployments(apiv1.NamespaceDefault)
+	return dClient.Get(slug, metav1.GetOptions{})
+}
+
+func (g *GatewayInstaller) updateStruct(dest, src interface{}) {
+	mergo.Merge(dest, src)
 }

@@ -18,6 +18,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/loomnetwork/dashboard/k8s"
+	"github.com/loomnetwork/dashboard/k8s/gateway"
 )
 
 func uploadS3CompatibleFile(cfg *config.Config, objectName string, reader io.Reader) error {
@@ -57,7 +58,7 @@ func deployToK8s(filename, slug string, cfg *config.Config) error {
 		"APP_SLUG":              slug,
 	}
 
-	if err := k8s.Install(k8s.Gateway, slug, env, cfg); err != nil {
+	if err := k8s.Install(gateway.Ident, slug, env, cfg); err != nil {
 		return errors.Wrapf(err, "Cannot deploy", slug)
 	}
 

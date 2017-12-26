@@ -1,4 +1,4 @@
-package k8s
+package ganache
 
 import (
 	"github.com/imdario/mergo"
@@ -17,15 +17,14 @@ import (
 
 // How many pods should be created for this service.
 const (
-	gatewayReplicas = 1
-	gatewayPort     = 8081
-	gatewayMemLimit = "500M"
-	gatewayCPULimit = "530m"
-	notFoundMessage = "the server could not find the requested resource"
+	ganacheReplicas = 1
+	ganachePort     = 8081
+	ganacheMemLimit = "200M"
+	ganacheCPULimit = "200m"
 )
 
-func (g *GatewayInstaller) createDeploymentStruct(image, slug string, env map[string]interface{}, client *kubernetes.Clientset) (*v1beta1.Deployment, error) {
-	zone, err := g.getZone(slug, client)
+func (g *Installer) createDeploymentStruct(image, slug string, env []apiv1.EnvVar, client *kubernetes.Clientset) (*v1beta1.Deployment, error) {
+	zone, err := g.GetZone(slug, client)
 	if err != nil {
 		return nil, errors.Wrap(err, "Cannot select zone")
 	}
@@ -35,23 +34,23 @@ func (g *GatewayInstaller) createDeploymentStruct(image, slug string, env map[st
 			Kind: "Deployment",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name: makeGatewayName(slug),
+			Name: MakeName(slug),
 			Labels: map[string]string{
-				"app":  Gateway,
+				"app":  Ident,
 				"slug": slug,
 			},
 		},
 		Spec: v1beta1.DeploymentSpec{
-			Replicas: int32Ptr(gatewayReplicas),
+			Replicas: int32Ptr(ganacheReplicas),
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
-					"app": Gateway,
+					"app": Ident,
 				},
 			},
 			Template: apiv1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						"app":  Gateway,
+						"app":  Ident,
 						"slug": slug,
 					},
 				},
@@ -59,25 +58,40 @@ func (g *GatewayInstaller) createDeploymentStruct(image, slug string, env map[st
 					NodeSelector: map[string]string{
 						"failure-domain.beta.kubernetes.io/zone": zone,
 					},
+					Volumes: []apiv1.Volume{
+						{
+							Name: "ganachedb",
+							VolumeSource: apiv1.VolumeSource{GCEPersistentDisk: &apiv1.GCEPersistentDiskVolumeSource{
+								PDName: "ganache-disk",
+								FSType: "ext4",
+							}},
+						},
+					},
 					Containers: []apiv1.Container{
 						{
-							Name:  Gateway,
-							Image: image,
-							//Command: []string{"./root/start.sh"},
+							Name:    Ident,
+							Image:   image,
+							Command: []string{"/usr/local/bin/loom-ganache", "-n", slug},
 							Resources: apiv1.ResourceRequirements{
 								Limits: apiv1.ResourceList{
-									apiv1.ResourceCPU:    resource.MustParse(gatewayCPULimit),
-									apiv1.ResourceMemory: resource.MustParse(gatewayMemLimit),
+									apiv1.ResourceCPU:    resource.MustParse(ganacheCPULimit),
+									apiv1.ResourceMemory: resource.MustParse(ganacheMemLimit),
 									//I don't think Kubernetes can limit Network bandwidth as of yet.
 								},
 							},
 							Ports: []apiv1.ContainerPort{
 								{
 									Protocol:      apiv1.ProtocolTCP,
-									ContainerPort: gatewayPort,
+									ContainerPort: ganachePort,
 								},
 							},
-							Env: makeEnv(env),
+							VolumeMounts: []apiv1.VolumeMount{
+								{
+									MountPath: "/ganache-data",
+									Name:      "ganachedb",
+								},
+							},
+							Env: env,
 						},
 					},
 				},
@@ -88,7 +102,7 @@ func (g *GatewayInstaller) createDeploymentStruct(image, slug string, env map[st
 	return d, nil
 }
 
-func (g *GatewayInstaller) createDeployment(image, slug string, env map[string]interface{}, client *kubernetes.Clientset) error {
+func (g *Installer) CreateDeployment(image, slug string, env []apiv1.EnvVar, client *kubernetes.Clientset) error {
 	dClient := client.AppsV1beta1().Deployments(apiv1.NamespaceDefault)
 
 	//Create deployment definition
@@ -98,7 +112,7 @@ func (g *GatewayInstaller) createDeployment(image, slug string, env map[string]i
 	}
 
 	//check if deployment exists
-	d, err := g.getDeployment(makeGatewayName(slug), client)
+	d, err := g.GetDeployment(MakeName(slug), client)
 	if err == nil && d != nil {
 		g.updateStruct(deployment, d)
 		if _, err := dClient.Update(deployment); err != nil {
@@ -123,11 +137,11 @@ func (g *GatewayInstaller) createDeployment(image, slug string, env map[string]i
 	return errors.Errorf("Unhandled Error %v", ss.Status().Message)
 }
 
-func (g *GatewayInstaller) getDeployment(slug string, client *kubernetes.Clientset) (*v1beta1.Deployment, error) {
+func (g *Installer) GetDeployment(slug string, client *kubernetes.Clientset) (*v1beta1.Deployment, error) {
 	dClient := client.AppsV1beta1().Deployments(apiv1.NamespaceDefault)
 	return dClient.Get(slug, metav1.GetOptions{})
 }
 
-func (g *GatewayInstaller) updateStruct(dest, src interface{}) {
+func (g *Installer) updateStruct(dest, src interface{}) {
 	mergo.Merge(dest, src)
 }

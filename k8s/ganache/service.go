@@ -1,4 +1,4 @@
-package k8s
+package ganache
 
 import (
 	"fmt"
@@ -12,11 +12,11 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
-func makeGatewayName(slug string) string {
-	return fmt.Sprintf("%v-%v", Gateway, slug)
+func MakeName(slug string) string {
+	return fmt.Sprintf("%v-%v", Ident, slug)
 }
 
-func (g *GatewayInstaller) createServiceStruct(slug string) *apiv1.Service {
+func (g *Installer) createServiceStruct(slug string) *apiv1.Service {
 	// Create a service
 	return &apiv1.Service{
 		TypeMeta: metav1.TypeMeta{
@@ -24,31 +24,31 @@ func (g *GatewayInstaller) createServiceStruct(slug string) *apiv1.Service {
 			APIVersion: "v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name: makeGatewayName(slug),
+			Name: MakeName(slug),
 		},
 		Spec: apiv1.ServiceSpec{
 			Type: apiv1.ServiceTypeClusterIP,
 			Selector: map[string]string{
-				"app":  Gateway,
+				"app":  Ident,
 				"slug": slug,
 			},
 			Ports: []apiv1.ServicePort{
 				{
 					Name:     "http",
 					Protocol: apiv1.ProtocolTCP,
-					Port:     gatewayPort,
+					Port:     ganachePort,
 				},
 			},
 		},
 	}
 }
 
-func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clientset) error {
+func (g *Installer) CreateService(slug string, client *kubernetes.Clientset) error {
 	sClient := client.CoreV1().Services(apiv1.NamespaceDefault)
 
 	service := g.createServiceStruct(slug)
 
-	s, err := g.getService(makeGatewayName(slug), client)
+	s, err := g.GetService(MakeName(slug), client)
 	if err == nil && s != nil {
 		g.updateStruct(service, s)
 		if _, err := sClient.Update(service); err != nil {
@@ -73,7 +73,7 @@ func (g *GatewayInstaller) createService(slug string, client *kubernetes.Clients
 	return errors.Errorf("Unhandled Error %v", ss.Status().Message)
 }
 
-func (g *GatewayInstaller) getService(slug string, client *kubernetes.Clientset) (*apiv1.Service, error) {
+func (g *Installer) GetService(slug string, client *kubernetes.Clientset) (*apiv1.Service, error) {
 	sClient := client.CoreV1().Services(apiv1.NamespaceDefault)
 	return sClient.Get(slug, metav1.GetOptions{})
 }

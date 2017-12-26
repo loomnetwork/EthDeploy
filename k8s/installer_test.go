@@ -12,19 +12,25 @@ import (
 
 	"strings"
 
+	"github.com/loomnetwork/dashboard/k8s/ganache"
+	"github.com/loomnetwork/dashboard/k8s/gateway"
 	"github.com/pkg/errors"
 )
 
 var kubeConfigPath string
-var gwi GatewayInstaller
+var gwi gateway.Installer
 
-const slug = "hello-world"
+const (
+	slug                 = "hello-world"
+	gatewayDockerVersion = "gcr.io/robotic-catwalk-188706/rpc_gateway:5728a1b"
+	ganacheDockerVersion = "gcr.io/robotic-catwalk-188706/loom-ganache:5a4cfce"
+)
 
 func TestInstallAndUpdate(t *testing.T) {
 	c := &config.Config{KubeConfigPath: kubeConfigPath}
 
 	t.Run("Install without a valid docker image should raise an error", func(t *testing.T) {
-		err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c)
+		err := Install(gateway.Ident, slug, map[string]interface{}{"a": 1}, c)
 		if err == nil {
 			t.Fatal("Should have raised an Error")
 			return
@@ -38,31 +44,21 @@ func TestInstallAndUpdate(t *testing.T) {
 	})
 
 	// Set the Image Path.
-	c.GatewayDockerImage = "gcr.io/robotic-catwalk-188706/rpc_gateway:6fa56b0"
+	c.GatewayDockerImage = gatewayDockerVersion
+	c.GanacheDockerImage = ganacheDockerVersion
 
-	t.Run("Install a gateway and wait for service, deployment and ingress", func(t *testing.T) {
-		if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {
+	t.Run("Install a ganache service for this service", func(t *testing.T) {
+		if err := Install(ganache.Ident, slug, map[string]interface{}{}, c); err != nil {
 			t.Fatal(err)
 			return
 		}
+	})
 
-		if err := assertDeploymentExists(slug); err != nil {
-			t.Error(err)
+	return
+	t.Run("Install a gateway and wait for service, deployment and ingress", func(t *testing.T) {
+		if err := Install(gateway.Ident, slug, map[string]interface{}{"a": 1}, c); err != nil {
+			t.Fatal(err)
 			return
-		}
-
-		if err := assertServiceExists(slug); err != nil {
-			t.Error(err)
-			return
-		}
-
-		if err := assertIngressExists(slug); err != nil {
-			t.Error(err)
-			return
-		}
-
-		if err := Install(Gateway, slug, map[string]interface{}{"a": 1}, c); err != nil {
-			t.Error("Gateway installation failed: ", err)
 		}
 
 		if err := assertDeploymentExists(slug); err != nil {
@@ -91,8 +87,8 @@ func TestInstallAndUpdate(t *testing.T) {
 		}
 
 		//update setupO
-		if err := Install(Gateway, slug, newEnv, c); err != nil {
-			t.Errorf("Gateway updation failed: %v", err)
+		if err := Install(gateway.Ident, slug, newEnv, c); err != nil {
+			t.Errorf("Ident updation failed: %v", err)
 		}
 
 		if err := assertDeploymentUpdated(slug, c, newEnv); err != nil {
@@ -112,7 +108,7 @@ func TestMain(m *testing.M) {
 		os.Exit(127)
 	}
 
-	gwi = GatewayInstaller{}
+	gwi = gateway.Installer{}
 	m.Run()
 }
 
@@ -123,12 +119,12 @@ func assertDeploymentExists(slug string) error {
 		return err
 	}
 
-	d, err := gwi.getDeployment(makeGatewayName(slug), client)
+	d, err := gwi.GetDeployment(gateway.MakeName(slug), client)
 	if err != nil {
 		return errors.Errorf("Cannot get deployment: %v", err)
 	}
 
-	if expected := fmt.Sprintf("%v-%v", Gateway, slug); expected != d.ObjectMeta.GetName() {
+	if expected := fmt.Sprintf("%v-%v", gateway.Ident, slug); expected != d.ObjectMeta.GetName() {
 		return errors.Errorf("Expected: %s \nActual: %s", expected, d.ObjectMeta.GetName())
 	}
 
@@ -142,12 +138,12 @@ func assertServiceExists(slug string) error {
 		return err
 	}
 
-	s, err := gwi.getService(makeGatewayName(slug), client)
+	s, err := gwi.GetService(gateway.MakeName(slug), client)
 	if err != nil {
 		return errors.Errorf("Cannot get service: %v", err)
 	}
 
-	if expected := fmt.Sprintf("%v-%v", Gateway, slug); expected != s.ObjectMeta.GetName() {
+	if expected := fmt.Sprintf("%v-%v", gateway.Ident, slug); expected != s.ObjectMeta.GetName() {
 		return errors.Errorf("Expected: %s \nActual: %s", expected, s.ObjectMeta.GetName())
 	}
 
@@ -161,12 +157,12 @@ func assertIngressExists(slug string) error {
 		return err
 	}
 
-	i, err := gwi.getIngress(makeIngressName(slug), client)
+	i, err := gwi.GetIngress(gateway.MakeIngressName(slug), client)
 	if err != nil {
 		return errors.Errorf("Cannot get ingress: %v", err)
 	}
 
-	if expected := makeIngressName(slug); expected != i.ObjectMeta.GetName() {
+	if expected := gateway.MakeIngressName(slug); expected != i.ObjectMeta.GetName() {
 		return errors.Errorf("Expected: %s \nActual: %s", expected, i.ObjectMeta.GetName())
 	}
 
@@ -179,7 +175,7 @@ func assertDeploymentUpdated(slug string, cfg *config.Config, env map[string]int
 		return err
 	}
 
-	d, err := gwi.getDeployment(makeGatewayName(slug), client)
+	d, err := gwi.GetDeployment(gateway.MakeName(slug), client)
 	if err != nil {
 		return errors.Errorf("Cannot get deployment: %v", err)
 	}

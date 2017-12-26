@@ -2,23 +2,29 @@ package k8s
 
 import (
 	"github.com/loomnetwork/dashboard/config"
+	"github.com/loomnetwork/dashboard/k8s/ganache"
+	"github.com/loomnetwork/dashboard/k8s/gateway"
 	"github.com/pkg/errors"
+
+	apiv1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
 )
 
 type installer interface {
-	getImage(*config.Config) (string, error)
-	getZone(slug string, c *kubernetes.Clientset) (string, error)
+	GetImage(*config.Config) (string, error)
+	GetZone(slug string, c *kubernetes.Clientset) (string, error)
 
-	createService(slug string, c *kubernetes.Clientset) error
-	createIngress(slug string, c *kubernetes.Clientset) error
-	createDeployment(image, slug string, env map[string]interface{}, c *kubernetes.Clientset) error
+	CreateService(slug string, c *kubernetes.Clientset) error
+	CreateIngress(slug string, c *kubernetes.Clientset) error
+	CreateDeployment(image, slug string, env []apiv1.EnvVar, c *kubernetes.Clientset) error
 }
 
 func getInstaller(ident string) installer {
 	switch ident {
-	case Gateway:
-		return &GatewayInstaller{}
+	case gateway.Ident:
+		return &gateway.Installer{}
+	case ganache.Ident:
+		return &ganache.Installer{}
 	}
 
 	panic(errors.New("Unknown type " + ident))
@@ -33,20 +39,20 @@ func Install(ident, slug string, env map[string]interface{}, cfg *config.Config)
 
 	i := getInstaller(ident)
 
-	image, err := i.getImage(cfg)
+	image, err := i.GetImage(cfg)
 	if err != nil {
 		return errors.Wrap(err, "Cannot find a valid Image file")
 	}
 
-	if err := i.createDeployment(image, slug, env, client); err != nil {
+	if err := i.CreateDeployment(image, slug, makeEnv(env), client); err != nil {
 		return errors.Wrap(err, "Could not deploy the k8s application")
 	}
 
-	if err := i.createService(slug, client); err != nil {
+	if err := i.CreateService(slug, client); err != nil {
 		return errors.Wrap(err, "could not create k8s service.")
 	}
 
-	if err := i.createIngress(slug, client); err != nil {
+	if err := i.CreateIngress(slug, client); err != nil {
 		return errors.Wrap(err, "could not create k8s Ingress.")
 	}
 

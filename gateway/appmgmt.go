@@ -1,16 +1,21 @@
 package gateway
 
 import (
-	"errors"
 	"fmt"
 	logf "log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
+	"bytes"
+
+	"encoding/json"
+
 	"github.com/loomnetwork/ethcontract"
 	minio "github.com/minio/minio-go"
+	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 )
@@ -94,7 +99,8 @@ func (g *Gateway) deployContracts() {
 		log.Fatalf("Failed to connect to the Ethereum client: %v", err)
 	}
 
-	key, err := g.getRandomWalletPrivateKey()
+	//key, err := g.getRandomWalletPrivateKey()
+	key, err := g.getTestRPCPrivateKey()
 	if err != nil {
 		log.Fatalf("Failed finding private key: %v", err)
 	}
@@ -126,4 +132,36 @@ func (g *Gateway) deployContracts() {
 		g.addContract(name, fmt.Sprintf("0x%x", address))
 	}
 	//TODO check for abi/bin files for non truffle style
+}
+
+func (g *Gateway) getTestRPCPrivateKey() (string, error) {
+	jsonValue, err := json.Marshal(map[string]interface{}{
+		"method":  "eth_accounts",
+		"params":  []string{},
+		"id":      1,
+		"jsonrpc": "2.0",
+	})
+
+	if err != nil {
+		return "", errors.Wrap(err, "Cannot marshal accounts request")
+	}
+
+	resp, err := http.Post(g.cfg.EthereumURI, "application/json", bytes.NewBuffer(jsonValue))
+	if err != nil {
+		return "", errors.Wrap(err, "Error fetching accounts")
+	}
+
+	defer resp.Body.Close()
+
+	var ret struct {
+		Id      int      `json:"id"`
+		JsonRPC string   `json:"jsonrpc"`
+		Result  []string `json:"result"`
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&ret); err != nil {
+		return "", errors.Wrap(err, "Error decoding response")
+	}
+
+	return ret.Result[1], nil
 }

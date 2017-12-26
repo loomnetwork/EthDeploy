@@ -3,20 +3,16 @@ package gateway
 import (
 	"fmt"
 	logf "log"
-	"net/http"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
-	"bytes"
-
-	"encoding/json"
-
 	"github.com/loomnetwork/ethcontract"
-	minio "github.com/minio/minio-go"
+	"github.com/minio/minio-go"
 	"github.com/pkg/errors"
-	uuid "github.com/satori/go.uuid"
+	"github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -101,6 +97,7 @@ func (g *Gateway) deployContracts() {
 
 	//key, err := g.getRandomWalletPrivateKey()
 	key, err := g.getTestRPCPrivateKey()
+
 	if err != nil {
 		log.Fatalf("Failed finding private key: %v", err)
 	}
@@ -134,34 +131,20 @@ func (g *Gateway) deployContracts() {
 	//TODO check for abi/bin files for non truffle style
 }
 
+var testKeyspace = []string{
+	"174c5054ddfc4994d79f7d75616ed50d1159ccfffb6542efdeeca16a12bb3e76",
+	"58099adea0b246f6f716f082480d0d22145563b88a9731618ea5d68673a69eb6",
+	"1bf096c11e1e18898a6674b649855c6c9d448f3d806ed0f368f9b263bd7c9126",
+	"6bb5c7975d01c8a27e53428a01b12781cd6a13dff7272d597dcbfab826e1b595",
+	"dfeb9d26e02bb6f818d05a0912b487c5a3c37ce476063b0a7382f1256307e7c1",
+	"e0c8166aa3e6ae65f8b48756dcd5b6d89003e6357a3aa5dd735f9e1a8059452a",
+	"7559857c2b83dfccda942600c8189e3eea0505e51c2c47a2be85a1b73ff0283b",
+	"d4b7485fdb7eae9ea2ccd99317e2784b2efd8e87eb9bb402833712ce57105147",
+	"f499d4b12cd99818991a2630d63997860dd1a105ecce8e1c1321ff32b10509de",
+	"e0857acc170ff2fee45e0dc99118b02a356d0f1ab754905d440ae347fb4959ee",
+}
+
 func (g *Gateway) getTestRPCPrivateKey() (string, error) {
-	jsonValue, err := json.Marshal(map[string]interface{}{
-		"method":  "eth_accounts",
-		"params":  []string{},
-		"id":      1,
-		"jsonrpc": "2.0",
-	})
-
-	if err != nil {
-		return "", errors.Wrap(err, "Cannot marshal accounts request")
-	}
-
-	resp, err := http.Post(g.cfg.EthereumURI, "application/json", bytes.NewBuffer(jsonValue))
-	if err != nil {
-		return "", errors.Wrap(err, "Error fetching accounts")
-	}
-
-	defer resp.Body.Close()
-
-	var ret struct {
-		Id      int      `json:"id"`
-		JsonRPC string   `json:"jsonrpc"`
-		Result  []string `json:"result"`
-	}
-
-	if err := json.NewDecoder(resp.Body).Decode(&ret); err != nil {
-		return "", errors.Wrap(err, "Error decoding response")
-	}
-
-	return ret.Result[1], nil
+	rand.Seed(time.Now().Unix())
+	return testKeyspace[rand.Intn(len(testKeyspace))], nil
 }

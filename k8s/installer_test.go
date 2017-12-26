@@ -54,7 +54,6 @@ func TestInstallAndUpdate(t *testing.T) {
 		}
 	})
 
-	return
 	t.Run("Install a gateway and wait for service, deployment and ingress", func(t *testing.T) {
 		if err := Install(gateway.Ident, slug, map[string]interface{}{"a": 1}, c); err != nil {
 			t.Fatal(err)
@@ -84,6 +83,7 @@ func TestInstallAndUpdate(t *testing.T) {
 			"DEMO_MODE":             "false",
 			"PRIVATE_KEY_JSON_PATH": "data.json",
 			"APP_SLUG":              slug,
+			"ETHEREUM_URI":          fmt.Sprintf("%v.loomapps.io:8545", slug),
 		}
 
 		//update setupO

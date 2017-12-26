@@ -22,7 +22,7 @@ func (g *Installer) GetImage(cfg *config.Config) (string, error) {
 // Try to maintain the affinity.
 // Also try to balance the load evenly between the available zones.
 func (g *Installer) GetZone(slug string, c *kubernetes.Clientset) (string, error) {
-	return "us-central1-f", nil
+	return "us-central1-c", nil
 }
 
 func int32Ptr(i int32) *int32 {

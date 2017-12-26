@@ -18,7 +18,7 @@ import (
 // How many pods should be created for this service.
 const (
 	ganacheReplicas = 1
-	ganachePort     = 8081
+	ganachePort     = 8545
 	ganacheMemLimit = "200M"
 	ganacheCPULimit = "200m"
 )

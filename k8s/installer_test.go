@@ -83,7 +83,7 @@ func TestInstallAndUpdate(t *testing.T) {
 			"DEMO_MODE":             "false",
 			"PRIVATE_KEY_JSON_PATH": "data.json",
 			"APP_SLUG":              slug,
-			"ETHEREUM_URI":          fmt.Sprintf("%v.loomapps.io:8545", slug),
+			"ETHEREUM_URI":          fmt.Sprintf("http://%v.loomapps.io:8545", slug),
 		}
 
 		//update setupO

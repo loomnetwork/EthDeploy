@@ -129,13 +129,13 @@ func (g *Gateway) LoomNetwork(c *gin.Context) {
 
 func (g *Gateway) LoomAccounts(c *gin.Context) {
 	commonHeaders(c)
-	fmt.Printf("serving file-%s\n", g.cfg.PrivateKeyJsonFile)
-	accountJson, err := readJsonOutput(g.cfg.PrivateKeyJsonFile) //TODO we should move this to a separate go routine that is spawning the other executable
-	if err != nil {
-		log.WithField("error", err).Error("Failed reading the json file")
-		c.JSON(400, gin.H{"error": "Invalid or missing API Key"})
-	}
-	c.JSON(200, accountJson)
+	//fmt.Printf("serving file-%s\n", g.cfg.PrivateKeyJsonFile)
+	//accountJson, err := readJsonOutput(g.cfg.PrivateKeyJsonFile) //TODO we should move this to a separate go routine that is spawning the other executable
+	//if err != nil {
+	//	log.WithField("error", err).Error("Failed reading the json file")
+	//	c.JSON(400, gin.H{"error": "Invalid or missing API Key"})
+	//}
+	c.JSON(200, testKeyspace)
 }
 
 func (g *Gateway) routerInitialize(r *gin.Engine) {

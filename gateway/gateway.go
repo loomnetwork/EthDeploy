@@ -2,7 +2,6 @@ package gateway
 
 import (
 	"sync"
-	"time"
 
 	"log"
 
@@ -105,7 +104,6 @@ func (g *Gateway) addContract(name, address string) {
 
 type Gateway struct {
 	sync.RWMutex // for the contracts
-	StopChannel  chan bool
 	appDir       string
 	guid         string //unique id for this instance
 	cfg          *config.RPCConfig
@@ -113,7 +111,7 @@ type Gateway struct {
 }
 
 func InitGateway(c *config.RPCConfig) *Gateway {
-	return &Gateway{StopChannel: make(chan bool), cfg: c}
+	return &Gateway{cfg: c}
 }
 
 func (g *Gateway) Run() {
@@ -128,8 +126,4 @@ func (g *Gateway) Run() {
 	s := g.setupHttp(nil) //database //TODO readd database
 
 	s.Run(g.cfg.BindAddr) //Gin run
-
-	// Likely this would never happen, cause the http server would have to close
-	g.StopChannel <- true
-	time.Sleep(2 * time.Second) // Atleast try and give time to kill the subprogram
 }

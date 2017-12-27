@@ -5,6 +5,8 @@ import (
 
 	"log"
 
+	"fmt"
+
 	"github.com/loomnetwork/dashboard/config"
 )
 
@@ -120,10 +122,13 @@ func (g *Gateway) Run() {
 		log.Fatal(err)
 	}
 
-	go g.deployContracts()
+	go func() {
+		if err := g.deployContracts(); err != nil {
+			fmt.Println(err)
+		}
+	}()
 
 	//	database := db.Connect()
 	s := g.setupHttp(nil) //database //TODO readd database
-
 	s.Run(g.cfg.BindAddr) //Gin run
 }

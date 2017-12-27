@@ -2,7 +2,6 @@ package gateway
 
 import (
 	"fmt"
-	logf "log"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -86,21 +85,22 @@ func (g *Gateway) downloadAndExtractApp(applicationZipPath string) error {
 //	return "", nil
 //}
 
-func (g *Gateway) deployContracts() {
+func (g *Gateway) deployContracts() error {
 	log.Debug("Deploying contracts")
 	time.Sleep(4 * time.Second) //To be certain we don't accidentally load to quickly
 
 	eclient, err := ethcontract.NewEthUtil(g.cfg.EthereumURI)
 	if err != nil {
-		log.Fatalf("Failed to connect to the Ethereum client: %v", err)
+		return errors.Wrap(err, "Failed to connect to the Ethereum client")
 	}
 
 	//key, err := g.getRandomWalletPrivateKey()
 	key, err := g.getTestRPCPrivateKey()
 
 	if err != nil {
-		log.Fatalf("Failed finding private key: %v", err)
+		return errors.Wrap(err, "Failed finding private key")
 	}
+
 	log.WithField("privatekey", key).Debug("found a private key")
 	eclient.SetWalletPrivateKey(key)
 
@@ -108,20 +108,21 @@ func (g *Gateway) deployContracts() {
 	contractDir := filepath.Join(g.appDir, "contracts/*.json")
 	files, err := filepath.Glob(contractDir)
 	if err != nil {
-		log.WithError(err).Error(err)
-		logf.Fatal(err) //nothing we can do?
+		return err
 	}
+
 	for _, truffleFile := range files {
 		idx := strings.Index(truffleFile, "Migrations.json")
 		if idx != -1 {
 			fmt.Printf("skipping -%s -%d\n", truffleFile, idx)
 			continue
 		}
+
 		log.WithField("contract", truffleFile).Info("deploying contract")
 
 		address, err := eclient.DeployContractTruffleFromFile(truffleFile)
 		if err != nil {
-			log.Fatalf("Failed to deploy contract file %v: %v", truffleFile, err)
+			return errors.Wrapf(err, "Failed to deploy contract file %v", truffleFile)
 		}
 
 		basename := filepath.Base(truffleFile)
@@ -130,6 +131,7 @@ func (g *Gateway) deployContracts() {
 		g.addContract(name, fmt.Sprintf("0x%x", address))
 	}
 	//TODO check for abi/bin files for non truffle style
+	return nil
 }
 
 var testKeyspace = &AccountJson{AccountPrivateKeys: map[string]string{

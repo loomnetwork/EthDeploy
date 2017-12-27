@@ -14,6 +14,7 @@ import (
 	"github.com/loomnetwork/dashboard/config"
 	dbpkg "github.com/loomnetwork/dashboard/db"
 	"github.com/loomnetwork/dashboard/models"
+	"github.com/pkg/errors"
 )
 
 func SetDBtoContext(db *gorm.DB) gin.HandlerFunc {
@@ -106,6 +107,9 @@ type myTransport struct {
 
 func (t *myTransport) RoundTrip(request *http.Request) (*http.Response, error) {
 	response, err := http.DefaultTransport.RoundTrip(request)
+	if err != nil {
+		return nil, errors.Wrap(err, "Roundtrip failed")
+	}
 	// or, if you captured the transport
 	// response, err := t.CapturedTransport.RoundTrip(request)
 
@@ -115,12 +119,11 @@ func (t *myTransport) RoundTrip(request *http.Request) (*http.Response, error) {
 	body, err := httputil.DumpResponse(response, true)
 	if err != nil {
 		// copying the response body did not work
-		return nil, err
+		return nil, errors.Wrap(err, "Response dump failed")
 	}
 
 	// You may want to check the Content-Type header to decide how to deal with
 	// the body. In this case, we're assuming it's text.
 	log.Print(string(body))
-
 	return response, err
 }

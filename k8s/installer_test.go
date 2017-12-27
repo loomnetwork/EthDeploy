@@ -84,6 +84,7 @@ func TestInstallAndUpdate(t *testing.T) {
 			"PRIVATE_KEY_JSON_PATH": "data.json",
 			"APP_SLUG":              slug,
 			"ETHEREUM_URI":          fmt.Sprintf("http://%v.loomapps.io:8545", slug),
+			"PROXY_ADDR":            fmt.Sprintf("http://%v.loomapps.io:8545", slug),
 		}
 
 		//update setupO

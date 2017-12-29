@@ -26,6 +26,31 @@ const (
 	ganacheDockerVersion = "gcr.io/robotic-catwalk-188706/loom-ganache:5a4cfce"
 )
 
+func TestGetZone(t *testing.T) {
+	c := &config.Config{KubeConfigPath: kubeConfigPath}
+
+	client, _ := makeClient(c)
+	slug1, err := gwi.GetZone("hello-world", client)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if slug1 != "us-central1-c" {
+		t.Error("For default test config, the value should be us-central1-c")
+	}
+
+	slug2, err := gwi.GetZone("abcd", client)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if slug2 != "us-central1-f" {
+		t.Error("For default test config, the value should be us-central1-f")
+	}
+}
+
 func TestInstallAndUpdate(t *testing.T) {
 	c := &config.Config{KubeConfigPath: kubeConfigPath}
 

@@ -21,33 +21,21 @@ var kubeConfigPath string
 var gwi gateway.Installer
 
 const (
-	slug                 = "hello-world"
-	gatewayDockerVersion = "gcr.io/robotic-catwalk-188706/rpc_gateway:e3face0"
-	ganacheDockerVersion = "gcr.io/robotic-catwalk-188706/loom-ganache:5a4cfce"
+	slug = "hello-world"
 )
 
 func TestGetZone(t *testing.T) {
 	c := &config.Config{KubeConfigPath: kubeConfigPath}
 
 	client, _ := makeClient(c)
-	slug1, err := gwi.GetZone("hello-world", client)
-	if err != nil {
+	if _, err := gwi.GetZone(slug, client); err != nil {
 		t.Error(err)
 		return
 	}
 
-	if slug1 != "us-central1-c" {
-		t.Error("For default test config, the value should be us-central1-c")
-	}
-
-	slug2, err := gwi.GetZone("abcd", client)
-	if err != nil {
+	if _, err := gwi.GetZone("abcd", client); err != nil {
 		t.Error(err)
 		return
-	}
-
-	if slug2 != "us-central1-f" {
-		t.Error("For default test config, the value should be us-central1-f")
 	}
 }
 
@@ -69,8 +57,8 @@ func TestInstallAndUpdate(t *testing.T) {
 	})
 
 	// Set the Image Path.
-	c.GatewayDockerImage = gatewayDockerVersion
-	c.GanacheDockerImage = ganacheDockerVersion
+	c.GatewayDockerImage = config.DefaultGatewayImage
+	c.GanacheDockerImage = config.DefaultGanacheImage
 
 	t.Run("Install a ganache service for this service", func(t *testing.T) {
 		if err := Install(ganache.Ident, slug, map[string]interface{}{}, c); err != nil {

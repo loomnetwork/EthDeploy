@@ -56,11 +56,11 @@ func deployToK8s(filename, slug string, cfg *config.Config) error {
 	}
 
 	env := map[string]interface{}{
-		"APP_ZIP_FILE":          fmt.Sprintf("do://uploads/%s", filename),
-		"DEMO_MODE":             "false",
-		"APP_SLUG":              slug,
-		"ETHEREUM_URI":          fmt.Sprintf("http://ganache-%v:8545", slug),
-		"PROXY_ADDR":            fmt.Sprintf("http://ganache-%v:8545", slug),
+		"APP_ZIP_FILE": fmt.Sprintf("do://uploads/%s", filename),
+		"DEMO_MODE":    "false",
+		"APP_SLUG":     slug,
+		"ETHEREUM_URI": fmt.Sprintf("http://ganache-%v:8545", slug),
+		"PROXY_ADDR":   fmt.Sprintf("http://ganache-%v:8545", slug),
 	}
 
 	if err := k8s.Install(gateway.Ident, slug, env, cfg); err != nil {

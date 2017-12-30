@@ -9,7 +9,9 @@ import (
 )
 
 const (
-	DefaultKey = "CONFIG"
+	DefaultKey          = "CONFIG"
+	DefaultGanacheImage = "gcr.io/robotic-catwalk-188706/loom-ganache:test"
+	DefaultGatewayImage = "gcr.io/robotic-catwalk-188706/rpc_gateway:e3face0"
 )
 
 type S3EndPoint struct {
@@ -65,8 +67,8 @@ var (
 	level              = envflag.String("LOG_LEVEL", "debug", "Log level minimum to output. Info/Debug/Warn")
 	serverHost         = envflag.String("SERVER_HOST", "http://127.0.0.1:8081", "hostname for oauth redirects")
 	loomDashboardHost  = envflag.String("LOOM_DASHBOARD_API_HOST", "https://dashboard.loomx.io", "hostname for production dashboard to read data from it, for the gateway.")
-	gatewayDockerImage = envflag.String("GATEWAY_DOCKER_IMAGE", "gcr.io/robotic-catwalk-188706/rpc_gateway:e3face0", "Gateway docker image version")
-	ganacheDockerImage = envflag.String("GANACHE_DOCKER_IMAGE", "gcr.io/robotic-catwalk-188706/loom-ganache:5a4cfce", "Ganache docker image version")
+	gatewayDockerImage = envflag.String("GATEWAY_DOCKER_IMAGE", DefaultGatewayImage, "Gateway docker image version")
+	ganacheDockerImage = envflag.String("GANACHE_DOCKER_IMAGE", DefaultGanacheImage, "Ganache docker image version")
 	ethereumURI        = envflag.String("ETHEREUM_URI", "http://localhost:8545", "Test RPC Host address")
 	kubeConfigPath     = envflag.String("KUBECONFIFG", "~/.kube/config", "Path to K8s configuration file")
 )

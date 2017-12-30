@@ -18,10 +18,12 @@ import (
 
 // How many pods should be created for this service.
 const (
-	ganacheReplicas = 1
-	ganachePort     = 8545
-	ganacheMemLimit = "200M"
-	ganacheCPULimit = "200m"
+	ganacheReplicas   = 1
+	ganachePort       = 8545
+	ganacheMemLimit   = "200M"
+	ganacheCPULimit   = "200m"
+	GlusterEndpoint   = "staging-glusterfs"
+	GlusterVolumeName = "ganache-data"
 )
 
 func (g *Installer) createDeploymentStruct(image, slug string, env []apiv1.EnvVar, client *kubernetes.Clientset) (*v1beta1.Deployment, error) {
@@ -62,9 +64,10 @@ func (g *Installer) createDeploymentStruct(image, slug string, env []apiv1.EnvVa
 					Volumes: []apiv1.Volume{
 						{
 							Name: "ganachedb",
-							VolumeSource: apiv1.VolumeSource{GCEPersistentDisk: &apiv1.GCEPersistentDiskVolumeSource{
-								PDName: "ganache-disk",
-								FSType: "ext4",
+							VolumeSource: apiv1.VolumeSource{Glusterfs: &apiv1.GlusterfsVolumeSource{
+								EndpointsName: GlusterEndpoint,
+								Path:          GlusterVolumeName,
+								ReadOnly:      false,
 							}},
 						},
 					},

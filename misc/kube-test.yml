@@ -1,0 +1,20 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: PLACEHOLDER_CERT
+    server: https://PLACEHOLDER_IP
+  name: loom-staging-customer
+contexts:
+- context:
+    cluster: loom-staging-customer
+    namespace: default
+    user: loom-onboarder
+  name: loom-staging-customer
+current-context: loom-staging-customer
+kind: Config
+preferences: {}
+users:
+- name: loom-onboarder
+  user:
+    as-user-extra: {}
+    token: PLACEHOLDER_TOKEN

@@ -67,6 +67,7 @@ var (
 	loomDashboardHost  = envflag.String("LOOM_DASHBOARD_API_HOST", "https://dashboard.loomx.io", "hostname for production dashboard to read data from it, for the gateway.")
 	gatewayDockerImage = envflag.String("GATEWAY_DOCKER_IMAGE", "c59342e", "Gateway docker image version")
 	ethereumURI        = envflag.String("ETHEREUM_URI", "http://localhost:8545", "Test RPC Host address")
+	kubeConfigPath     = envflag.String("KUBECONFIFG", "~/.kube/config", "Path to K8s configuration file")
 )
 
 func GetDefaultedConfig() *Config {
@@ -107,6 +108,7 @@ func GetDefaultedConfig() *Config {
 		ServerHost:         *serverHost,
 		GatewayDockerImage: *gatewayDockerImage,
 		InviteOnlyMode:     *inviteOnlyMode,
+		KubeConfigPath:     *kubeConfigPath,
 		S3:                 &S3EndPoint{AccessKeyID: accessKeyID, SecretAccessKey: secretAccessKey, EndPointUrl: endpoint}}
 }
 

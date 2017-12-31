@@ -66,6 +66,7 @@ var (
 	serverHost         = envflag.String("SERVER_HOST", "http://127.0.0.1:8080", "hostname for oauth redirects")
 	loomDashboardHost  = envflag.String("LOOM_DASHBOARD_API_HOST", "https://dashboard.loomx.io", "hostname for production dashboard to read data from it, for the gateway.")
 	gatewayDockerImage = envflag.String("GATEWAY_DOCKER_IMAGE", "gcr.io/robotic-catwalk-188706/rpc_gateway:e3face0", "Gateway docker image version")
+	ganacheDockerImage = envflag.String("GANACHE_DOCKER_IMAGE", "gcr.io/robotic-catwalk-188706/loom-ganache:5a4cfce", "Ganache docker image version")
 	ethereumURI        = envflag.String("ETHEREUM_URI", "http://localhost:8545", "Test RPC Host address")
 	kubeConfigPath     = envflag.String("KUBECONFIFG", "~/.kube/config", "Path to K8s configuration file")
 )
@@ -107,6 +108,7 @@ func GetDefaultedConfig() *Config {
 		DisableUpload:      *disableUpload,
 		ServerHost:         *serverHost,
 		GatewayDockerImage: *gatewayDockerImage,
+		GanacheDockerImage: *ganacheDockerImage,
 		InviteOnlyMode:     *inviteOnlyMode,
 		KubeConfigPath:     *kubeConfigPath,
 		S3:                 &S3EndPoint{AccessKeyID: accessKeyID, SecretAccessKey: secretAccessKey, EndPointUrl: endpoint}}

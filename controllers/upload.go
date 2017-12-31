@@ -57,7 +57,7 @@ func deployToK8s(filename, slug string, cfg *config.Config) error {
 
 	env := map[string]interface{}{
 		"SPAWN_NETWORK":         "node /src/build/cli.node.js",
-		"APP_ZIP_FILE":          fmt.Sprintf("do,//uploads/%s", filename),
+		"APP_ZIP_FILE":          fmt.Sprintf("do://%s", filename),
 		"DEMO_MODE":             "false",
 		"PRIVATE_KEY_JSON_PATH": "data.json",
 		"APP_SLUG":              slug,

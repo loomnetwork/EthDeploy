@@ -28,7 +28,7 @@ func uploadS3CompatibleFile(cfg *config.Config, objectName string, reader io.Rea
 	if err != nil {
 		log.Fatalln(err)
 	}
-	bucketName := "loom"
+	bucketName := "loomx"
 	//	minioClient.TraceOn(os.Stderr)
 
 	uploadFilePath := fmt.Sprintf("uploads/%s", objectName)

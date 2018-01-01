@@ -17,17 +17,13 @@ import (
 
 const ingressControllerClass = "traefik"
 
-func makeHost(slug string) string {
-	return fmt.Sprintf("%v.loomapps.io", slug)
-}
-
 func MakeIngressName(slug string) string {
 	return fmt.Sprintf("%v-%v-%v", ingressControllerClass, Ident, slug)
 }
 
-func (g *Installer) CreateIngress(slug string, client *kubernetes.Clientset) error {
+func (g *Installer) CreateIngress(slug, host string, client *kubernetes.Clientset) error {
 	iClient := client.ExtensionsV1beta1().Ingresses(apiv1.NamespaceDefault)
-	ingress := g.createIngressStruct(slug)
+	ingress := g.createIngressStruct(slug, host)
 
 	ig, err := g.GetIngress(MakeIngressName(slug), client)
 	if err == nil && ig != nil {
@@ -61,7 +57,7 @@ func (g *Installer) GetIngress(slug string, client *kubernetes.Clientset) (*exte
 }
 
 // Create an Ingress document.
-func (g *Installer) createIngressStruct(slug string) *extensionsv1beta1.Ingress {
+func (g *Installer) createIngressStruct(slug, host string) *extensionsv1beta1.Ingress {
 	return &extensionsv1beta1.Ingress{
 		TypeMeta: metav1.TypeMeta{
 			Kind: "Ingress",
@@ -75,7 +71,7 @@ func (g *Installer) createIngressStruct(slug string) *extensionsv1beta1.Ingress 
 		Spec: extensionsv1beta1.IngressSpec{
 			Rules: []extensionsv1beta1.IngressRule{
 				{
-					Host: makeHost(slug),
+					Host: host,
 					IngressRuleValue: extensionsv1beta1.IngressRuleValue{
 						HTTP: &extensionsv1beta1.HTTPIngressRuleValue{
 							Paths: []extensionsv1beta1.HTTPIngressPath{

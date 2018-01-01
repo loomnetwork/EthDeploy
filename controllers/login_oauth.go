@@ -24,7 +24,7 @@ var (
 	PROD_GITHUB_WEB_KEY    = "a6abecccefa53842aba4"
 	PROD_GITHUB_WEB_SECRET = "1ee2a16122358308c556a08fbb487a4d1b7b4473"
 	DEV_GITHUB_KEY         = "8d316b5c2fa614ecffef"
-	DEV_GITHUB_SECRET      = "07ce2d1fb8bf6abbc723931be32781c8160b063d"
+	DEV_GITHUB_SECRET      = "161f2858cde208b57e492bedc16b09fee31716e6"
 )
 
 func Login(c *gin.Context) {

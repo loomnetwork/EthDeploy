@@ -14,7 +14,7 @@
         <h6 class="list-group-header bg-primary text-white">
           Login Required
         </h6>
-        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="https://github.com/login/oauth/authorize?scope=user:email&client_id={{.githubClientID}}">
+        <a class="list-group-item list-group-item-action justify-content-between d-flex" href="https://github.com/login/oauth/authorize?scope=user:email&client_id={{.githubClientID}}&redirect_uri={{.serverbasepath}}%2Foauth%2Fcallback_github">
           <span class="icon icon-github"></span>
           <span>Login with Github</span>
         </a>

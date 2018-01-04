@@ -1,10 +1,10 @@
-FROM loomnetwork/test_rpc_base:084640d
+FROM ubuntu:16.04
+
+MAINTAINER piyush@oogway.in
 
 ADD misc/ca-certificates.crt /etc/ssl/certs/
 EXPOSE 8081
 
 ADD rpc_proxy rpc_proxy
 
-
 CMD ["./rpc_proxy"]
-

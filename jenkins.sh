@@ -14,10 +14,12 @@ npm install
 
 REV=`git rev-parse --short HEAD`
 DOC_IMAGE=loomnetwork/dashboard:$REV
+DOC_IMAGE=gcr.io/robotic-catwalk-188706/dashboard:${REV}
 
 echo "sending $DOC_IMAGE"
 docker build -t $DOC_IMAGE -f Dockerfile .
-docker push $DOC_IMAGE
+
+gcloud docker -- push ${DOC_IMAGE}
 
 export IMAGE=dashboard
 
@@ -27,13 +29,8 @@ export IMAGE=dashboard
 
 #deploy to nomad
 
-TMP_FILE=tmp_dashboard.nomad
-cp dashboard.nomad $TMP_FILE	
-sed -i 's/REV_REPLACE/'"$REV"'/g' $TMP_FILE
-cat $TMP_FILE
-NOMAD_ADDR=http://45.55.246.200:4646 nomad run $TMP_FILE
-
-
-echo "Ok now building the RPC Gateway, we don't deploy it anyway automatically yet"
-#todo maybe have two jenkins jobs??
-./build_gateway_docker.sh
+#TMP_FILE=tmp_dashboard.nomad
+#cp dashboard.nomad $TMP_FILE
+#sed -i 's/REV_REPLACE/'"$REV"'/g' $TMP_FILE
+#cat $TMP_FILE
+#NOMAD_ADDR=http://45.55.246.200:4646 nomad run $TMP_FILE

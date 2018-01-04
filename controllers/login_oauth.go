@@ -23,8 +23,8 @@ import (
 var (
 	PROD_GITHUB_WEB_KEY    = "a6abecccefa53842aba4"
 	PROD_GITHUB_WEB_SECRET = "1ee2a16122358308c556a08fbb487a4d1b7b4473"
-	DEV_GITHUB_KEY         = "08b87d778bb6c806bbd7"
-	DEV_GITHUB_SECRET      = "004f53d434b710e82a046f324e0865d820a18640"
+	DEV_GITHUB_KEY         = "8d316b5c2fa614ecffef"
+	DEV_GITHUB_SECRET      = "161f2858cde208b57e492bedc16b09fee31716e6"
 )
 
 func Login(c *gin.Context) {

@@ -1,36 +1,43 @@
 package: github.com/loomnetwork/dashboard
 import:
-- package: github.com/gin-gonic/gin
-  version: v1.2
-- package: github.com/jinzhu/gorm
-  version: v1.0
+- package: github.com/ethereum/go-ethereum
   subpackages:
-  - dialects/sqlite
-- package: github.com/serenize/snaker
-- package: rsc.io/letsencrypt
-  version: v0.0.1
-- package: golang.org/x/net
-  subpackages:
-  - context
-- package: github.com/gin-contrib/static
-- package: github.com/satori/go.uuid
-  version: ~1.1.0
+  - accounts/abi
+  - accounts/abi/bind
+  - common
+  - core/types
 - package: github.com/gin-contrib/sessions
+- package: github.com/gin-contrib/static
+- package: github.com/gin-gonic/gin
 - package: github.com/ianschenck/envflag
+- package: github.com/imdario/mergo
+- package: github.com/jinzhu/gorm
+  subpackages:
+  - dialects/mysql
+- package: github.com/loomnetwork/ethcontract
 - package: github.com/loomnetwork/ez-gin-template
 - package: github.com/minio/minio-go
-  version: ~3.0.3
+- package: github.com/pkg/errors
+- package: github.com/satori/go.uuid
+- package: github.com/serenize/snaker
 - package: github.com/sirupsen/logrus
-  version: master
-- package: github.com/Sirupsen/logrus
-  version: master
-  repo: git@github.com:/sirupsen/logrus
-  vcs: git
-- package: github.com/go-ini/ini
-  version: ~1.30.3
-- package: github.com/minio/go-homedir
-  version: 4d76aabb80b22bad8695d3904e943f1fb5e6199f
-- package: github.com/hashicorp/nomad
-  version: ~0.7.0
+- package: golang.org/x/oauth2
   subpackages:
-  - api
+  - github
+  - linkedin
+- package: k8s.io/api
+  subpackages:
+  - apps/v1beta1
+  - core/v1
+  - extensions/v1beta1
+- package: k8s.io/apimachinery
+  subpackages:
+  - pkg/api/errors
+  - pkg/api/resource
+  - pkg/apis/meta/v1
+  - pkg/util/intstr
+- package: k8s.io/client-go
+  subpackages:
+  - kubernetes
+  - plugin/pkg/client/auth/gcp
+  - tools/clientcmd

@@ -1,23 +1,25 @@
 package controllers
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"time"
 
-	"github.com/hashicorp/nomad/api"
-	"github.com/hashicorp/nomad/helper"
 	"github.com/loomnetwork/dashboard/config"
 	dbpkg "github.com/loomnetwork/dashboard/db"
 	"github.com/loomnetwork/dashboard/middleware"
-	minio "github.com/minio/minio-go"
-	uuid "github.com/satori/go.uuid"
+	"github.com/minio/minio-go"
+	"github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/gin-gonic/gin"
 	"github.com/loomnetwork/dashboard/models"
+	"github.com/pkg/errors"
+
+	"github.com/loomnetwork/dashboard/k8s"
+	"github.com/loomnetwork/dashboard/k8s/ganache"
+	"github.com/loomnetwork/dashboard/k8s/gateway"
 )
 
 func uploadS3CompatibleFile(cfg *config.Config, objectName string, reader io.Reader) error {
@@ -26,7 +28,7 @@ func uploadS3CompatibleFile(cfg *config.Config, objectName string, reader io.Rea
 	if err != nil {
 		log.Fatalln(err)
 	}
-	bucketName := "loom"
+	bucketName := "loomx"
 	//	minioClient.TraceOn(os.Stderr)
 
 	uploadFilePath := fmt.Sprintf("uploads/%s", objectName)
@@ -48,97 +50,24 @@ func genObjectName(c *gin.Context) string {
 	return fmt.Sprintf("%s.zip", guid)
 }
 
-//TODO set NOMAD_ADDR
-func SendNomadJob(filename, slug, dockerVersion string) error {
-	if slug == "" {
-		return errors.New("slug is blank won't send to nomad")
+func deployToK8s(filename, slug string, cfg *config.Config) error {
+	if err := k8s.Install(ganache.Ident, slug, map[string]interface{}{}, cfg); err != nil {
+		return errors.Wrapf(err, "Cannot deploy Ganache for %v", slug)
 	}
 
-	ncfg := api.DefaultConfig()
-	nomadClient, err := api.NewClient(ncfg)
-	if err != nil {
-		return err
-	}
-	name := fmt.Sprintf("loomapp-%s", slug)
-	traefikTags := fmt.Sprintf("traefik.frontend.rule=Host:%s.loomapps.io", slug)
-	job := &api.Job{
-		ID:          helper.StringToPtr(name),
-		Name:        helper.StringToPtr(name),
-		Datacenters: []string{"dc1"},
-		Type:        helper.StringToPtr("service"),
-		Update: &api.UpdateStrategy{
-			MaxParallel: helper.IntToPtr(1),
-		},
-		TaskGroups: []*api.TaskGroup{
-			{
-				Name:  helper.StringToPtr("loomapps-client"),
-				Count: helper.IntToPtr(1),
-				RestartPolicy: &api.RestartPolicy{
-					Interval: helper.TimeToPtr(5 * time.Minute),
-					Attempts: helper.IntToPtr(10),
-					Delay:    helper.TimeToPtr(25 * time.Second),
-					Mode:     helper.StringToPtr("delay"),
-				},
-				//				EphemeralDisk: &api.EphemeralDisk{
-				//					SizeMB: helper.IntToPtr(300),
-				//				},
-				Tasks: []*api.Task{
-					{
-						Name:   name,
-						Driver: "docker",
-						Config: map[string]interface{}{
-							"image": fmt.Sprintf("loomnetwork/rpc_gateway:%s", dockerVersion), //TODO make this a config option
-							"port_map": []map[string]int{{
-								"web": 8081,
-							}},
-						},
-						Env: map[string]string{
-							"SPAWN_NETWORK":         "node /src/build/cli.node.js",
-							"APP_ZIP_FILE":          fmt.Sprintf("do://uploads/%s", filename),
-							"DEMO_MODE":             "false",
-							"PRIVATE_KEY_JSON_PATH": "data.json",
-							"APP_SLUG":              slug,
-						},
-						Resources: &api.Resources{
-							CPU:      helper.IntToPtr(500),
-							MemoryMB: helper.IntToPtr(500),
-							Networks: []*api.NetworkResource{
-								{
-									MBits: helper.IntToPtr(10),
-									DynamicPorts: []api.Port{
-										{
-											Label: "web",
-										},
-									},
-								},
-							},
-						},
-						Services: []*api.Service{
-							{
-								Name:      fmt.Sprintf("loomapp-%s-check", slug),
-								Tags:      []string{"global", "traefik.tags=loomapp", traefikTags},
-								PortLabel: "web",
-								Checks: []api.ServiceCheck{
-									{
-										Name:     "alive",
-										Type:     "tcp",
-										Interval: 10 * time.Second,
-										Timeout:  2 * time.Second,
-									},
-								},
-							},
-						},
-						Templates: []*api.Template{},
-					},
-				},
-			},
-		},
+	env := map[string]interface{}{
+		"APP_ZIP_FILE": fmt.Sprintf("do://uploads/%s", filename),
+		"DEMO_MODE":    "false",
+		"APP_SLUG":     slug,
+		"ETHEREUM_URI": fmt.Sprintf("http://ganache-%v:8545", slug),
+		"PROXY_ADDR":   fmt.Sprintf("http://ganache-%v:8545", slug),
 	}
 
-	jobs := nomadClient.Jobs()
-	res, wmeta, err := jobs.Register(job, nil)
-	fmt.Printf("res--%v \n wmeta --- %v\n", res, wmeta)
-	return err
+	if err := k8s.Install(gateway.Ident, slug, env, cfg); err != nil {
+		return errors.Wrapf(err, "Cannot deploy Gateway for %v", slug)
+	}
+
+	return nil
 }
 
 func UploadApplication(c *gin.Context) {
@@ -195,8 +124,7 @@ func UploadApplication(c *gin.Context) {
 			return
 		}
 
-		err = SendNomadJob(uniqueFilename, slugId, cfg.GatewayDockerImage)
-		if err != nil {
+		if err := deployToK8s(uniqueFilename, slugId, cfg); err != nil {
 			log.WithField("error", err).Warn("sendnomadjob failed")
 
 			c.JSON(http.StatusBadRequest, gin.H{"Error": "Could not create test network"})

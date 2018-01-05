@@ -1,0 +1,82 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: dashboard
+  labels:
+    app: dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      containers:
+      - name: dashboard-mysql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                  "-instances=robotic-catwalk-188706:asia-south1:mysql-stage-database=tcp:3306",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        volumeMounts:
+          - name: dashboard-mysql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+          - name: ssl-certs
+            mountPath: /etc/ssl/certs
+          - name: dashboard-mysql
+            mountPath: /cloudsql
+      - name: dashboard
+        image: gcr.io/robotic-catwalk-188706/dashboard:REV_REPLACE
+        imagePullPolicy: Always
+        resources:
+           limits:
+              memory: 200M
+              cpu: 200m
+        env:
+          - name: DEMO_MODE
+            value: "false"
+          - name: GIN_MODE
+            value: debug
+          - name: LOG_LEVEL
+            value: debug
+          - name: KUBECONFIFG
+            value: /kube-test.yml
+          - name: AUTOMIGRATE
+            value: "1"
+          - name: INVITE_ONLY_MODE
+            value: "false"
+          - name: SERVER_HOST
+            value: http://staging.loomapps.io
+          - name: GATEWAY_DOCKER_IMAGE
+            value: gcr.io/robotic-catwalk-188706/rpc_gateway:386ae76
+          - name: GANACHE_DOCKER_IMAGE
+            value: gcr.io/robotic-catwalk-188706/loom-ganache:525061d
+          - name: DATABASE_USER
+            valueFrom:
+                secretKeyRef:
+                  name: dashboard-mysql-db-credentials
+                  key: username
+          - name: DATABASE_PASS
+            valueFrom:
+                secretKeyRef:
+                  name: dashboard-mysql-db-credentials
+                  key: password
+          - name: GIN_MODE
+            value: debug
+          - name: DATABASE_HOST
+            value: 127.0.0.1
+        ports:
+        - containerPort: 8082
+          name: dashboard
+      volumes:
+        - name: dashboard-mysql-instance-credentials
+          secret:
+            secretName: dashboard-mysql-instance-credentials
+        - name: cloudsql
+          emptyDir:
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs

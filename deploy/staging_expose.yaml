@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: staging-dashboard
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+spec:
+  rules:
+  - host: stage.loomapps.io
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: dashboard-svc
+            servicePort: 80

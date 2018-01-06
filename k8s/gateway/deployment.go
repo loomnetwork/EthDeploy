@@ -64,10 +64,9 @@ func (g *Installer) createDeploymentStruct(image, slug string, env []apiv1.EnvVa
 						{
 							Name:  Ident,
 							Image: image,
-							//Command: []string{"./root/start.sh"},
 							Resources: apiv1.ResourceRequirements{
 								Limits: apiv1.ResourceList{
-									//apiv1.ResourceCPU:    resource.MustParse(gatewayCPULimit),
+									apiv1.ResourceCPU:    resource.MustParse(gatewayCPULimit),
 									apiv1.ResourceMemory: resource.MustParse(gatewayMemLimit),
 									//I don't think Kubernetes can limit Network bandwidth as of yet.
 								},

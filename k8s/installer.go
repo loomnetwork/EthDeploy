@@ -6,6 +6,8 @@ import (
 	"github.com/loomnetwork/dashboard/k8s/gateway"
 	"github.com/pkg/errors"
 
+	"fmt"
+
 	apiv1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
 )
@@ -15,7 +17,7 @@ type installer interface {
 	GetZone(slug string, c *kubernetes.Clientset) (string, error)
 
 	CreateService(slug string, c *kubernetes.Clientset) error
-	CreateIngress(slug string, c *kubernetes.Clientset) error
+	CreateIngress(slug, host string, c *kubernetes.Clientset) error
 	CreateDeployment(image, slug string, env []apiv1.EnvVar, c *kubernetes.Clientset) error
 }
 
@@ -29,6 +31,10 @@ func getInstaller(ident string) installer {
 
 	panic(errors.New("Unknown type " + ident))
 	return nil
+}
+
+func makeHost(slug string, cfg *config.Config) string {
+	return fmt.Sprintf("%v.%v", slug, cfg.GatewayTld)
 }
 
 func Install(ident, slug string, env map[string]interface{}, cfg *config.Config) error {
@@ -52,7 +58,7 @@ func Install(ident, slug string, env map[string]interface{}, cfg *config.Config)
 		return errors.Wrap(err, "could not create k8s service.")
 	}
 
-	if err := i.CreateIngress(slug, client); err != nil {
+	if err := i.CreateIngress(slug, makeHost(slug, cfg), client); err != nil {
 		return errors.Wrap(err, "could not create k8s Ingress.")
 	}
 

@@ -12,6 +12,7 @@ const (
 	DefaultKey          = "CONFIG"
 	DefaultGanacheImage = "gcr.io/robotic-catwalk-188706/loom-ganache:test"
 	DefaultGatewayImage = "gcr.io/robotic-catwalk-188706/rpc_gateway:e3face0"
+	DefaultGatewayTld   = "loomapps.io"
 )
 
 type S3EndPoint struct {
@@ -28,6 +29,7 @@ type Config struct {
 	BindAddr           string
 	EnableAuth         bool
 	DisableUpload      bool
+	GatewayTld         string
 	GatewayDockerImage string
 	GanacheDockerImage string
 	KubeConfigPath     string // Path to GCP Kubernetes config file for out-of-cluster authentication.
@@ -67,6 +69,7 @@ var (
 	level              = envflag.String("LOG_LEVEL", "debug", "Log level minimum to output. Info/Debug/Warn")
 	serverHost         = envflag.String("SERVER_HOST", "http://127.0.0.1:8081", "hostname for oauth redirects")
 	loomDashboardHost  = envflag.String("LOOM_DASHBOARD_API_HOST", "https://dashboard.loomx.io", "hostname for production dashboard to read data from it, for the gateway.")
+	gatewayTLD         = envflag.String("GATEWAY_TLD", DefaultGatewayTld, "Default top level domain for gateway, loomapps.io")
 	gatewayDockerImage = envflag.String("GATEWAY_DOCKER_IMAGE", DefaultGatewayImage, "Gateway docker image version")
 	ganacheDockerImage = envflag.String("GANACHE_DOCKER_IMAGE", DefaultGanacheImage, "Ganache docker image version")
 	ethereumURI        = envflag.String("ETHEREUM_URI", "http://localhost:8545", "Test RPC Host address")
@@ -109,6 +112,7 @@ func GetDefaultedConfig() *Config {
 		EnableAuth:         *enableAuth,
 		DisableUpload:      *disableUpload,
 		ServerHost:         *serverHost,
+		GatewayTld:         *gatewayTLD,
 		GatewayDockerImage: *gatewayDockerImage,
 		GanacheDockerImage: *ganacheDockerImage,
 		InviteOnlyMode:     *inviteOnlyMode,

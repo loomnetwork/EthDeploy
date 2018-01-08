@@ -15,6 +15,8 @@ import (
 	"github.com/loomnetwork/dashboard/k8s/ganache"
 	"github.com/loomnetwork/dashboard/k8s/gateway"
 	"github.com/pkg/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	apiv1 "k8s.io/api/core/v1"
 )
 
 var kubeConfigPath string
@@ -99,6 +101,30 @@ func TestInstallAndUpdate(t *testing.T) {
 		}
 		if err := assertDeploymentUpdated(slug, c, newEnv); err != nil {
 			t.Error(err)
+		}
+	})
+
+	t.Run("Terminate Gateway and Ganache deployments", func(t *testing.T) {
+		client, err := makeClient(c)
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		dClient := client.AppsV1beta1().Deployments(apiv1.NamespaceDefault)
+		deletePolicy := metav1.DeletePropagationForeground
+
+		if err := dClient.Delete(ganache.MakeName(slug), &metav1.DeleteOptions{
+			PropagationPolicy: &deletePolicy,
+		}); err != nil {
+			t.Error(err)
+			return
+		}
+
+		if err := dClient.Delete(gateway.MakeName(slug), &metav1.DeleteOptions{
+			PropagationPolicy: &deletePolicy,
+		}); err != nil {
+			t.Error(err)
+			return
 		}
 	})
 }

@@ -26,7 +26,7 @@ spec:
             readOnly: true
           - name: ssl-certs
             mountPath: /etc/ssl/certs
-          - name: dashboard-mysql
+          - name: cloudsql
             mountPath: /cloudsql
       - name: dashboard
         image: gcr.io/robotic-catwalk-188706/dashboard:REV_REPLACE

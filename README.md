@@ -1,3 +1,8 @@
+# EthDeploy 
+
+Ethdeploy is a system that allows for cloud based 'staging' or 'development' environments for blockchains. The actual service is in private beta. Its simply an easy way for people to have a private Ethereum blockchain, since Ropsten Test network can be unstable at times. It is written in Go with a pure JS frontend. It requires Kubernetes to run, older builds supported Nomad but that is no longer supported.
+
+
 # API Server
 
 Simple Rest API using gin(framework) & gorm(orm)

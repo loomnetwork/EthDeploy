@@ -28,7 +28,7 @@ K8S_TMP_FILE=k8s_deployment.yaml
 
 if [[ "$GIT_BRANCH" = "origin/staging" ]]
 then
-    cp k8s/staging.yaml $K8S_TMP_FILE
+    cp deploy/staging.yaml $K8S_TMP_FILE
     sed -i 's/REV_REPLACE/'"$REV"'/g' $K8S_TMP_FILE
     kubectl replace -f $K8S_TMP_FILE --kubeconfig=/var/lib/jenkins/staging_kube_config.yaml --force
 fi

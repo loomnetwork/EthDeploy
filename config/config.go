@@ -66,6 +66,8 @@ var (
 	ganacheDockerImage = envflag.String("GANACHE_DOCKER_IMAGE", DefaultGanacheImage, "Ganache docker image version")
 	kubeConfigPath     = envflag.String("KUBECONFIFG", "~/.kube/config", "Path to K8s configuration file")
 
+	//Initially we were saving this data to Digital Ocean Spaces
+	//It also supports any S3 compatible iterface, so also AWS
 	accessKeyID     = envflag.String("DO_ACCESS_ID", "", "S3/Digital Ocean Spaces access ID")
 	secretAccessKey = envflag.String("DO_SECRET_KEY", "", "S3/Digital Ocean Spaces access Secret")
 	endpoint        = envflag.String("STORAGE_ENPOINT", "", "S3/Digital Ocean Spaces URL Endpoint")

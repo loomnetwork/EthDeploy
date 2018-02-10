@@ -65,6 +65,10 @@ var (
 	gatewayDockerImage = envflag.String("GATEWAY_DOCKER_IMAGE", DefaultGatewayImage, "Gateway docker image version")
 	ganacheDockerImage = envflag.String("GANACHE_DOCKER_IMAGE", DefaultGanacheImage, "Ganache docker image version")
 	kubeConfigPath     = envflag.String("KUBECONFIFG", "~/.kube/config", "Path to K8s configuration file")
+
+	accessKeyID     = envflag.String("DO_ACCESS_ID", "", "S3/Digital Ocean Spaces access ID")
+	secretAccessKey = envflag.String("DO_SECRET_KEY", "", "S3/Digital Ocean Spaces access Secret")
+	endpoint        = envflag.String("STORAGE_ENPOINT", "", "S3/Digital Ocean Spaces URL Endpoint")
 )
 
 func GetDefaultedConfig() *Config {
@@ -74,11 +78,6 @@ func GetDefaultedConfig() *Config {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	log.WithField("loomEnv", loomEnv).Debug("parsing config and setting loom environment")
-
-	//Ghetto for now
-	accessKeyID := "5X5SWWI4MYYT2K4HQE4S"
-	secretAccessKey := "2s29YdRWnox3fixcPpZPsE4FWo/U+06LitAM3oWh820"
-	endpoint := "nyc3.digitaloceanspaces.com"
 
 	if *demo == true {
 		log.Info("You are running in demo mode, don't use this in production. As it skips authentication and other features")
@@ -108,7 +107,7 @@ func GetDefaultedConfig() *Config {
 		GanacheDockerImage: *ganacheDockerImage,
 		InviteOnlyMode:     *inviteOnlyMode,
 		KubeConfigPath:     *kubeConfigPath,
-		S3:                 &S3EndPoint{AccessKeyID: accessKeyID, SecretAccessKey: secretAccessKey, EndPointUrl: endpoint}}
+		S3:                 &S3EndPoint{AccessKeyID: *accessKeyID, SecretAccessKey: *secretAccessKey, EndPointUrl: *endpoint}}
 }
 
 //Finding the config on the gin context

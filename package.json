@@ -1,10 +1,10 @@
 {
   "private": true,
-  "name": "toolkit",
-  "version": "1.0.0",
-  "description": "A bootstrap toolkit.",
+  "name": "ethdeploy",
+  "version": "0.0.1",
+  "description": "EthDeploy Assets.",
   "main": "gulpfile.js",
-  "author": "Colossal",
+  "author": "Loom Network",
   "scripts": {
     "start": "./node_modules/.bin/gulp docs"
   },
